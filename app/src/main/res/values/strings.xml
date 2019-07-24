@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="app_name">WGU App</string>
+<string name="app_header">WGU App</string>
+
+// AppBar strings
+<string name="appBar_title">Title</string>
+
+// List Item strings
+<string name="listItem">Item</string>
+
+// Activity Home page string labels
+<string name="title">Title</string>
+<string name="main_activity">Home</string>
+<string name="mentor_label">Mentor</string>
+<string name="email">Email</string>
+<string name="mail_descr">Mail</string>
+<string name="current_term">Current Term</string>
+<string name="term_title">Term Title</string>
+<string name="alerts">Alerts</string>
+
+
+// Activity Term page string labels
+<string name="term_activity_title">Terms</string>
+<string name="new_term">New Term</string>
+<string name="add_term_btn">Add Term</string>
+<string name="term_list">Term List</string>
+
+//Term view string labels
+<string name="term_view_title">Term View</string>
+<string name="course_select">Choose Course:</string>
+
+//Term edit string labels
+<string name="edit_term">Edit Term</string>
+
+
+// Activity Course page string labels
+<string name="course_activity_title">Courses</string>
+<string name="new_course">New Course</string>
+<string name="course_details">Course Details</string>
+
+<string name="status_text">Status:</string>
+
+<string name="course_mentor">Mentor:</string>
+<string name="mentor_contact">Contact:</string>
+
+<string name="assessments">Course Assessments</string>
+<string name="course_list">Course List</string>
+
+<string name="notes">Notes</string>
+<string name="enter_notes">Enter Notes</string>
+<string name="edit_note">Edit Note</string>
+<string name="del_note">Delete Note</string>
+
+// Activity Course view string labels
+<string name="course_view_title">Course View</string>
+<string name="course_name_label">Course Name:</string>
+<string name="course_enter_mentor">Mentor Name</string>
+<string name="course_enter_phone">Phone</string>
+<string name="course_enter_email">Email</string>
+<string name="assess_select">Choose Assessment:</string>
+<string name="course_assess_name">Assessment Name</string>
+<string name="oa_radio_txt">OA</string>
+<string name="pa_radio_txt">PA</string>
+
+// Activity Course edit string labels
+<string name="course_edit_title">Edit Course</string>
+
+
+// Activity Assessment page string labels
+<string name="assess_activity_title">Assessments</string>
+<string name="new_assess">New Assessment</string>
+<string name="assess_list">Assessments list</string>
+<string name="assess_details">Assessment Details</string>
+<string name="type">Type:</string>
+<string name="enter_assess_name">Enter Assessment Name</string>
+
+<string name="tab_text_1">Tab 1</string>
+<string name="tab_text_2">Tab 2</string>
+
+// Activity Assessment view string labels
+<string name="assess_view_title">Assessment View</string>
+
+// Activity Assessment edit string labels
+<string name="assess_edit_title">Edit Assessment</string>
+
+// Button string labels
+<string name="create_btn_txt">Create</string>
+<string name="home">Home</string>
+<string name="back_btn">Back</string>
+<string name="delete_btn">Delete</string>
+<string name="view_btn">View</string>
+<string name="edit_btn">Edit</string>
+<string name="add_btn">Add</string>
+<string name="new_assess_btn">New Assessment</string>
+<string name="del_course_btn">Delete Course</string>
+<string name="create_assess_txt">Create Assessment</string>
+
+
+// Button description string labels
+<string name="home_btn_desc">Home Button</string>
+<string name="back_btn_desc">Back Button</string>
+
+
+// Multi-use string labels
+<string name="start_date">Start Date:</string>
+<string name="end_date">End Date:</string>
+<string name="blank_date">mm/dd/yyyy</string>
+<string name="title_activity_assessment">Assessments</string>
+<string name="save_btn">Save</string>
+<string name="cancel_btn">Cancel</string>
+<string name="clear">Clear</string>
+<string name="addNoteBtn">Add Note</string>
+
+</resources>

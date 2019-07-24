@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
+
+
+    <style name="CustomToolBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/colorSubHeaders</item>
+        <item name="android:textColorPrimary">@color/colorTextOnBlue</item>
+        <item name="android:textColorSecondary">@color/colorTextOnBlue</item>
+
+    </style>
+
+    <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

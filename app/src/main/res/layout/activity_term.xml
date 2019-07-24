@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_term"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".TermActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/t_appbar"
+                layout="@layout/app_bar"> </include>
+
+            <!--     <TextView
+                     android:id="@+id/term_title"
+                     android:layout_width="315dp"
+                     android:layout_height="match_parent"
+                     android:layout_alignParentLeft="true"
+                     android:background="@color/colorHeaders"
+                     android:minHeight="?actionBarSize"
+                     android:padding="@dimen/appbar_padding"
+                     android:text="@string/term_activity_title"
+                     android:textColor="@color/colorGrey" />
+
+                 <ImageButton
+                     android:id="@+id/home_btn_term"
+                     android:layout_width="wrap_content"
+                     android:layout_height="match_parent"
+                     android:layout_weight="1"
+                     android:background="@color/colorHeaders"
+                     android:textColor="@color/colorGrey"
+                     app:srcCompat="@drawable/ic_home_white"
+                     tools:ignore="VectorDrawableCompat" />
+             -->
+
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrey"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/new_term" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/term_title_input"
+                    android:layout_width="225dp"
+                    android:layout_height="match_parent"
+                    android:hint="Enter Term Title"
+                    android:textAlignment="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="@string/start_date" />
+
+                        <TextView
+                            android:id="@+id/term_sd_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="end"
+                            android:text="@string/blank_date"
+                            android:textAlignment="viewEnd" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:text="@string/end_date" />
+
+                        <TextView
+                            android:id="@+id/term_ed_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="end"
+                            android:text="@string/blank_date"
+                            android:textAlignment="viewEnd" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorSubHeaders"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/add_term_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_term_btn" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorGrey"
+                android:text="@string/term_list"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/term_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:fillViewport="true"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_term_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+
+
+        </ScrollView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+<!--
+            <Button
+                android:id="@+id/termViewBtn"
+                android:layout_width="75dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:text="@string/view_btn" />
+
+            <Button
+                android:id="@+id/termEditBtn"
+                android:layout_width="75dp"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@+id/termViewBtn"
+                android:text="@string/edit_btn" />
+
+            <Button
+                android:id="@+id/termDelBtn"
+                android:layout_width="75dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_toRightOf="@+id/termEditBtn"
+                android:text="@string/delete_btn" />
+            -->
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorSubHeaders"
+    android:textColor="@color/colorTextOnBlue"
+    >
+
+    <item
+        android:id="@+id/menu_home"
+        android:title="@string/home"></item>
+    <item
+        android:id="@+id/menu_terms"
+        android:title="@string/term_list"
+        android:layout_height="match_parent"
+        android:textColor="@color/colorTextOnBlue">
+    </item>
+
+    <item
+        android:id="@+id/menu_courses"
+        android:title="@string/course_list"
+        android:layout_height="match_parent"
+        android:textColor="@color/colorTextOnBlue"
+        >
+    </item>
+
+    <item
+        android:id="@+id/menu_tests"
+        android:title="@string/assess_list"
+        android:textColor="@color/colorTextOnBlue"
+        >
+    </item>
+
+
+</menu>
+
+
+
