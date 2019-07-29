@@ -21,7 +21,7 @@ public interface TermDAO {
     void update (TermEntity termEntity);
 
     @Delete
-    void delete (TermEntity termEntity);
+    void deleteTerm (TermEntity termEntity);
 
 //    @Query("DELETE FROM term_table")
 //    void deleteAll();
@@ -36,9 +36,6 @@ public interface TermDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ArrayList<TermEntity> notes);
-
-    @Delete
-    void deleteTerm(TermEntity termEntity);
 
     @Query("SELECT * FROM term_table WHERE term_id = :id")
     TermEntity getTermById(int id);

@@ -1,7 +1,6 @@
 package com.example.c196project.database;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -126,38 +125,19 @@ public class AppRepository {
     }
 
 
-    // delete methods for all entity classes
+    /**
+     *  delete methods for all entity classes
+     */
+
     // delete term methods
-/**    public void deleteTerm(final TermEntity term) {
+    public void deleteTerm(final TermEntity termEntity){
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                mDb.termDAO().deleteTerm(term);
+                mDb.termDAO().deleteTerm(termEntity);
             }
         });
     }
-*/
-    private static class DeleteTermAsyncTask extends AsyncTask<TermEntity, Void, Void> {
-
-        private TermDAO mAsyncTaskTermDAO;
-
-        public DeleteTermAsyncTask(TermDAO termDAO){
-            mAsyncTaskTermDAO = termDAO;
-        }
-
-        @Override
-        protected Void doInBackground(TermEntity... termEntity) {
-            mAsyncTaskTermDAO.deleteTerm(termEntity[0]);
-            return null;
-        }
-    }
-
-    public void deleteTerm(TermEntity termEntity){
-
-        new DeleteTermAsyncTask(mDb.termDAO()).execute(termEntity);
-
-    }
-
 
     public void deleteAllTerms() {
         executor.execute(new Runnable() {

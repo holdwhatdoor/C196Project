@@ -39,6 +39,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
+
 public class TermActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "TermActivity";
@@ -46,8 +48,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     // View model
     private TermViewModel termVM;
 
-    // Term entity, data array list and adapter
-    private TermEntity termEntity;
+    // Term data array list and adapter
     private List<TermEntity> termData = new ArrayList<>();
     private TermItemAdapter mTermAdapter;
 
@@ -66,14 +67,20 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
     public Button addTermBtn;   // id= add_term_btn
 
+    // Recycler view components
     @BindView(R.id.rv_term_list)
     public RecyclerView termRV;
 
     public RelativeLayout itemList;
-
     public Button delListItem;
     public Button editListItem;
 
+    // Bundle extras and variables for edit/delete function
+    private Bundle extras;
+    private int termToDeleteID;
+    private int termToUpdateID;
+
+    // On create override method
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +101,11 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         initRecyclerView();
         initViewModel();
 
-        // Start and End date TextView id and function
+        /**
+         * Start and End date TextView id's and onClick override functionality
+         */
+
+        //Start date instantiation/functionality
         startDisplayDate = (TextView) findViewById(R.id.term_sd_input);
         startDisplayDate.setOnClickListener(new View.OnClickListener() {
 
@@ -112,6 +123,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // End date instantiation/functionality
         endDisplayDate = (TextView) findViewById(R.id.term_ed_input);
         endDisplayDate.setOnClickListener(new View.OnClickListener() {
 
@@ -129,6 +141,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // End date listener functionality
         endDateSetListener = (view, year, month, dayOfMonth) -> {
             Log.d(TAG, "onEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
@@ -136,6 +149,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             endDisplayDate.setText(endDate);
         };
 
+        // Start date listener functionality
         startDateSetListener = (view, year, month, dayOfMonth) -> {
             Log.d(TAG, "onStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
@@ -143,22 +157,29 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             startDisplayDate.setText(startDate);
         };
 
+
+        /**
+         * Add Term button instantiation and functionality
+         */
+
         addTermBtn = findViewById(R.id.add_term_btn);
         addTermBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
 
                 termTitleInput = (EditText) findViewById(R.id.term_title_input);
-                Date today = Calendar.getInstance().getTime();
+                Date cal = Calendar.getInstance().getTime();
+                Date today = DateConverter.calDtToDate(cal);
 
                 try {
 
                     if (TextUtils.isEmpty(termTitleInput.getText())) {
 
-                        Log.d(TAG, "today date: " + today);
                         showNoInputAlert();
                     } else {
+
+                        Log.d(TAG, "today date: " + today);
                         String term = termTitleInput.getText().toString();
                         String startString = (String) startDisplayDate.getText();
                         String endString = (String) endDisplayDate.getText();
@@ -166,41 +187,44 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                         Date start = DateConverter.toDate(startString);
                         Date end = DateConverter.toDate(endString);
 
-                        if(start.before(end) /**&& start.after(today)*/){
+                        if (start.before(end) && (start.compareTo(today) > 0 || start.equals(today))) {
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
-                        }
-                        else{
+                            termTitleInput.getText().clear();
+                            startDisplayDate.setText(null);
+                            endDisplayDate.setText(null);
+                        } else {
+
+                            Log.d(TAG, "today date: " + today);
                             dateConflictAlert();
                         }
 
 
                     }
-                }
-                catch(Exception ex){
+                } catch (Exception ex) {
 
                 }
+            }
+        });
 
-                editListItem = findViewById(R.id.item_edit_btn);
-                editListItem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                    }
-                });
-
-                delListItem = findViewById(R.id.item_del_btn);
-                delListItem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        termVM.deleteTerm();
-                    }
-                });
-
+/**        editListItem = findViewById(R.id.item_edit_btn);
+        editListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
 
+        delListItem = findViewById(R.id.item_del_btn);
+        delListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                termVM.deleteTerm();
+            }
+        });
+*/
     }
 
     // Initiates view model
@@ -226,8 +250,26 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     // Initiates recycler view
     private void initRecyclerView() {
         itemList = (RelativeLayout) findViewById(R.id.itemlist_layout);
+
         delListItem = (Button) findViewById(R.id.item_del_btn);
+/**        delListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                termVM.deleteTerm();
+            }
+        });
+*/
+
         editListItem = findViewById(R.id.item_edit_btn);
+  /**      editListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+*/
+
         termRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         termRV.setLayoutManager(layoutManager);
@@ -252,18 +294,24 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                 } finally {
 
                 }
+                break;
+
             case R.id.appBar_homeBtn:
                 Intent mainIntent = new Intent(this, MainActivity.class);
                 this.startActivity(mainIntent);
-
-            case R.id.term_sd_input:
-
-            case R.id.term_ed_input:
+                break;
 
             case R.id.item_del_btn:
+             //   TermEntity termToDel = mTermAdapter.getTermAtPos();
+
+                extras = getIntent().getExtras();
+                termToDeleteID = extras.getInt(TERM_ID_KEY);
+                termVM.loadData(termToDeleteID);
+                termVM.deleteTerm(termToDeleteID);
+                break;
 
             case R.id.item_edit_btn:
-
+                break;
 
         }
     }
@@ -326,10 +374,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void initMenu() {
-
-    }
-
+    // Alert messages
     public void showNoInputAlert() {
         AlertDialog.Builder noTitle = new AlertDialog.Builder(this);
         noTitle.setTitle("No Title Input");
@@ -344,7 +389,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void dateConflictAlert(){
+    public void dateConflictAlert() {
         AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
         dateConflict.setTitle("Date Conflict");
         dateConflict.setMessage("Choose a start and end date and ensure the start date is before end" +

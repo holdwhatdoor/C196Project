@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 public class TermViewModel extends AndroidViewModel {
 
     public MutableLiveData<TermEntity> mLiveTerm = new MutableLiveData<>();
+    public LiveData<TermEntity> mTerm;
     public LiveData<List<TermEntity>> mTerms;
     public AppRepository mRepository;
     public Executor executor = Executors.newSingleThreadExecutor();
@@ -24,13 +25,19 @@ public class TermViewModel extends AndroidViewModel {
     public TermViewModel(@NonNull Application application) {
         super(application);
 
-        mRepository = AppRepository.getInstance(application.getApplicationContext());
+        mRepository = AppRepository.getInstance(getApplication());
         mTerms = mRepository.mTerms;
     }
 
     public void insertTerm(TermEntity newTerm){
         mRepository.insertTerm(newTerm);
     }
+
+    public void deleteTerm(int termId){
+        mRepository.deleteTerm(mRepository.getTermById(termId));
+    }
+
+
 
     public void loadData(final int termId){
         executor.execute(new Runnable() {
@@ -50,7 +57,9 @@ public class TermViewModel extends AndroidViewModel {
     }
 
     public void deleteTerm(){
-        mRepository.deleteTerm(mLiveTerm.getValue());
+        TermEntity term = mLiveTerm.getValue();
+        mRepository.deleteTerm(term);
+
     }
 
 }

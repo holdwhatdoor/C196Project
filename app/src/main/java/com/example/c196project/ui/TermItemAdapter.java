@@ -1,6 +1,7 @@
 package com.example.c196project.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.c196project.R;
+import com.example.c196project.TermActivity;
 import com.example.c196project.database.TermEntity;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
 public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.ViewHolder> {
 
@@ -45,9 +49,12 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.ViewHo
         holder.mDelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"Term item at " + getTermAtPos(position).getTermTitle() + " deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"Term item at " + getTermAtPos(position).getTermTitle() +
+                        " deleted", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, TermActivity.class);
+                intent.putExtra(TERM_ID_KEY, term.getTermId());
+                mContext.startActivity(intent);
                 removeAt(holder.getAdapterPosition());
-
             }
         });
 
@@ -67,8 +74,7 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.ViewHo
 
     public TermEntity getTermAtPos(int position){
 
-        int termPosition = position;
-        return mTerms != null ? mTerms.get(termPosition) :null;
+        return mTerms != null ? mTerms.get(position) :null;
     }
 
     @Override
@@ -98,5 +104,6 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.ViewHo
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mTerms.size());
     }
+
 
 }

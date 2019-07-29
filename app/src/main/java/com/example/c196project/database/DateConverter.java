@@ -2,6 +2,7 @@ package com.example.c196project.database;
 
 import androidx.room.TypeConverter;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,5 +32,14 @@ public class DateConverter {
         }
 
         return date;
+    }
+
+    public static Date calDtToDate(Date calDate){
+        DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        String strDate = dateFormat.format(calDate);
+
+        Date formattedDate = toDate(strDate);
+
+        return formattedDate;
     }
 }
