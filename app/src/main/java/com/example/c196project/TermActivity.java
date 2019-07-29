@@ -187,7 +187,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                         Date start = DateConverter.toDate(startString);
                         Date end = DateConverter.toDate(endString);
 
-                        if (start.before(end) && (start.compareTo(today) > 0 || start.equals(today))) {
+                        if (start.getTime() > end.getTime()) {
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
                             termTitleInput.getText().clear();
@@ -306,12 +306,13 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
                 extras = getIntent().getExtras();
                 termToDeleteID = extras.getInt(TERM_ID_KEY);
-                termVM.loadData(termToDeleteID);
-                termVM.deleteTerm(termToDeleteID);
-                break;
+                termVM.loadTerm(termToDeleteID);
+                Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
+          //      termVM.deleteTerm(termToDeleteID);
+                termVM.deleteTerm();
 
             case R.id.item_edit_btn:
-                break;
+
 
         }
     }

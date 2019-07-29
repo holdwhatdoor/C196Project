@@ -24,32 +24,6 @@
                 android:id="@+id/t_appbar"
                 layout="@layout/app_bar"> </include>
 
-            <!--     <TextView
-                     android:id="@+id/term_title"
-                     android:layout_width="315dp"
-                     android:layout_height="match_parent"
-                     android:layout_alignParentLeft="true"
-                     android:background="@color/colorHeaders"
-                     android:minHeight="?actionBarSize"
-                     android:padding="@dimen/appbar_padding"
-                     android:text="@string/term_activity_title"
-                     android:textColor="@color/colorGrey" />
-
-                 <ImageButton
-                     android:id="@+id/home_btn_term"
-                     android:layout_width="wrap_content"
-                     android:layout_height="match_parent"
-                     android:layout_weight="1"
-                     android:background="@color/colorHeaders"
-                     android:textColor="@color/colorGrey"
-                     app:srcCompat="@drawable/ic_home_white"
-                     tools:ignore="VectorDrawableCompat" />
-             -->
-
-
-
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -192,30 +166,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal">
-
-<!--
-            <Button
-                android:id="@+id/termViewBtn"
-                android:layout_width="75dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:text="@string/view_btn" />
-
-            <Button
-                android:id="@+id/termEditBtn"
-                android:layout_width="75dp"
-                android:layout_height="50dp"
-                android:layout_toRightOf="@+id/termViewBtn"
-                android:text="@string/edit_btn" />
-
-            <Button
-                android:id="@+id/termDelBtn"
-                android:layout_width="75dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_toRightOf="@+id/termEditBtn"
-                android:text="@string/delete_btn" />
-            -->
 
         </RelativeLayout>
 

@@ -51,6 +51,7 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.ViewHo
             public void onClick(View v) {
                 Toast.makeText(mContext,"Term item at " + getTermAtPos(position).getTermTitle() +
                         " deleted", Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(mContext, TermActivity.class);
                 intent.putExtra(TERM_ID_KEY, term.getTermId());
                 mContext.startActivity(intent);

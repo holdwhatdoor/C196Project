@@ -1,6 +1,7 @@
 package com.example.c196project.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -34,12 +35,15 @@ public class TermViewModel extends AndroidViewModel {
     }
 
     public void deleteTerm(int termId){
+        Log.d("Term Title to delete: ", mRepository.getTermById(termId).getTermTitle());
+        Log.d("Term str data to del: ", mRepository.getTermById(termId).toString());
         mRepository.deleteTerm(mRepository.getTermById(termId));
+
     }
 
 
 
-    public void loadData(final int termId){
+    public void loadTerm(final int termId){
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -57,8 +61,8 @@ public class TermViewModel extends AndroidViewModel {
     }
 
     public void deleteTerm(){
-        TermEntity term = mLiveTerm.getValue();
-        mRepository.deleteTerm(term);
+   //     TermEntity term = mLiveTerm.getValue();
+        mRepository.deleteTerm(mLiveTerm.getValue());
 
     }
 
