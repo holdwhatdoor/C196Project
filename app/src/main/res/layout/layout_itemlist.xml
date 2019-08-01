@@ -11,17 +11,35 @@
 
         <TextView
             android:id="@+id/list_item"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:contextClickable="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center_vertical"
+            android:text="@string/listItem"
+            android:textSize="25sp" />
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/listItem"
-            android:contextClickable="true"
-            android:maxLines="1"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:layout_toLeftOf="@+id/item_edit_btn"
-            android:ellipsize="end"
-            android:textSize="17sp" />
+            android:layout_below="@id/list_item">
+
+            <TextView
+                android:id="@+id/start_lbl"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:text="Start Date: "/>
+            <TextView
+                android:id="@+id/start_date"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/start_lbl"
+                android:text="MM/DD/YYYY"/>
+
+
+        </RelativeLayout>
 
 
         <Button
@@ -29,14 +47,16 @@
             android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/item_del_btn"
-            android:text="Edit" />
+            android:text="Edit"
+            android:layout_centerVertical="true"/>
 
         <Button
             android:id="@+id/item_del_btn"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Delete" />
+            android:text="Delete"
+            android:layout_centerVertical="true"/>
 
 
     </RelativeLayout>

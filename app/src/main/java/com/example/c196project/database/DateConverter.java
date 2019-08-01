@@ -26,7 +26,7 @@ public class DateConverter {
 
         Date date = null;
         try {
-            date = new SimpleDateFormat("mm/dd/yyyy").parse(dateString);
+            date = new SimpleDateFormat("yyyy/mm/dd").parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -35,7 +35,7 @@ public class DateConverter {
     }
 
     public static Date calDtToDate(Date calDate){
-        DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/mm/dd");
         String strDate = dateFormat.format(calDate);
 
         Date formattedDate = toDate(strDate);

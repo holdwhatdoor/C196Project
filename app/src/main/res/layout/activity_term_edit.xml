@@ -135,6 +135,37 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/delTermBtn"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:text="@string/del_term_btn" />
+
+            <Button
+                android:id="@+id/saveTermBtn"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@+id/delTermBtn"
+                android:text="@string/save_term_btn" />
+
+            <Button
+                android:id="@+id/delAllCourse"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@+id/saveTermBtn"
+                android:text="@string/del_all_course" />
+
+
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,38 +196,6 @@
                 android:layout_height="wrap_content" />
 
         </ScrollView>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-
-            <Button
-                android:id="@+id/eTSaveBtn"
-                android:layout_width="75dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:text="@string/save_btn" />
-
-            <Button
-                android:id="@+id/eTCancelBtn"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_toRightOf="@+id/eTSaveBtn"
-                android:text="@string/cancel_btn" />
-
-            <Button
-                android:id="@+id/eTDelCourseBtn"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_toRightOf="@+id/eTCancelBtn"
-                android:text="@string/del_course_btn" />
-
-
-        </RelativeLayout>
 
     </LinearLayout>
 </RelativeLayout>

@@ -26,6 +26,7 @@
 <string name="new_term">New Term</string>
 <string name="add_term_btn">Add Term</string>
 <string name="term_list">Term List</string>
+<string name="del_all_term">Delete All Terms</string>
 
 //Term view string labels
 <string name="term_view_title">Term View</string>
@@ -33,6 +34,9 @@
 
 //Term edit string labels
 <string name="edit_term">Edit Term</string>
+<string name="del_term_btn">Delete Term</string>
+<string name="save_term_btn">Save Term</string>
+<string name="del_all_course">Delete Courses</string>
 
 
 // Activity Course page string labels
@@ -108,9 +112,11 @@
 <string name="end_date">End Date:</string>
 <string name="blank_date">mm/dd/yyyy</string>
 <string name="title_activity_assessment">Assessments</string>
-<string name="save_btn">Save</string>
-<string name="cancel_btn">Cancel</string>
 <string name="clear">Clear</string>
 <string name="addNoteBtn">Add Note</string>
+
+<string name="cancel_btn">Cancel</string>
+<string name="save_btn">Save</string>
+
 
 </resources>

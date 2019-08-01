@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 public class TermViewModel extends AndroidViewModel {
 
     public MutableLiveData<TermEntity> mLiveTerm = new MutableLiveData<>();
+    public MutableLiveData<List<TermEntity>> mLiveTerms = new MutableLiveData<>();
     public LiveData<TermEntity> mTerm;
     public LiveData<List<TermEntity>> mTerms;
     public AppRepository mRepository;
@@ -30,18 +31,14 @@ public class TermViewModel extends AndroidViewModel {
         mTerms = mRepository.mTerms;
     }
 
+    public LiveData<List<TermEntity>> getAllTerms(){
+        return mTerms;
+    }
+
+
     public void insertTerm(TermEntity newTerm){
         mRepository.insertTerm(newTerm);
     }
-
-    public void deleteTerm(int termId){
-        Log.d("Term Title to delete: ", mRepository.getTermById(termId).getTermTitle());
-        Log.d("Term str data to del: ", mRepository.getTermById(termId).toString());
-        mRepository.deleteTerm(mRepository.getTermById(termId));
-
-    }
-
-
 
     public void loadTerm(final int termId){
         executor.execute(new Runnable() {
@@ -53,6 +50,18 @@ public class TermViewModel extends AndroidViewModel {
         });
     }
 
+    public void deleteTerm(int termId){
+        Log.d("Term Title to delete: ", mRepository.getTermById(termId).getTermTitle());
+        Log.d("Term str data to del: ", mRepository.getTermById(termId).toString());
+        mRepository.deleteTerm(mRepository.getTermById(termId));
+
+    }
+
+    public void deleteTerm(TermEntity termEntity){
+        mRepository.deleteTerm(mTerm.getValue());
+
+    }
+
     public void saveTerm(TermEntity termEntity){
         TermEntity term = mLiveTerm.getValue();
         if(term == null){
@@ -60,10 +69,8 @@ public class TermViewModel extends AndroidViewModel {
         }
     }
 
-    public void deleteTerm(){
-   //     TermEntity term = mLiveTerm.getValue();
-        mRepository.deleteTerm(mLiveTerm.getValue());
-
+    public void deleteAll() {
+        mRepository.deleteAllTerms();
     }
 
 }

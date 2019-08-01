@@ -246,6 +246,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/add_btn" />
+                    <Button
+                        android:id="@+id/termView_delAllCourse"
+                        android:layout_width="125dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/del_all_course" />
 
 
                 </LinearLayout>

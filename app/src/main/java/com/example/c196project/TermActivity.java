@@ -38,16 +38,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
+import butterknife.OnClick;
 
 public class TermActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "TermActivity";
 
+    // Recycler view components
+    @BindView(R.id.rv_term_list)
+    public RecyclerView termRV;
+    public RelativeLayout itemList;
+
+
+    @OnClick(R.id.item_edit_btn)
+    void editClickHandler() {
+        Intent intent = new Intent(this, TermEdit.class);
+        startActivity(intent);
+    }
+
     // View model
     private TermViewModel termVM;
-
     // Term data array list and adapter
     private List<TermEntity> termData = new ArrayList<>();
     private TermItemAdapter mTermAdapter;
@@ -55,48 +65,30 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     // App bar components
     private TextView pageTitle;         // id= app_bar_title
     private ImageButton homeBtn;        // id= appBar_homeBtn
-
     // Term page components
     private EditText termTitleInput;    // id= term_title_input
-
     private TextView startDisplayDate;     // id= term_sd_input
     private DatePickerDialog.OnDateSetListener startDateSetListener;
-
     private TextView endDisplayDate;     // id = term_ed_input
     private DatePickerDialog.OnDateSetListener endDateSetListener;
-
     public Button addTermBtn;   // id= add_term_btn
-
-    // Recycler view components
-    @BindView(R.id.rv_term_list)
-    public RecyclerView termRV;
-
-    public RelativeLayout itemList;
-    public Button delListItem;
-    public Button editListItem;
-
-    // Bundle extras and variables for edit/delete function
-    private Bundle extras;
-    private int termToDeleteID;
-    private int termToUpdateID;
+    public Button delAllTermBtn;    // id= del_all_term
 
     // On create override method
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
-
         // Instantiate Toolbar by id
         Toolbar toolbar = (Toolbar) findViewById(R.id.t_appbar);
         setSupportActionBar(toolbar);
-
         // Set Toolbar text and home button id and function
         pageTitle = (TextView) findViewById(R.id.app_bar_title);
         pageTitle.setText("Terms");
-
         homeBtn = (ImageButton) findViewById(R.id.appBar_homeBtn);
         homeBtn.setOnClickListener(this);
 
+        // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);
         initRecyclerView();
         initViewModel();
@@ -104,7 +96,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         /**
          * Start and End date TextView id's and onClick override functionality
          */
-
         //Start date instantiation/functionality
         startDisplayDate = (TextView) findViewById(R.id.term_sd_input);
         startDisplayDate.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +152,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         /**
          * Add Term button instantiation and functionality
          */
-
         addTermBtn = findViewById(R.id.add_term_btn);
         addTermBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -187,7 +177,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                         Date start = DateConverter.toDate(startString);
                         Date end = DateConverter.toDate(endString);
 
-                        if (start.getTime() > end.getTime()) {
+                        if (start.before(end)) {
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
                             termTitleInput.getText().clear();
@@ -207,68 +197,103 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+//        termListTitle = findViewById(R.id.list_item);
 
-/**        editListItem = findViewById(R.id.item_edit_btn);
-        editListItem.setOnClickListener(new View.OnClickListener() {
+        delAllTermBtn = findViewById(R.id.del_all_term);
+        delAllTermBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                termVM.deleteAll();
             }
         });
 
-        delListItem = findViewById(R.id.item_del_btn);
-        delListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+/**        Button editListItem = itemList.findViewById(R.id.item_edit_btn);
+ editListItem.setOnClickListener(new View.OnClickListener() {
+@Override public void onClick(View v) {
 
-                termVM.deleteTerm();
-            }
-        });
-*/
+}
+});
+
+
+
+ Button delListItem = itemList.findViewById(R.id.item_del_btn);
+ delListItem.setOnClickListener(new View.OnClickListener() {
+@Override public void onClick(View v) {
+
+extras = getIntent().getExtras();
+termToDeleteID = extras.getInt(TERM_ID_KEY);
+termVM.loadTerm(termToDeleteID);
+Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
+termVM.deleteTerm(termToDeleteID);
+}
+});
+ */
     }
 
     // Initiates view model
     private void initViewModel() {
 
-        final Observer<List<TermEntity>> termObserver = termEntities -> {
-            termData.clear();
-            termData.addAll(termEntities);
+        /**       final Observer<List<TermEntity>> termObserver = (List<TermEntity> termEntities) -> {
+         termData.clear();
+         termData.addAll(termEntities);
 
-            if (mTermAdapter == null) {
-                mTermAdapter = new TermItemAdapter(termData, TermActivity.this);
-                termRV.setAdapter(mTermAdapter);
-            } else {
-                mTermAdapter.notifyDataSetChanged();
-            }
+         if (mTermAdapter == null) {
+         mTermAdapter = new TermItemAdapter(termData, TermActivity.this);
+         termRV.setAdapter(mTermAdapter);
+         } else {
+         mTermAdapter.notifyDataSetChanged();
+         }
 
-        };
-        termVM = ViewModelProviders.of(this).get(TermViewModel.class);
-        termVM.mTerms.observe(this, termObserver);
+         };
+         termVM = ViewModelProviders.of(this).get(TermViewModel.class);
+         termVM.mTerms.observe(this, termObserver);
+         */
 
+        final Observer<List<TermEntity>> termsObserver =
+                new Observer<List<TermEntity>>() {
+                    @Override
+                    public void onChanged(List<TermEntity> termEntities) {
+                        termData.clear();
+                        termData.addAll(termEntities);
+
+                        if (mTermAdapter == null) {
+                            mTermAdapter = new TermItemAdapter(termData,
+                                    TermActivity.this);
+                            termRV.setAdapter(mTermAdapter);
+                        } else {
+                            mTermAdapter.notifyDataSetChanged();
+                        }
+                    }
+                };
+        termVM = ViewModelProviders.of(this)
+                .get(TermViewModel.class);
+        termVM.mTerms.observe(this, termsObserver);
     }
 
     // Initiates recycler view
     private void initRecyclerView() {
         itemList = (RelativeLayout) findViewById(R.id.itemlist_layout);
 
-        delListItem = (Button) findViewById(R.id.item_del_btn);
-/**        delListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                termVM.deleteTerm();
-            }
+        /**      delListItem = itemList.findViewById(R.id.item_del_btn);
+         delListItem.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        extras = getIntent().getExtras();
+        termToDeleteID = extras.getInt(TERM_ID_KEY);
+        termVM.loadTerm(termToDeleteID);
+        Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
+        termVM.deleteTerm(termToDeleteID);
+        }
         });
-*/
 
-        editListItem = findViewById(R.id.item_edit_btn);
-  /**      editListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
+         editListItem = itemList.findViewById(R.id.item_edit_btn);
+         /**      editListItem.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+
+        }
         });
-*/
+         */
 
         termRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -276,7 +301,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
         mTermAdapter = new TermItemAdapter(termData, this);
         termRV.setAdapter(mTermAdapter);
-
     }
 
     // Overrides on click
@@ -284,36 +308,10 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.add_term_btn:
-                termTitleInput = (EditText) findViewById(R.id.term_title_input);
-                startDisplayDate = (TextView) findViewById(R.id.term_sd_input);
-                endDisplayDate = (TextView) findViewById(R.id.term_ed_input);
-
-                try {
-
-                } finally {
-
-                }
-                break;
-
             case R.id.appBar_homeBtn:
                 Intent mainIntent = new Intent(this, MainActivity.class);
                 this.startActivity(mainIntent);
                 break;
-
-            case R.id.item_del_btn:
-             //   TermEntity termToDel = mTermAdapter.getTermAtPos();
-
-                extras = getIntent().getExtras();
-                termToDeleteID = extras.getInt(TERM_ID_KEY);
-                termVM.loadTerm(termToDeleteID);
-                Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
-          //      termVM.deleteTerm(termToDeleteID);
-                termVM.deleteTerm();
-
-            case R.id.item_edit_btn:
-
-
         }
     }
 
@@ -358,21 +356,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 return true /*super.onOptionsItemSelected(item)*/;
         }
-    }
-
-    // Method to insert data to database
-    public void insertDB(View view) {
-
-        // Reference variables to UI
-        EditText termTitle = (EditText) findViewById(R.id.term_title_input);
-        TextView startDate = (TextView) findViewById(R.id.term_sd_input);
-        TextView endDate = (TextView) findViewById(R.id.term_ed_input);
-
-        // Instantiate
-
-
-        //
-
     }
 
     // Alert messages
