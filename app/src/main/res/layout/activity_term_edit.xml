@@ -72,7 +72,7 @@
                     android:layout_width="225dp"
                     android:layout_height="match_parent"
                     android:hint="Enter Term Title"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,16 +87,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:text="@string/start_date" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/edit_tsd_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:gravity="end"
                             android:text="@string/blank_date"
                             android:textAlignment="viewEnd" />
@@ -111,16 +107,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:text="@string/end_date" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/edit_ted_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:gravity="end"
                             android:text="@string/blank_date"
                             android:textAlignment="viewEnd" />
@@ -190,10 +182,10 @@
             tools:layout_editor_absoluteY="8dp">
 
             <androidx.recyclerview.widget.RecyclerView
-
-                android:id="@+id/term_list_view"
+                android:id="@+id/rv_edit_termList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         </ScrollView>
 

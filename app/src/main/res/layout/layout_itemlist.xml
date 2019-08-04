@@ -21,6 +21,21 @@
             android:text="@string/listItem"
             android:textSize="25sp" />
 
+
+        <Button
+            android:id="@+id/item_edit_btn"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/item_del_btn"
+            android:text="Edit"/>
+
+        <Button
+            android:id="@+id/item_del_btn"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Delete"/>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,35 +43,35 @@
 
             <TextView
                 android:id="@+id/start_lbl"
-                android:layout_width="75dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="Start Date: "/>
+                android:text="Start: "/>
             <TextView
                 android:id="@+id/start_date"
-                android:layout_width="150dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/start_lbl"
                 android:text="MM/DD/YYYY"/>
+
+            <TextView
+                android:id="@+id/end_lbl"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/start_date"
+                android:text="End: "/>
+            <TextView
+                android:id="@+id/end_date"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/end_lbl"
+                android:text="MM/DD/YYYY"/>
+
+
 
 
         </RelativeLayout>
 
 
-        <Button
-            android:id="@+id/item_edit_btn"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/item_del_btn"
-            android:text="Edit"
-            android:layout_centerVertical="true"/>
-
-        <Button
-            android:id="@+id/item_del_btn"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Delete"
-            android:layout_centerVertical="true"/>
 
 
     </RelativeLayout>

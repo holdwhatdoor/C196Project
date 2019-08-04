@@ -5,7 +5,7 @@
 
 
     <style name="CustomToolBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/colorSubHeaders</item>
+        <item name="background">@color/colorSubHeaders</item>
         <item name="android:textColorPrimary">@color/colorTextOnBlue</item>
         <item name="android:textColorSecondary">@color/colorTextOnBlue</item>
 

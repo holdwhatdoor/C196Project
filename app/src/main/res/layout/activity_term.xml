@@ -64,18 +64,15 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:text="@string/start_date" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/term_sd_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
                             android:gravity="end"
                             android:text="@string/blank_date"
+                            android:focusable="false"
                             android:textAlignment="viewEnd" />
 
                     </LinearLayout>
@@ -92,7 +89,7 @@
                             android:layout_marginBottom="10dp"
                             android:text="@string/end_date" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/term_ed_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -100,6 +97,7 @@
                             android:layout_marginBottom="10dp"
                             android:gravity="end"
                             android:text="@string/blank_date"
+                            android:focusable="false"
                             android:textAlignment="viewEnd" />
 
                     </LinearLayout>

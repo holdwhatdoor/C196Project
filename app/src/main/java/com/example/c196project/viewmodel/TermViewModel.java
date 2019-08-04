@@ -31,11 +31,6 @@ public class TermViewModel extends AndroidViewModel {
         mTerms = mRepository.mTerms;
     }
 
-    public LiveData<List<TermEntity>> getAllTerms(){
-        return mTerms;
-    }
-
-
     public void insertTerm(TermEntity newTerm){
         mRepository.insertTerm(newTerm);
     }
@@ -57,7 +52,7 @@ public class TermViewModel extends AndroidViewModel {
 
     }
 
-    public void deleteTerm(TermEntity termEntity){
+    public void deleteTerm(){
         mRepository.deleteTerm(mTerm.getValue());
 
     }

@@ -1,6 +1,5 @@
 package com.example.c196project;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,12 +12,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -31,14 +31,16 @@ import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.TermItemAdapter;
 import com.example.c196project.viewmodel.TermViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class TermActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,14 +49,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     // Recycler view components
     @BindView(R.id.rv_term_list)
     public RecyclerView termRV;
-    public RelativeLayout itemList;
-
-
-    @OnClick(R.id.item_edit_btn)
-    void editClickHandler() {
-        Intent intent = new Intent(this, TermEdit.class);
-        startActivity(intent);
-    }
 
     // View model
     private TermViewModel termVM;
@@ -67,9 +61,9 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton homeBtn;        // id= appBar_homeBtn
     // Term page components
     private EditText termTitleInput;    // id= term_title_input
-    private TextView startDisplayDate;     // id= term_sd_input
+    private EditText startDisplayDate;     // id= term_sd_input
     private DatePickerDialog.OnDateSetListener startDateSetListener;
-    private TextView endDisplayDate;     // id = term_ed_input
+    private EditText endDisplayDate;     // id = term_ed_input
     private DatePickerDialog.OnDateSetListener endDateSetListener;
     public Button addTermBtn;   // id= add_term_btn
     public Button delAllTermBtn;    // id= del_all_term
@@ -79,13 +73,15 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term);
+
         // Instantiate Toolbar by id
         Toolbar toolbar = (Toolbar) findViewById(R.id.t_appbar);
         setSupportActionBar(toolbar);
+
         // Set Toolbar text and home button id and function
-        pageTitle = (TextView) findViewById(R.id.app_bar_title);
+        pageTitle = findViewById(R.id.app_bar_title);
         pageTitle.setText("Terms");
-        homeBtn = (ImageButton) findViewById(R.id.appBar_homeBtn);
+        homeBtn =  findViewById(R.id.appBar_homeBtn);
         homeBtn.setOnClickListener(this);
 
         // initialize butterknife, initRecyclerView and initViewModel
@@ -96,39 +92,51 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         /**
          * Start and End date TextView id's and onClick override functionality
          */
+        // Initialized Calendar date variable
+        Calendar calendar = Calendar.getInstance();
+        // Initialized DatePickerDialog date listener
+        DatePickerDialog.OnDateSetListener sDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                DateConverter.updateDateText(startDisplayDate, calendar);
+            }
+        };
+
+
+        DatePickerDialog.OnDateSetListener eDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                DateConverter.updateDateText(endDisplayDate, calendar);
+            }
+        };
+
         //Start date instantiation/functionality
-        startDisplayDate = (TextView) findViewById(R.id.term_sd_input);
+        startDisplayDate = findViewById(R.id.term_sd_input);
         startDisplayDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Calendar calStart = Calendar.getInstance();
-                int startYear = calStart.get(Calendar.YEAR);
-                int startMonth = calStart.get(Calendar.MONTH);
-                int startDay = calStart.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog startDialog = new DatePickerDialog(
-                        TermActivity.this, android.R.style.Theme_DeviceDefault,
-                        startDateSetListener, startYear, startMonth, startDay);
-                startDialog.show();
+                new DatePickerDialog(TermActivity.this, sDate, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                        .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         // End date instantiation/functionality
-        endDisplayDate = (TextView) findViewById(R.id.term_ed_input);
+        endDisplayDate = findViewById(R.id.term_ed_input);
         endDisplayDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Calendar calEnd = Calendar.getInstance();
-                int endYear = calEnd.get(Calendar.YEAR);
-                int endMonth = calEnd.get(Calendar.MONTH);
-                int endDay = calEnd.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog endDialog = new DatePickerDialog(
-                        TermActivity.this, android.R.style.Theme_DeviceDefault,
-                        endDateSetListener, endYear, endMonth, endDay);
-                endDialog.show();
+                new DatePickerDialog(TermActivity.this, eDate, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                        .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -159,8 +167,10 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
 
                 termTitleInput = (EditText) findViewById(R.id.term_title_input);
-                Date cal = Calendar.getInstance().getTime();
-                Date today = DateConverter.calDtToDate(cal);
+                TimeZone localTZ = TimeZone.getDefault();
+                Locale locale = Locale.getDefault();
+
+                Date today = Calendar.getInstance(localTZ, locale).getTime();
 
                 try {
 
@@ -171,13 +181,18 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
                         Log.d(TAG, "today date: " + today);
                         String term = termTitleInput.getText().toString();
-                        String startString = (String) startDisplayDate.getText();
-                        String endString = (String) endDisplayDate.getText();
+                        String startString = startDisplayDate.getText().toString();
+                        String endString = endDisplayDate.getText().toString();
+                        Log.d(TAG, "Start Date String value: " + startString);
+                        Log.d(TAG, "End Date String value: " + endString);
+
 
                         Date start = DateConverter.toDate(startString);
+                        Log.d(TAG, "Start Date converted: " + start);
                         Date end = DateConverter.toDate(endString);
+                        Log.d(TAG, "End Date converted: " + end);
 
-                        if (start.before(end)) {
+                        if (start.before(end) && !start.before(today)) {
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
                             termTitleInput.getText().clear();
@@ -197,7 +212,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-//        termListTitle = findViewById(R.id.list_item);
 
         delAllTermBtn = findViewById(R.id.del_all_term);
         delAllTermBtn.setOnClickListener(new View.OnClickListener() {
@@ -207,47 +221,33 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
 /**        Button editListItem = itemList.findViewById(R.id.item_edit_btn);
- editListItem.setOnClickListener(new View.OnClickListener() {
-@Override public void onClick(View v) {
+        editListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-}
-});
+            }
+        });
 
 
+        Button delListItem = itemList.findViewById(R.id.item_del_btn);
+        delListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
- Button delListItem = itemList.findViewById(R.id.item_del_btn);
- delListItem.setOnClickListener(new View.OnClickListener() {
-@Override public void onClick(View v) {
-
-extras = getIntent().getExtras();
-termToDeleteID = extras.getInt(TERM_ID_KEY);
-termVM.loadTerm(termToDeleteID);
-Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
-termVM.deleteTerm(termToDeleteID);
-}
-});
- */
+                Bundle extras = getIntent().getExtras();
+                int termToDeleteID = extras.getInt(TERM_ID_KEY);
+                termVM.loadTerm(termToDeleteID);
+                Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
+                termVM.deleteTerm(termToDeleteID);
+            }
+        });
+*/
     }
 
     // Initiates view model
     private void initViewModel() {
-
-        /**       final Observer<List<TermEntity>> termObserver = (List<TermEntity> termEntities) -> {
-         termData.clear();
-         termData.addAll(termEntities);
-
-         if (mTermAdapter == null) {
-         mTermAdapter = new TermItemAdapter(termData, TermActivity.this);
-         termRV.setAdapter(mTermAdapter);
-         } else {
-         mTermAdapter.notifyDataSetChanged();
-         }
-
-         };
-         termVM = ViewModelProviders.of(this).get(TermViewModel.class);
-         termVM.mTerms.observe(this, termObserver);
-         */
 
         final Observer<List<TermEntity>> termsObserver =
                 new Observer<List<TermEntity>>() {
@@ -272,28 +272,7 @@ termVM.deleteTerm(termToDeleteID);
 
     // Initiates recycler view
     private void initRecyclerView() {
-        itemList = (RelativeLayout) findViewById(R.id.itemlist_layout);
-
-
-        /**      delListItem = itemList.findViewById(R.id.item_del_btn);
-         delListItem.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-        extras = getIntent().getExtras();
-        termToDeleteID = extras.getInt(TERM_ID_KEY);
-        termVM.loadTerm(termToDeleteID);
-        Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
-        termVM.deleteTerm(termToDeleteID);
-        }
-        });
-
-
-         editListItem = itemList.findViewById(R.id.item_edit_btn);
-         /**      editListItem.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-
-        }
-        });
-         */
+      //  itemList = findViewById(R.id.itemlist_layout);
 
         termRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -356,6 +335,14 @@ termVM.deleteTerm(termToDeleteID);
             default:
                 return true /*super.onOptionsItemSelected(item)*/;
         }
+    }
+
+    // Update Start/End Date EditText
+    private void updateDateText(EditText date, Calendar calendar){
+        String dateFormat = "MM/dd/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
+
+        date.setText(sdf.format(calendar.getTime()));
     }
 
     // Alert messages
