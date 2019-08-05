@@ -36,6 +36,7 @@
 <string name="edit_term">Edit Term</string>
 <string name="del_term_btn">Delete Term</string>
 <string name="save_term_btn">Save Term</string>
+<string name="add_course_btn">Add Course</string>
 <string name="del_all_course">Delete Courses</string>
 
 

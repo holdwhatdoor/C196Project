@@ -15,7 +15,7 @@ public class CourseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "course_id")
     private int courseId = 0;
-    @ForeignKey(entity = TermEntity.class, parentColumns = "termId", childColumns = "courseId")
+    @ForeignKey(entity = TermEntity.class, parentColumns = "term_Id", childColumns = "course_Id")
     private int termId;
 
     // Table Non-Key columns

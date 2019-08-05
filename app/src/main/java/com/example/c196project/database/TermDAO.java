@@ -18,7 +18,7 @@ public interface TermDAO {
     void insert (TermEntity termEntity);
 
     @Update
-    void update (TermEntity termEntity);
+    void updateTerm (TermEntity termEntity);
 
     @Delete
     void deleteTerm (TermEntity termEntity);
@@ -49,6 +49,8 @@ public interface TermDAO {
     @Query("SELECT COUNT(*) FROM term_table")
     int getCount();
 
+
+    //   @Query("SELECT * FROM course_table WHERE term_id = :id")
 
 
 }

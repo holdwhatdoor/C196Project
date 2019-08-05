@@ -257,8 +257,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                         termData.addAll(termEntities);
 
                         if (mTermAdapter == null) {
-                            mTermAdapter = new TermItemAdapter(termData,
-                                    TermActivity.this);
+                            mTermAdapter = new TermItemAdapter(termData,TermActivity.this);
                             termRV.setAdapter(mTermAdapter);
                         } else {
                             mTermAdapter.notifyDataSetChanged();

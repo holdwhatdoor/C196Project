@@ -125,6 +125,7 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.TermHo
     }
 
     public class TermHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.list_item)
         TextView mListItem;
         @BindView(R.id.start_date)

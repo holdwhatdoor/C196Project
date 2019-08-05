@@ -127,33 +127,173 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrey"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorSubHeaders"
+                android:gravity="center"
+                android:text="@string/new_course" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_courseTitle"
+                        android:layout_width="225dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter Course Title" />
+
+                    <EditText
+                        android:id="@+id/et_mentorName"
+                        android:layout_width="225dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter Mentor Name" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/start_date" />
+
+                        <EditText
+                            android:id="@+id/et_courseStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text="mm/dd/yyyy"
+                            android:textAlignment="viewEnd" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/end_date" />
+
+                        <EditText
+                            android:id="@+id/et_courseEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text="mm/dd/yyyy"
+                            android:textAlignment="viewEnd" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_mentorEmail"
+                    android:layout_width="225dp"
+                    android:layout_height="match_parent"
+                    android:hint="Enter Mentor Email" />
+
+                <EditText
+                    android:id="@+id/et_mentorPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:hint="Enter Mentor Phone #" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/status_text" />
+
+                <Spinner
+                    android:id="@+id/et_courseStatus"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorSubHeaders"
             android:gravity="center"
             android:orientation="horizontal">
 
 
             <Button
                 android:id="@+id/delTermBtn"
-                android:layout_width="100dp"
+                android:layout_width="75dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:text="@string/del_term_btn" />
 
             <Button
                 android:id="@+id/saveTermBtn"
-                android:layout_width="100dp"
+                android:layout_width="75dp"
                 android:layout_height="60dp"
                 android:layout_toRightOf="@+id/delTermBtn"
                 android:text="@string/save_term_btn" />
 
             <Button
-                android:id="@+id/delAllCourse"
-                android:layout_width="100dp"
+                android:id="@+id/addCourse"
+                android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_toRightOf="@+id/saveTermBtn"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:text="@string/add_course_btn" />
+
+            <Button
+                android:id="@+id/delAllCourse"
+                android:layout_width="90dp"
+                android:layout_height="60dp"
+                android:layout_toRightOf="@+id/addCourse"
                 android:text="@string/del_all_course" />
+
 
 
         </RelativeLayout>

@@ -50,7 +50,7 @@ public class AppRepository {
         });
     }
 
-    // Live data arraylists for each object entity
+    // get methods for all live data arraylists for each object entity
     private LiveData<List<TermEntity>> getAllTerms() {
         return mDb.termDAO().getAll();
     }
@@ -204,6 +204,29 @@ public class AppRepository {
             @Override
             public void run() {
                 mDb.alertDAO().deleteAll();
+            }
+        });
+    }
+
+    public LiveData<List<CourseEntity>> getTermCourses(int termId){
+        LiveData<List<CourseEntity>> courses = null;
+        courses = getAllCourses();
+
+
+        return courses;
+    }
+
+    public List<AssessmentEntity> getCourseAssessments(int courseId){
+        List<AssessmentEntity> assessments = null;
+
+        return assessments;
+    }
+
+    public void updateTerm(TermEntity term) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.termDAO().updateTerm(term);
             }
         });
     }

@@ -12,10 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.c196project.CourseEdit;
 import com.example.c196project.R;
 import com.example.c196project.TermEdit;
 import com.example.c196project.database.CourseEntity;
-import com.example.c196project.database.DateConverter;
 
 import java.util.Date;
 import java.util.List;
@@ -41,7 +41,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
     private final List<CourseEntity> mCourses;
     private final Context mContext;
 
-    @BindView(R.id.rv_term_list)
+    @BindView(R.id.rv_edit_termList)
     public RecyclerView termRV;
 
     public TermEditAdapter(List<CourseEntity> mCourses, Context mContext) {
@@ -61,17 +61,17 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
     @Override
     public void onBindViewHolder(@NonNull TermEditHolder holder, int position) {
 
-        final CourseEntity term = mCourses.get(position);
+        final CourseEntity course = mCourses.get(position);
 
-        holder.mListItem.setText(term.getCourseTitle());
-        holder.mStartDate.setText(DateConverter.formatDateString(term.getStartDate().toString()));
-        holder.mEndDate.setText(DateConverter.formatDateString(term.getEndDate().toString()));
+        holder.mListItem.setText(course.getCourseTitle());
+ //       holder.mStartDate.setText(DateConverter.formatDateString(course.getStartDate().toString()));
+ //       holder.mEndDate.setText(DateConverter.formatDateString(course.getEndDate().toString()));
 
         holder.mDelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                int courseId = getCourseAtPos(position).getTermId();
+                int courseId = getCourseAtPos(position).getCourseId();
                 String courseTitle = getCourseAtPos(position).getCourseTitle();
                 Date start = getCourseAtPos(position).getStartDate();
                 Date end = getCourseAtPos(position).getEndDate();
@@ -94,7 +94,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 Log.d(TAG, "Course Data: " + course.toString());
 
                 Intent intent = new Intent(mContext, TermEdit.class);
-                intent.putExtra(TERM_ID_KEY, term.getTermId());
+                intent.putExtra(TERM_ID_KEY, course.getTermId());
                 mContext.startActivity(intent);
             }
         });
@@ -103,7 +103,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
             @Override
             public void onClick(View v) {
 
-                int courseId = getCourseAtPos(position).getTermId();
+                int courseId = getCourseAtPos(position).getCourseId();
                 String courseTitle = getCourseAtPos(position).getCourseTitle();
                 Date start = getCourseAtPos(position).getStartDate();
                 Date end = getCourseAtPos(position).getEndDate();
@@ -120,10 +120,10 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 Log.d(TAG, "Course ID: " + courseId);
                 Log.d(TAG, "Course Title: " + courseTitle);
                 Log.d(TAG, "Course Start Date: " + start);
-                Log.d(TAG, "Term End Date: " + end);
-                Log.d(TAG, "Term Data: " + term.toString());
+                Log.d(TAG, "Course End Date: " + end);
+                Log.d(TAG, "Course Data: " + course.toString());
 
-                Intent intent = new Intent(mContext, TermEdit.class);
+                Intent intent = new Intent(mContext, CourseEdit.class);
                 intent.putExtra(COURSE_ID_KEY, course.getTermId());
                 intent.putExtra(COURSE_TITLE_KEY, course.getCourseTitle());
                 intent.putExtra(COURSE_START_KEY, course.getStartDate().toString());
@@ -157,6 +157,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
     }
 
     public class TermEditHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.list_item)
         TextView mListItem;
         @BindView(R.id.start_date)

@@ -1,6 +1,7 @@
 package com.example.c196project;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,16 +10,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
-import com.example.c196project.ui.TermItemAdapter;
+import com.example.c196project.ui.TermEditAdapter;
 import com.example.c196project.viewmodel.CourseViewModel;
 import com.example.c196project.viewmodel.TermViewModel;
 
@@ -45,24 +49,43 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     // View Models
     public TermViewModel termViewModel;
     public CourseViewModel courseViewModel;
-    // Term data array list and adapter
-    private List<TermEntity> termData = new ArrayList<>();
-    private TermItemAdapter mTermAdapter;
+    // Course data array lists and adapters
+    private List<CourseEntity> courseData = new ArrayList<>();
+    private TermEditAdapter mCourseAdapter;
 
     // Header Variables
     public TextView pageTitle;
     public ImageButton homeBtn;  // id = home_btn_term
 
-    public EditText termTitleEdit;  // id = term_title_edit
-
     // Initialized Calendar date variable
     Calendar calendar = Calendar.getInstance();
-    // Declare start/end date EditText with DatePickerDialog listeners and SimpleDateFormat
-    public EditText startDisplayDate;
-    public DatePickerDialog.OnDateSetListener startDateSetListener;
-    public EditText endDisplayDate;
-    public DatePickerDialog.OnDateSetListener endDateSetListener;
+    // SimpleDateFormat initialization for all date display items
     public SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+    /**
+     *   Term data display/input elements
+     */
+    public EditText termTitleEdit;  // id = term_title_edit
+    // Term declarations for start/end date EditText with DatePickerDialog listeners and SimpleDateFormat
+    public EditText termStartDate;
+    public DatePickerDialog.OnDateSetListener termStartListener;
+    public EditText termEndDate;
+    public DatePickerDialog.OnDateSetListener termEndListener;
+
+    /**
+     *  Add Course data imput elements
+     */
+    public EditText courseTitleInput;
+    // Add Course declarations for start/end date EditText with DatePickerDialog listeners
+    public EditText courseStartDate;
+    public DatePickerDialog.OnDateSetListener courseStartListener;
+    public EditText courseEndDate;
+    public DatePickerDialog.OnDateSetListener courseEndListener;
+    // Add course mentor info
+    public EditText courseMentor;
+    public EditText mentorPhone;
+    public EditText mentorEmail;
+    public Spinner status;
 
     // Recycler view components
     @BindView(R.id.rv_edit_termList)
@@ -71,14 +94,15 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     // Button variables
     public Button delTermBtn;
     public Button saveBtn;
-    public Button delCourseBtn;
+    public Button addCourse;
+    public Button delCoursesBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_edit);
 
-        // retrieves data passed from adapter
+        // retrieves term data passed from adapter
         Bundle extras = getIntent().getExtras();
         int termId = extras.getInt(TERM_ID_KEY);
         String termTitle = extras.getString(TERM_TITLE_KEY);
@@ -96,15 +120,20 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         homeBtn =  findViewById(R.id.appBar_homeBtn);
         homeBtn.setOnClickListener(this);
 
+        // instantiate/set page title
+        pageTitle = findViewById(R.id.app_bar_title);
+        pageTitle.setText("Term Edit");
+        TextView title = findViewById(R.id.title);
+
         // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);
         initRecyclerView();
         initViewModel();
 
-        // input element id assignments
+        // Term input element id assignments
         termTitleEdit = findViewById(R.id.edit_term_title);
-        startDisplayDate = findViewById(R.id.edit_tsd_input);
-        endDisplayDate = findViewById(R.id.edit_ted_input);
+        termStartDate = findViewById(R.id.edit_tsd_input);
+        termEndDate = findViewById(R.id.edit_ted_input);
 
         Log.d(TAG,"Term ID retrieved: " + termId);
         Log.d(TAG,"Term Title retrieved: " + termTitle);
@@ -114,14 +143,14 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         /**
          * Start and End date TextView id's and onClick override functionality
          */
-        // Initialized DatePickerDialog date listener start/end dates
+        // Initialized Term DatePickerDialog date listener start/end dates
         DatePickerDialog.OnDateSetListener sDate = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                DateConverter.updateDateText(startDisplayDate, calendar);
+                DateConverter.updateDateText(termStartDate, calendar);
             }
         };
         DatePickerDialog.OnDateSetListener eDate = new DatePickerDialog.OnDateSetListener() {
@@ -130,12 +159,12 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                DateConverter.updateDateText(endDisplayDate, calendar);
+                DateConverter.updateDateText(termEndDate, calendar);
             }
         };
-        //Start date instantiation/functionality
-        startDisplayDate = findViewById(R.id.edit_tsd_input);
-        startDisplayDate.setOnClickListener(new View.OnClickListener() {
+        // Term start date instantiation/functionality
+        termStartDate = findViewById(R.id.edit_tsd_input);
+        termStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(TermEdit.this, sDate, calendar
@@ -143,9 +172,9 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        // End date instantiation/functionality
-        endDisplayDate = findViewById(R.id.edit_ted_input);
-        endDisplayDate.setOnClickListener(new View.OnClickListener() {
+        // Term end date instantiation/functionality
+        termEndDate = findViewById(R.id.edit_ted_input);
+        termEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(TermEdit.this, eDate, calendar
@@ -153,55 +182,126 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-        // Start date listener functionality
-        startDateSetListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "onStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+        // Term start date listener functionality
+        termStartListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Log.d(TAG, "onStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
-            String startDate = month + "/" + dayOfMonth + "/" + year;
-            startDisplayDate.setText(startDate);
+                String startDate = month + "/" + dayOfMonth + "/" + year;
+                termStartDate.setText(startDate);
+            }
         };
-        // End date listener functionality
-        endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        // Term end date listener functionality
+        termEndListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Log.d(TAG, "onEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
                 String endDate = month + "/" + dayOfMonth + "/" + year;
-                endDisplayDate.setText(endDate);
+                termEndDate.setText(endDate);
             }
         };
-//        TermEntity passedTerm = new TermEntity(termId, termTitle, start, end);
-        // instantiate/set page title
-        pageTitle = findViewById(R.id.app_bar_title);
-        pageTitle.setText("Term Edit");
-        TextView title = findViewById(R.id.title);
-        //  Set edit text fields for Term Title and start/end dates
-        termTitleEdit.setText(termTitle);
-        startDisplayDate.setText(startFormat);
-        endDisplayDate.setText(endFormat);
 
+        //  Set term data text to EditText fields for Term Title and start/end dates
+        termTitleEdit.setText(termTitle);
+        termStartDate.setText(startFormat);
+        termEndDate.setText(endFormat);
+
+        // Course input elements id assignments
+        courseTitleInput = findViewById(R.id.et_courseTitle);
+        courseMentor = findViewById(R.id.et_mentorName);
+        mentorPhone = findViewById(R.id.et_mentorPhone);
+        mentorEmail = findViewById(R.id.et_mentorEmail);
+        status = findViewById(R.id.et_courseStatus);
+
+        // Course start date instantiation/functionality
+        courseStartDate = findViewById(R.id.et_courseStart);
+        courseStartDate.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // Course start date listener functionality
+        courseStartListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            }
+        };
+
+        // Course End date instantiation/functionality
+        courseEndDate = findViewById(R.id.et_courseEnd);
+        courseEndDate.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // Course end date listener functionality
+        courseEndListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+            }
+        };
+
+        //
+
+
+        /**
+         *  Set button id's and onClickListeners
+         */
         // set delete term button id and onClickListener
         delTermBtn = findViewById(R.id.delTermBtn);
         delTermBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                termViewModel.deleteTerm(termId);
+                if(courseData != null){
+                    deleteTermError();
+                }else{
+                    termViewModel.deleteTerm(termId);
+                }
+
             }
         });
 
-        //set save button id and onClickListener
+        //set save button id and onClickListener functionality
         saveBtn = findViewById(R.id.saveTermBtn);
         saveBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-        //        termViewModel.updateTerm(termId);
+                TermEntity passedTerm = getPassedTerm();
+                int termId = passedTerm.getTermId();
+                String termTitle = termTitleEdit.getText().toString();
+                String termStart = termStartDate.getText().toString();
+                String termEnd = termEndDate.getText().toString();
+                Date start = DateConverter.toDate(termStart);
+                Date end = DateConverter.toDate(termEnd);
+                TermEntity updatedTerm = new TermEntity(termId, termTitle, start, end);
+                termViewModel.updateTerm(updatedTerm);
+            }
+        });
+
+        // set add course button id and onClickListener
+        addCourse = findViewById(R.id.addCourse);
+        addCourse.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
         // set delete all courses id and OnClickListener
-        delCourseBtn = findViewById(R.id.delAllCourse);
-        delCourseBtn.setOnClickListener(new View.OnClickListener(){
+        delCoursesBtn = findViewById(R.id.delAllCourse);
+        delCoursesBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -218,8 +318,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             if(termEntity != null){
                 Calendar calendar = Calendar.getInstance();
                 termTitleEdit.setText(termEntity.getTermTitle());
-                startDisplayDate.setText(DateConverter.formatDateString(termEntity.getStart().toString()));
-                endDisplayDate.setText(DateConverter.formatDateString(termEntity.getEnd().toString()));
+                termStartDate.setText(DateConverter.formatDateString(termEntity.getStart().toString()));
+                termEndDate.setText(DateConverter.formatDateString(termEntity.getEnd().toString()));
             }
         });
 
@@ -235,14 +335,12 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     // Initiates recycler view
     private void initRecyclerView() {
-        //  itemList = findViewById(R.id.itemlist_layout);
-
         editTermRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         editTermRV.setLayoutManager(layoutManager);
 
-        mTermAdapter = new TermItemAdapter(termData, this);
-        editTermRV.setAdapter(mTermAdapter);
+        mCourseAdapter = new TermEditAdapter(courseData, this);
+        editTermRV.setAdapter(mCourseAdapter);
     }
 
     @Override
@@ -268,5 +366,19 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         TermEntity passedTerm = new TermEntity(termId, termTitle, start, end);
 
         return passedTerm;
+    }
+
+    public void deleteTermError(){
+        AlertDialog.Builder deleteTermError = new AlertDialog.Builder(this);
+        deleteTermError.setTitle("Term Delete Error");
+        deleteTermError.setMessage("Term has courses assigned to it, delete all courses before deleting" +
+                "term.");
+        deleteTermError.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        deleteTermError.create().show();
     }
 }
