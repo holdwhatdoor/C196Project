@@ -4,14 +4,18 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +30,13 @@ import com.example.c196project.ui.TermEditAdapter;
 import com.example.c196project.viewmodel.CourseViewModel;
 import com.example.c196project.viewmodel.TermViewModel;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,14 +46,14 @@ import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 import static com.example.c196project.utilities.Constants.TERM_START_KEY;
 import static com.example.c196project.utilities.Constants.TERM_TITLE_KEY;
 
-public class TermEdit extends AppCompatActivity implements View.OnClickListener, Serializable {
+public class TermEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
 
     private static final String TAG ="TermEdit";
 
     // View Models
-    public TermViewModel termViewModel;
-    public CourseViewModel courseViewModel;
+    public TermViewModel termVM;
+    public CourseViewModel courseVM;
     // Course data array lists and adapters
     private List<CourseEntity> courseData = new ArrayList<>();
     private TermEditAdapter mCourseAdapter;
@@ -85,7 +90,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     public EditText courseMentor;
     public EditText mentorPhone;
     public EditText mentorEmail;
-    public Spinner status;
+    public Spinner statusSpinner;
+    public String[] spinnerOptions = {"Planned", "Enrolled", "Completed"};
 
     // Recycler view components
     @BindView(R.id.rv_edit_termList)
@@ -186,7 +192,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         termStartListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "onStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+                Log.d(TAG, "termStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
                 String startDate = month + "/" + dayOfMonth + "/" + year;
                 termStartDate.setText(startDate);
@@ -196,7 +202,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         termEndListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "onEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+                Log.d(TAG, "termEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
                 String endDate = month + "/" + dayOfMonth + "/" + year;
                 termEndDate.setText(endDate);
@@ -213,15 +219,34 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         courseMentor = findViewById(R.id.et_mentorName);
         mentorPhone = findViewById(R.id.et_mentorPhone);
         mentorEmail = findViewById(R.id.et_mentorEmail);
-        status = findViewById(R.id.et_courseStatus);
+        statusSpinner = findViewById(R.id.et_courseStatus);
+
+        statusSpinner.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        ArrayAdapter spinAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
+                spinnerOptions);
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(spinAdapter);
+
 
         // Course start date instantiation/functionality
+        DatePickerDialog.OnDateSetListener courseStart = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                DateConverter.updateDateText(courseStartDate, calendar);
+            }
+        };
+
         courseStartDate = findViewById(R.id.et_courseStart);
         courseStartDate.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-
+                new DatePickerDialog(TermEdit.this, courseStart, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                        .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -229,7 +254,20 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         courseStartListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
+                String startDate = month + "/" + dayOfMonth + "/" + year;
+                courseStartDate.setText(startDate);
+            }
+        };
+
+        DatePickerDialog.OnDateSetListener courseEnd = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                DateConverter.updateDateText(courseEndDate, calendar);
             }
         };
 
@@ -239,15 +277,19 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
             @Override
             public void onClick(View v) {
-
+                new DatePickerDialog(TermEdit.this, courseEnd, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                        .get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
-        // Course end date listener functionality
         courseEndListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
+                String endDate = month + "/" + dayOfMonth + "/" + year;
+                courseEndDate.setText(endDate);
             }
         };
 
@@ -265,7 +307,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 if(courseData != null){
                     deleteTermError();
                 }else{
-                    termViewModel.deleteTerm(termId);
+                    termVM.deleteTerm(termId);
                 }
 
             }
@@ -285,7 +327,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 Date start = DateConverter.toDate(termStart);
                 Date end = DateConverter.toDate(termEnd);
                 TermEntity updatedTerm = new TermEntity(termId, termTitle, start, end);
-                termViewModel.updateTerm(updatedTerm);
+                termVM.updateTerm(updatedTerm);
             }
         });
 
@@ -296,7 +338,66 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void onClick(View v) {
 
+                TimeZone localTZ = TimeZone.getDefault();
+                Locale locale = Locale.getDefault();
+
+                Date today = Calendar.getInstance(localTZ, locale).getTime();
+
+                try {
+
+                    if (TextUtils.isEmpty(courseTitleInput.getText())) {
+                        showNoInputAlert();
+                    } else if(TextUtils.isEmpty(courseMentor.getText())){
+                        showNoInputAlert();
+                    } else if(TextUtils.isEmpty(mentorPhone.getText())) {
+                        showNoInputAlert();
+                    } else if(TextUtils.isEmpty(mentorEmail.getText())) {
+                        showNoInputAlert();
+                    } else if(TextUtils.isEmpty(statusSpinner.getSelectedItem().toString())){
+                        showNoInputAlert();
+                    }
+                    else{
+                        Log.d(TAG, "today date: " + today);
+                        String course = courseTitleInput.getText().toString();
+                        String startString = courseStartDate.getText().toString();
+                        String endString = courseEndDate.getText().toString();
+                        String mentor = courseMentor.getText().toString();
+                        String phone = mentorPhone.getText().toString();
+                        String email = mentorEmail.getText().toString();
+                        String status = statusSpinner.getSelectedItem().toString();
+                        String notes = null;
+                        int termId = getPassedTerm().getTermId();
+
+                        Log.d(TAG, "Course Start Date String value: " + startString);
+                        Log.d(TAG, "Course End Date String value: " + endString);
+                        Date start = DateConverter.toDate(startString);
+                        Log.d(TAG, "Course Start Date converted: " + start);
+                        Date end = DateConverter.toDate(endString);
+                        Log.d(TAG, "Course End Date converted: " + end);
+                        Log.d(TAG, "Spinner selection: " + status);
+
+
+                        if (start.before(end) && !start.before(today)) {
+                            CourseEntity newCourse = new CourseEntity(course, start,
+                                    end, status, mentor, phone, email, notes, termId);
+                            courseVM.insertCourse(newCourse);
+                            courseTitleInput.getText().clear();
+                            courseStartDate.setText(null);
+                            courseEndDate.setText(null);
+                            statusSpinner.setOnItemSelectedListener(null);
+                        } else {
+
+                            Log.d(TAG, "today date: " + today);
+                            courseConflictAlert();
+                        }
+
+
+                    }
+                } catch (Exception ex) {
+
+                }
             }
+
         });
 
         // set delete all courses id and OnClickListener
@@ -312,9 +413,9 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     // Initialize view method
     private void initViewModel(){
-        termViewModel = ViewModelProviders.of(this)
+        termVM = ViewModelProviders.of(this)
                 .get(TermViewModel.class);
-        termViewModel.mLiveTerm.observe(this, (termEntity) ->{
+        termVM.mLiveTerm.observe(this, (termEntity) ->{
             if(termEntity != null){
                 Calendar calendar = Calendar.getInstance();
                 termTitleEdit.setText(termEntity.getTermTitle());
@@ -329,7 +430,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         }
         else{
             int termId = extras.getInt(TERM_ID_KEY);
-            termViewModel.loadTerm(termId);
+            termVM.loadTerm(termId);
         }
     }
 
@@ -368,6 +469,21 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         return passedTerm;
     }
 
+    // Alert messages
+    public void showNoInputAlert() {
+        AlertDialog.Builder noTitle = new AlertDialog.Builder(this);
+        noTitle.setTitle("No Title Input");
+        noTitle.setMessage("Fill out all Course input fields.");
+        noTitle.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        noTitle.create().show();
+
+    }
+
     public void deleteTermError(){
         AlertDialog.Builder deleteTermError = new AlertDialog.Builder(this);
         deleteTermError.setTitle("Term Delete Error");
@@ -381,4 +497,31 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         });
         deleteTermError.create().show();
     }
+
+    public void courseConflictAlert() {
+        AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
+        dateConflict.setTitle("Date Conflict");
+        dateConflict.setMessage("Choose a start and end date and ensure the start date is before end" +
+                " date and that no other courses overlap chosen dates.");
+        dateConflict.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dateConflict.create().show();
+    }
+
+
+    //Performing action onItemSelected and onNothing selected
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
+        Toast.makeText(getApplicationContext(), spinnerOptions[position], Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+
+    }
+
 }

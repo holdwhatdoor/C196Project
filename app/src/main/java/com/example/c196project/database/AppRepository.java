@@ -230,4 +230,14 @@ public class AppRepository {
             }
         });
     }
+
+    public void updateCourse(CourseEntity course) {
+        executor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                mDb.courseDAO().updateCourse(course);
+            }
+        });
+    }
 }

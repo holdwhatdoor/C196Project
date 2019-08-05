@@ -42,6 +42,20 @@ public class CourseEntity {
 
     }
 
+    @Ignore
+    public CourseEntity(String courseTitle, Date startDate, Date endDate, String status,
+                        String mentorName, String mentorPhone, String mentorEmail, String courseNotes, int termId){
+        this.courseTitle = courseTitle;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.mentorName = mentorName;
+        this.mentorPhone = mentorPhone;
+        this.mentorEmail = mentorEmail;
+        this.courseNotes = courseNotes;
+        this.termId = termId;
+    }
+
     public CourseEntity(int courseId, String courseTitle, Date startDate, Date endDate, String status,
                         String mentorName, String mentorPhone, String mentorEmail, String courseNotes, int termId) {
 
