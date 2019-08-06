@@ -435,9 +435,9 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         Date start = DateConverter.toDate(startStr);
         Date end = DateConverter.toDate(endStr);
 
-        TermEntity passedTerm = new TermEntity(termId, termTitle, start, end);
+        TermEntity termPassed = new TermEntity(termId, termTitle, start, end);
 
-        return passedTerm;
+        return termPassed;
     }
 
     // Alert messages
