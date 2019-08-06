@@ -156,9 +156,19 @@ public class CourseEntity {
         this.mentorEmail = mentorEmail;
     }
 
+    public void setCourseNotes(String courseNotes) { this.courseNotes = courseNotes; }
+
     public void setTermId(int termId){
         this.termId = termId;
     }
+
+    @Override
+    public String toString(){
+        return "CourseEntity{" + "CourseId= " + courseId + ", Course Title= " + courseTitle + ", Course Start= " +
+                startDate + ", Course End= " + endDate + ", Course Mentor= " + mentorName + "Mentor Email= " +
+                mentorEmail + "Course Notes= " + courseNotes + "Mentor Phone= " + mentorPhone + "Term ID= " + termId + "}";
+    }
+
 
 /*    ContentValues toCourseValues() {
         ContentValues values = new ContentValues(5);

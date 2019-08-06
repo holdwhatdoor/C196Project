@@ -304,10 +304,13 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         delTermBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(courseData != null){
+
+                Log.d(TAG, "Course Data: " + courseData.toString());
+                if(!courseData.isEmpty() ){
                     deleteTermError();
                 }else{
                     termVM.deleteTerm(termId);
+                    finish();
                 }
 
             }
@@ -319,8 +322,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
             @Override
             public void onClick(View v) {
-                TermEntity passedTerm = getPassedTerm();
-                int termId = passedTerm.getTermId();
+    //            TermEntity passedTerm = getPassedTerm();
+    //            int termId = passedTerm.getTermId();
                 String termTitle = termTitleEdit.getText().toString();
                 String termStart = termStartDate.getText().toString();
                 String termEnd = termEndDate.getText().toString();
@@ -347,6 +350,12 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
                     if (TextUtils.isEmpty(courseTitleInput.getText())) {
                         showNoInputAlert();
+                    } else if (courseStartDate.getText().toString().equals("") ||
+                        courseStartDate.getText().toString().equals("mm/dd/yyyy")){
+                        showNoInputAlert();
+                    } else if (courseEndDate.getText().toString().equals("") ||
+                        courseEndDate.getText().toString().equals("mm/dd/yyyy")){
+                        showNoInputAlert();
                     } else if(TextUtils.isEmpty(courseMentor.getText())){
                         showNoInputAlert();
                     } else if(TextUtils.isEmpty(mentorPhone.getText())) {
@@ -357,34 +366,61 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         showNoInputAlert();
                     }
                     else{
-                        Log.d(TAG, "today date: " + today);
+                        Log.d(TAG, "today date....: " + today);
                         String course = courseTitleInput.getText().toString();
-                        String startString = courseStartDate.getText().toString();
-                        String endString = courseEndDate.getText().toString();
-                        String mentor = courseMentor.getText().toString();
-                        String phone = mentorPhone.getText().toString();
-                        String email = mentorEmail.getText().toString();
-                        String status = statusSpinner.getSelectedItem().toString();
-                        String notes = null;
-                        int termId = getPassedTerm().getTermId();
+                        Log.d(TAG, "Course title: " + course);
 
+                        String startString = courseStartDate.getText().toString();
                         Log.d(TAG, "Course Start Date String value: " + startString);
-                        Log.d(TAG, "Course End Date String value: " + endString);
                         Date start = DateConverter.toDate(startString);
                         Log.d(TAG, "Course Start Date converted: " + start);
+
+                        String endString = courseEndDate.getText().toString();
+                        Log.d(TAG, "Course End Date String value: " + endString);
                         Date end = DateConverter.toDate(endString);
                         Log.d(TAG, "Course End Date converted: " + end);
+
+                        String mentor = courseMentor.getText().toString();
+                        Log.d(TAG,"Mentor: " + mentor);
+
+                        String phone = mentorPhone.getText().toString();
+                        Log.d(TAG, "Phone: " + phone);
+
+                        String email = mentorEmail.getText().toString();
+                        Log.d(TAG, "Email: " + email);
+
+                        String status = statusSpinner.getSelectedItem().toString();
                         Log.d(TAG, "Spinner selection: " + status);
+
+                        String notes = ".";
+                        Log.d(TAG, "Notes: " + notes);
+
+                      //  int termId = getPassedTerm().getTermId();
+                        Log.d(TAG, "Term ID: " + termId);
+                        Log.d(TAG, "Start before end:  " + start.before(end));
+                        Log.d(TAG, "Start not before today: " + !start.before(today));
 
 
                         if (start.before(end) && !start.before(today)) {
+                            Log.d(TAG, "Entered if that calls insertCourse()");
+
                             CourseEntity newCourse = new CourseEntity(course, start,
                                     end, status, mentor, phone, email, notes, termId);
+
+                            Log.d(TAG, "Course object created");
+                            Log.d(TAG, "Course title: " + newCourse.getCourseTitle());
+
                             courseVM.insertCourse(newCourse);
+
+                            Log.d(TAG, "Course insert complete.");
+
                             courseTitleInput.getText().clear();
                             courseStartDate.setText(null);
                             courseEndDate.setText(null);
-                            statusSpinner.setOnItemSelectedListener(null);
+                            courseMentor.getText().clear();
+                            mentorPhone.getText().clear();
+                            mentorEmail.getText().clear();
+                            statusSpinner.setSelection(-1);
                         } else {
 
                             Log.d(TAG, "today date: " + today);

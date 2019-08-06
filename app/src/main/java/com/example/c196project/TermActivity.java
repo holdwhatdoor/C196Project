@@ -177,7 +177,13 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                     if (TextUtils.isEmpty(termTitleInput.getText())) {
 
                         showNoInputAlert();
-                    } else {
+                    } else if (startDisplayDate.getText().toString().equals("") ||
+                        startDisplayDate.getText().toString().equals("mm/dd/yyyy")){
+                        showNoInputAlert();
+                    } else if(endDisplayDate.getText().toString().equals("") ||
+                        endDisplayDate.getText().toString().equals("mm/dd/yyyy")){
+                        showNoInputAlert();
+                    }else{
 
                         Log.d(TAG, "today date: " + today);
                         String term = termTitleInput.getText().toString();
@@ -196,8 +202,8 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
                             termTitleInput.getText().clear();
-                            startDisplayDate.setText(null);
-                            endDisplayDate.setText(null);
+                            startDisplayDate.getText().clear();
+                            endDisplayDate.getText().clear();
                         } else {
 
                             Log.d(TAG, "today date: " + today);
