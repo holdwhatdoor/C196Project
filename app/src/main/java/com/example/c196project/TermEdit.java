@@ -1,7 +1,6 @@
 package com.example.c196project;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -146,67 +144,44 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         Log.d(TAG,"Term Start retrieved: " + startStr);
         Log.d(TAG,"Term End retrieved: " + endStr);
 
-        /**
-         * Start and End date TextView id's and onClick override functionality
+        /**Start and End date TextView id's and onClick override functionality
          */
         // Initialized Term DatePickerDialog date listener start/end dates
-        DatePickerDialog.OnDateSetListener sDate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                DateConverter.updateDateText(termStartDate, calendar);
-            }
+        DatePickerDialog.OnDateSetListener sDate = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            DateConverter.updateDateText(termStartDate, calendar);
         };
-        DatePickerDialog.OnDateSetListener eDate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                DateConverter.updateDateText(termEndDate, calendar);
-            }
+        DatePickerDialog.OnDateSetListener eDate = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            DateConverter.updateDateText(termEndDate, calendar);
         };
         // Term start date instantiation/functionality
         termStartDate = findViewById(R.id.edit_tsd_input);
-        termStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(TermEdit.this, sDate, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
-                        .get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        termStartDate.setOnClickListener(v -> new DatePickerDialog(TermEdit.this, sDate, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                .get(Calendar.DAY_OF_MONTH)).show());
         // Term end date instantiation/functionality
         termEndDate = findViewById(R.id.edit_ted_input);
-        termEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(TermEdit.this, eDate, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
-                        .get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        termEndDate.setOnClickListener(v -> new DatePickerDialog(TermEdit.this, eDate, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                .get(Calendar.DAY_OF_MONTH)).show());
         // Term start date listener functionality
-        termStartListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "termStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+        termStartListener = (view, year, month, dayOfMonth) -> {
+            Log.d(TAG, "termStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
-                String startDate = month + "/" + dayOfMonth + "/" + year;
-                termStartDate.setText(startDate);
-            }
+            String startDate = month + "/" + dayOfMonth + "/" + year;
+            termStartDate.setText(startDate);
         };
         // Term end date listener functionality
-        termEndListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "termEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+        termEndListener = (view, year, month, dayOfMonth) -> {
+            Log.d(TAG, "termEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
-                String endDate = month + "/" + dayOfMonth + "/" + year;
-                termEndDate.setText(endDate);
-            }
+            String endDate = month + "/" + dayOfMonth + "/" + year;
+            termEndDate.setText(endDate);
         };
 
         //  Set term data text to EditText fields for Term Title and start/end dates
@@ -221,7 +196,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         mentorEmail = findViewById(R.id.et_mentorEmail);
         statusSpinner = findViewById(R.id.et_courseStatus);
 
-        statusSpinner.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        statusSpinner.setOnItemSelectedListener(this);
         ArrayAdapter spinAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
                 spinnerOptions);
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -229,68 +204,44 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
 
         // Course start date instantiation/functionality
-        DatePickerDialog.OnDateSetListener courseStart = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                DateConverter.updateDateText(courseStartDate, calendar);
-            }
+        DatePickerDialog.OnDateSetListener courseStart = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            DateConverter.updateDateText(courseStartDate, calendar);
         };
 
         courseStartDate = findViewById(R.id.et_courseStart);
-        courseStartDate.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(TermEdit.this, courseStart, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
-                        .get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        courseStartDate.setOnClickListener(v -> new DatePickerDialog(TermEdit.this, courseStart, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                .get(Calendar.DAY_OF_MONTH)).show());
 
         // Course start date listener functionality
-        courseStartListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+        courseStartListener = (view, year, month, dayOfMonth) -> {
+            Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
-                String startDate = month + "/" + dayOfMonth + "/" + year;
-                courseStartDate.setText(startDate);
-            }
+            String startDate = month + "/" + dayOfMonth + "/" + year;
+            courseStartDate.setText(startDate);
         };
 
-        DatePickerDialog.OnDateSetListener courseEnd = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                DateConverter.updateDateText(courseEndDate, calendar);
-            }
+        DatePickerDialog.OnDateSetListener courseEnd = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            DateConverter.updateDateText(courseEndDate, calendar);
         };
 
         // Course End date instantiation/functionality
         courseEndDate = findViewById(R.id.et_courseEnd);
-        courseEndDate.setOnClickListener(new View.OnClickListener(){
+        courseEndDate.setOnClickListener(v -> new DatePickerDialog(TermEdit.this, courseEnd, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                .get(Calendar.DAY_OF_MONTH)).show());
 
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(TermEdit.this, courseEnd, calendar
-                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
-                        .get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        courseEndListener = (view, year, month, dayOfMonth) -> {
+            Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
-        courseEndListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
-                String endDate = month + "/" + dayOfMonth + "/" + year;
-                courseEndDate.setText(endDate);
-            }
+            String endDate = month + "/" + dayOfMonth + "/" + year;
+            courseEndDate.setText(endDate);
         };
 
         //
@@ -301,149 +252,133 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
          */
         // set delete term button id and onClickListener
         delTermBtn = findViewById(R.id.delTermBtn);
-        delTermBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        delTermBtn.setOnClickListener(v -> {
 
-                Log.d(TAG, "Course Data: " + courseData.toString());
-                if(!courseData.isEmpty() ){
-                    deleteTermError();
-                }else{
-                    termVM.deleteTerm(termId);
-                    finish();
-                }
-
+            Log.d(TAG, "Course Data: " + courseData.toString());
+            if(!courseData.isEmpty() ){
+                deleteTermError();
+            }else{
+                termVM.deleteTerm(termId);
+                finish();
             }
+
         });
 
         //set save button id and onClickListener functionality
         saveBtn = findViewById(R.id.saveTermBtn);
-        saveBtn.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-    //            TermEntity passedTerm = getPassedTerm();
-    //            int termId = passedTerm.getTermId();
-                String termTitle = termTitleEdit.getText().toString();
-                String termStart = termStartDate.getText().toString();
-                String termEnd = termEndDate.getText().toString();
-                Date start = DateConverter.toDate(termStart);
-                Date end = DateConverter.toDate(termEnd);
-                TermEntity updatedTerm = new TermEntity(termId, termTitle, start, end);
-                termVM.updateTerm(updatedTerm);
-            }
+        saveBtn.setOnClickListener(v -> {
+//            TermEntity passedTerm = getPassedTerm();
+//            int termId = passedTerm.getTermId();
+            String termTitle1 = termTitleEdit.getText().toString();
+            String termStart = termStartDate.getText().toString();
+            String termEnd = termEndDate.getText().toString();
+            Date start = DateConverter.toDate(termStart);
+            Date end = DateConverter.toDate(termEnd);
+            TermEntity updatedTerm = new TermEntity(termId, termTitle1, start, end);
+            termVM.updateTerm(updatedTerm);
         });
 
         // set add course button id and onClickListener
         addCourse = findViewById(R.id.addCourse);
-        addCourse.setOnClickListener(new View.OnClickListener(){
+        addCourse.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
+            TimeZone localTZ = TimeZone.getDefault();
+            Locale locale = Locale.getDefault();
 
-                TimeZone localTZ = TimeZone.getDefault();
-                Locale locale = Locale.getDefault();
+            Date today = Calendar.getInstance(localTZ, locale).getTime();
 
-                Date today = Calendar.getInstance(localTZ, locale).getTime();
+            try {
 
-                try {
+                if (TextUtils.isEmpty(courseTitleInput.getText())) {
+                    showNoInputAlert();
+                } else if (courseStartDate.getText().toString().equals("") ||
+                    courseStartDate.getText().toString().equals("mm/dd/yyyy")){
+                    showNoInputAlert();
+                } else if (courseEndDate.getText().toString().equals("") ||
+                    courseEndDate.getText().toString().equals("mm/dd/yyyy")){
+                    showNoInputAlert();
+                } else if(TextUtils.isEmpty(courseMentor.getText())){
+                    showNoInputAlert();
+                } else if(TextUtils.isEmpty(mentorPhone.getText())) {
+                    showNoInputAlert();
+                } else if(TextUtils.isEmpty(mentorEmail.getText())) {
+                    showNoInputAlert();
+                } else if(TextUtils.isEmpty(statusSpinner.getSelectedItem().toString())){
+                    showNoInputAlert();
+                }
+                else{
+                    Log.d(TAG, "today date....: " + today);
+                    String course = courseTitleInput.getText().toString();
+                    Log.d(TAG, "Course title: " + course);
 
-                    if (TextUtils.isEmpty(courseTitleInput.getText())) {
-                        showNoInputAlert();
-                    } else if (courseStartDate.getText().toString().equals("") ||
-                        courseStartDate.getText().toString().equals("mm/dd/yyyy")){
-                        showNoInputAlert();
-                    } else if (courseEndDate.getText().toString().equals("") ||
-                        courseEndDate.getText().toString().equals("mm/dd/yyyy")){
-                        showNoInputAlert();
-                    } else if(TextUtils.isEmpty(courseMentor.getText())){
-                        showNoInputAlert();
-                    } else if(TextUtils.isEmpty(mentorPhone.getText())) {
-                        showNoInputAlert();
-                    } else if(TextUtils.isEmpty(mentorEmail.getText())) {
-                        showNoInputAlert();
-                    } else if(TextUtils.isEmpty(statusSpinner.getSelectedItem().toString())){
-                        showNoInputAlert();
+                    String startString = courseStartDate.getText().toString();
+                    Log.d(TAG, "Course Start Date String value: " + startString);
+                    Date start = DateConverter.toDate(startString);
+                    Log.d(TAG, "Course Start Date converted: " + start);
+
+                    String endString = courseEndDate.getText().toString();
+                    Log.d(TAG, "Course End Date String value: " + endString);
+                    Date end = DateConverter.toDate(endString);
+                    Log.d(TAG, "Course End Date converted: " + end);
+
+                    String mentor = courseMentor.getText().toString();
+                    Log.d(TAG,"Mentor: " + mentor);
+
+                    String phone = mentorPhone.getText().toString();
+                    Log.d(TAG, "Phone: " + phone);
+
+                    String email = mentorEmail.getText().toString();
+                    Log.d(TAG, "Email: " + email);
+
+                    String status = statusSpinner.getSelectedItem().toString();
+                    Log.d(TAG, "Spinner selection: " + status);
+
+                    String notes = ".";
+                    Log.d(TAG, "Notes: " + notes);
+
+                  //  int termId = getPassedTerm().getTermId();
+                    Log.d(TAG, "Term ID: " + termId);
+                    Log.d(TAG, "Start before end:  " + start.before(end));
+                    Log.d(TAG, "Start not before today: " + !start.before(today));
+
+
+                    if (start.before(end) && !start.before(today)) {
+                        Log.d(TAG, "Entered if that calls insertCourse()");
+
+                        CourseEntity newCourse = new CourseEntity(course, start,
+                                end, status, mentor, phone, email, notes, termId);
+
+                        Log.d(TAG, "Course object created");
+                        Log.d(TAG, "Course title: " + newCourse.getCourseTitle());
+
+                        courseVM.insertCourse(newCourse);
+
+                        Log.d(TAG, "Course insert complete.");
+
+                        courseTitleInput.getText().clear();
+                        courseStartDate.setText(null);
+                        courseEndDate.setText(null);
+                        courseMentor.getText().clear();
+                        mentorPhone.getText().clear();
+                        mentorEmail.getText().clear();
+                        statusSpinner.setSelection(-1);
+                    } else {
+
+                        Log.d(TAG, "today date: " + today);
+                        courseConflictAlert();
                     }
-                    else{
-                        Log.d(TAG, "today date....: " + today);
-                        String course = courseTitleInput.getText().toString();
-                        Log.d(TAG, "Course title: " + course);
 
-                        String startString = courseStartDate.getText().toString();
-                        Log.d(TAG, "Course Start Date String value: " + startString);
-                        Date start = DateConverter.toDate(startString);
-                        Log.d(TAG, "Course Start Date converted: " + start);
-
-                        String endString = courseEndDate.getText().toString();
-                        Log.d(TAG, "Course End Date String value: " + endString);
-                        Date end = DateConverter.toDate(endString);
-                        Log.d(TAG, "Course End Date converted: " + end);
-
-                        String mentor = courseMentor.getText().toString();
-                        Log.d(TAG,"Mentor: " + mentor);
-
-                        String phone = mentorPhone.getText().toString();
-                        Log.d(TAG, "Phone: " + phone);
-
-                        String email = mentorEmail.getText().toString();
-                        Log.d(TAG, "Email: " + email);
-
-                        String status = statusSpinner.getSelectedItem().toString();
-                        Log.d(TAG, "Spinner selection: " + status);
-
-                        String notes = ".";
-                        Log.d(TAG, "Notes: " + notes);
-
-                      //  int termId = getPassedTerm().getTermId();
-                        Log.d(TAG, "Term ID: " + termId);
-                        Log.d(TAG, "Start before end:  " + start.before(end));
-                        Log.d(TAG, "Start not before today: " + !start.before(today));
-
-
-                        if (start.before(end) && !start.before(today)) {
-                            Log.d(TAG, "Entered if that calls insertCourse()");
-
-                            CourseEntity newCourse = new CourseEntity(course, start,
-                                    end, status, mentor, phone, email, notes, termId);
-
-                            Log.d(TAG, "Course object created");
-                            Log.d(TAG, "Course title: " + newCourse.getCourseTitle());
-
-                            courseVM.insertCourse(newCourse);
-
-                            Log.d(TAG, "Course insert complete.");
-
-                            courseTitleInput.getText().clear();
-                            courseStartDate.setText(null);
-                            courseEndDate.setText(null);
-                            courseMentor.getText().clear();
-                            mentorPhone.getText().clear();
-                            mentorEmail.getText().clear();
-                            statusSpinner.setSelection(-1);
-                        } else {
-
-                            Log.d(TAG, "today date: " + today);
-                            courseConflictAlert();
-                        }
-
-
-                    }
-                } catch (Exception ex) {
 
                 }
-            }
+            } catch (Exception ex) {
 
+            }
         });
 
         // set delete all courses id and OnClickListener
         delCoursesBtn = findViewById(R.id.delAllCourse);
-        delCoursesBtn.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-        //        courseViewModel.deleteAllCourses();
-            }
+        delCoursesBtn.setOnClickListener(v -> {
+    //        courseViewModel.deleteAllCourses();
         });
     }
 
@@ -510,11 +445,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         AlertDialog.Builder noTitle = new AlertDialog.Builder(this);
         noTitle.setTitle("No Title Input");
         noTitle.setMessage("Fill out all Course input fields.");
-        noTitle.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        noTitle.setPositiveButton("OK", (dialog, which) -> {
 
-            }
         });
         noTitle.create().show();
 
@@ -525,11 +457,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         deleteTermError.setTitle("Term Delete Error");
         deleteTermError.setMessage("Term has courses assigned to it, delete all courses before deleting" +
                 "term.");
-        deleteTermError.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        deleteTermError.setPositiveButton("OK", (dialog, which) -> {
 
-            }
         });
         deleteTermError.create().show();
     }
@@ -539,11 +468,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         dateConflict.setTitle("Date Conflict");
         dateConflict.setMessage("Choose a start and end date and ensure the start date is before end" +
                 " date and that no other courses overlap chosen dates.");
-        dateConflict.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        dateConflict.setPositiveButton("OK", (dialog, which) -> {
 
-            }
         });
         dateConflict.create().show();
     }
