@@ -53,6 +53,4 @@ public interface AssessmentDAO {
     @Query("SELECT COUNT(*) FROM assess_table")
     int getCount();
 
-    @Query("SELECT * FROM assess_table WHERE course_id = course_id")
-    List<AssessmentEntity> getCourseAssessments(int courseId);
 }

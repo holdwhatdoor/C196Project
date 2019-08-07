@@ -403,8 +403,11 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 new Observer<List<CourseEntity>>() {
                     @Override
                     public void onChanged(List<CourseEntity> courseEntities) {
+
+                        int termId = getPassedTerm().getTermId();
                         courseData.clear();
-                        courseData.addAll(courseEntities);
+                        getTermCourses(termId, courseEntities);
+                        //courseData.addAll(courseEntities);
 
                         if (mCourseAdapter == null) {
                             mCourseAdapter = new TermEditAdapter(courseData,TermEdit.this);
@@ -451,16 +454,27 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     public TermEntity getPassedTerm(){
         Bundle extras = getIntent().getExtras();
-        int termId = extras.getInt("TERM_ID_KEY");
-        String termTitle = extras.getString("TERM_TITLE_KEY");
-        String startStr = extras.getString("TERM_START_KEY");
-        String endStr = extras.getString("TERM_END_KEY");
+        int termId = extras.getInt(TERM_ID_KEY);
+        String termTitle = extras.getString(TERM_TITLE_KEY);
+        String startStr = extras.getString(TERM_START_KEY);
+        String endStr = extras.getString(TERM_END_KEY);
         Date start = DateConverter.toDate(startStr);
         Date end = DateConverter.toDate(endStr);
 
         TermEntity termPassed = new TermEntity(termId, termTitle, start, end);
 
         return termPassed;
+    }
+
+    // Method returning list of course entities with passed termId parameter
+    public List<CourseEntity> getTermCourses(int termId, List<CourseEntity> courseEntities){
+
+        for(int i = 0; i < courseEntities.size(); i++){
+            if(courseEntities.get(i).getTermId() == termId){
+                courseData.add(courseEntities.get(i));
+            }
+        }
+        return courseData;
     }
 
     // Alert messages

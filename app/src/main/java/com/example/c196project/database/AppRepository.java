@@ -72,18 +72,6 @@ public class AppRepository {
         return mDb.alertDAO().getAll();
     }
 
-    // get methods for live data arraylists for courses and assessments linked to specific terms and courses
-    private LiveData<List<CourseEntity>> getTermCourses(int termId) {
-        return mDb.courseDAO().getTermCourses(termId);
-    }
-
-
-    private List<AssessmentEntity> getCourseAssessments(int courseId){
-       return mDb.assessmentDAO().getCourseAssessments(courseId);
-    }
-
-
-
     // get entity methods by id
     public TermEntity getTermById(int termId) {
         return mDb.termDAO().getTermById(termId);
