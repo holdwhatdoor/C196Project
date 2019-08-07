@@ -56,7 +56,7 @@ public interface CourseDAO {
     int getCount();
 
     @Query("SELECT * FROM course_table WHERE termId = termId")
-    int getCourses();
+    LiveData<List<CourseEntity>> getTermCourses(int termId);
 
 }
 

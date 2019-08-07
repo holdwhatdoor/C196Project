@@ -15,11 +15,16 @@ public class AppRepository {
 
     // Repository instance variable
     private static AppRepository ourInstance;
-    // Live Date instance variables
+    // Live Data instance variables
     public LiveData<List<TermEntity>> mTerms;
     public LiveData<List<CourseEntity>> mCourses;
     public LiveData<List<AssessmentEntity>> mAssessments;
     public LiveData<List<AlertEntity>> mAlerts;
+
+    // Live Data lists for assigned to term and course instances
+    public LiveData<List<CourseEntity>> mTermCourses;
+    public LiveData<List<AssessmentEntity>> mCourseAssessments;
+
     // Database variable and executor
     private AppDatabase mDb;
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -66,6 +71,17 @@ public class AppRepository {
     private LiveData<List<AlertEntity>> getAllAlerts() {
         return mDb.alertDAO().getAll();
     }
+
+    // get methods for live data arraylists for courses and assessments linked to specific terms and courses
+    private LiveData<List<CourseEntity>> getTermCourses(int termId) {
+        return mDb.courseDAO().getTermCourses(termId);
+    }
+
+
+    private List<AssessmentEntity> getCourseAssessments(int courseId){
+       return mDb.assessmentDAO().getCourseAssessments(courseId);
+    }
+
 
 
     // get entity methods by id
@@ -206,20 +222,6 @@ public class AppRepository {
                 mDb.alertDAO().deleteAll();
             }
         });
-    }
-
-    public LiveData<List<CourseEntity>> getTermCourses(int termId){
-        LiveData<List<CourseEntity>> courses = null;
-        courses = getAllCourses();
-
-
-        return courses;
-    }
-
-    public List<AssessmentEntity> getCourseAssessments(int courseId){
-        List<AssessmentEntity> assessments = null;
-
-        return assessments;
     }
 
     public void updateTerm(TermEntity term) {
