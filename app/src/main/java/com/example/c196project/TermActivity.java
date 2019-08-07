@@ -46,10 +46,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "TermActivity";
 
-    // Recycler view components
-    @BindView(R.id.rv_term_list)
-    public RecyclerView termRV;
-
     // View model
     private TermViewModel termVM;
     // Term data array list and adapter
@@ -67,6 +63,10 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     private DatePickerDialog.OnDateSetListener endDateSetListener;
     public Button addTermBtn;   // id= add_term_btn
     public Button delAllTermBtn;    // id= del_all_term
+
+    // Recycler view binding
+    @BindView(R.id.rv_term_list)
+    public RecyclerView termRV;
 
     // On create override method
     @Override
@@ -175,7 +175,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                 try {
 
                     if (TextUtils.isEmpty(termTitleInput.getText())) {
-
                         showNoInputAlert();
                     } else if (startDisplayDate.getText().toString().equals("") ||
                         startDisplayDate.getText().toString().equals("mm/dd/yyyy")){
@@ -256,18 +255,15 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     private void initViewModel() {
 
         final Observer<List<TermEntity>> termsObserver =
-                new Observer<List<TermEntity>>() {
-                    @Override
-                    public void onChanged(List<TermEntity> termEntities) {
-                        termData.clear();
-                        termData.addAll(termEntities);
+                termEntities -> {
+                    termData.clear();
+                    termData.addAll(termEntities);
 
-                        if (mTermAdapter == null) {
-                            mTermAdapter = new TermItemAdapter(termData,TermActivity.this);
-                            termRV.setAdapter(mTermAdapter);
-                        } else {
-                            mTermAdapter.notifyDataSetChanged();
-                        }
+                    if (mTermAdapter == null) {
+                        mTermAdapter = new TermItemAdapter(termData,TermActivity.this);
+                        termRV.setAdapter(mTermAdapter);
+                    } else {
+                        mTermAdapter.notifyDataSetChanged();
                     }
                 };
         termVM = ViewModelProviders.of(this)
@@ -352,16 +348,16 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
     // Alert messages
     public void showNoInputAlert() {
-        AlertDialog.Builder noTitle = new AlertDialog.Builder(this);
-        noTitle.setTitle("No Title Input");
-        noTitle.setMessage("Enter a term title.");
-        noTitle.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder emptyInput = new AlertDialog.Builder(this);
+        emptyInput.setTitle("Empty Input Field(s)");
+        emptyInput.setMessage("Fill out all input fields.");
+        emptyInput.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        noTitle.create().show();
+        emptyInput.create().show();
 
     }
 
@@ -369,8 +365,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
         dateConflict.setTitle("Date Conflict");
         dateConflict.setMessage("Choose a start and end date and ensure the start date is before end" +
-                " date and that no other terms overlap " +
-                "chosen dates.");
+                " date and that no other terms overlap chosen dates.");
         dateConflict.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

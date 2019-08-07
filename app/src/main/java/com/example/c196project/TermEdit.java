@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,17 +90,17 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     public EditText mentorPhone;
     public EditText mentorEmail;
     public Spinner statusSpinner;
-    public String[] spinnerOptions = {"Planned", "Enrolled", "Completed"};
-
-    // Recycler view components
-    @BindView(R.id.rv_edit_termList)
-    public RecyclerView editTermRV;
+    public String[] spinnerOptions = {"No Selection", "Planned", "In Progress", "Completed", "Dropped"};
 
     // Button variables
     public Button delTermBtn;
     public Button saveBtn;
     public Button addCourse;
     public Button delCoursesBtn;
+
+    // Recycler view components
+    @BindView(R.id.rv_edit_termList)
+    public RecyclerView courseRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,6 +277,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             Date end = DateConverter.toDate(termEnd);
             TermEntity updatedTerm = new TermEntity(termId, termTitle1, start, end);
             termVM.updateTerm(updatedTerm);
+            finish();
         });
 
         // set add course button id and onClickListener
@@ -303,7 +305,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                     showNoInputAlert();
                 } else if(TextUtils.isEmpty(mentorEmail.getText())) {
                     showNoInputAlert();
-                } else if(TextUtils.isEmpty(statusSpinner.getSelectedItem().toString())){
+                } else if(TextUtils.isEmpty(statusSpinner.getSelectedItem().toString()) ||
+                        statusSpinner.getSelectedItem().toString().equals("No Selection")){
                     showNoInputAlert();
                 }
                 else{
@@ -378,7 +381,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         // set delete all courses id and OnClickListener
         delCoursesBtn = findViewById(R.id.delAllCourse);
         delCoursesBtn.setOnClickListener(v -> {
-    //        courseViewModel.deleteAllCourses();
+            courseVM.deleteAll();
         });
     }
 
@@ -395,6 +398,26 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             }
         });
 
+
+        final Observer<List<CourseEntity>> coursesObserver =
+                new Observer<List<CourseEntity>>() {
+                    @Override
+                    public void onChanged(List<CourseEntity> courseEntities) {
+                        courseData.clear();
+                        courseData.addAll(courseEntities);
+
+                        if (mCourseAdapter == null) {
+                            mCourseAdapter = new TermEditAdapter(courseData,TermEdit.this);
+                            courseRV.setAdapter(mCourseAdapter);
+                        } else {
+                            mCourseAdapter.notifyDataSetChanged();
+                        }
+                    }
+                };
+        courseVM = ViewModelProviders.of(this)
+                .get(CourseViewModel.class);
+        courseVM.mCourses.observe(this, coursesObserver);
+
         Bundle extras = getIntent().getExtras();
         if(extras == null){
 
@@ -407,12 +430,12 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     // Initiates recycler view
     private void initRecyclerView() {
-        editTermRV.setHasFixedSize(true);
+        courseRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        editTermRV.setLayoutManager(layoutManager);
+        courseRV.setLayoutManager(layoutManager);
 
         mCourseAdapter = new TermEditAdapter(courseData, this);
-        editTermRV.setAdapter(mCourseAdapter);
+        courseRV.setAdapter(mCourseAdapter);
     }
 
     @Override
@@ -442,13 +465,13 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     // Alert messages
     public void showNoInputAlert() {
-        AlertDialog.Builder noTitle = new AlertDialog.Builder(this);
-        noTitle.setTitle("No Title Input");
-        noTitle.setMessage("Fill out all Course input fields.");
-        noTitle.setPositiveButton("OK", (dialog, which) -> {
+        AlertDialog.Builder emptyInput = new AlertDialog.Builder(this);
+        emptyInput.setTitle("Empty Input Field(s)");
+        emptyInput.setMessage("Fill out all Course input fields.");
+        emptyInput.setPositiveButton("OK", (dialog, which) -> {
 
         });
-        noTitle.create().show();
+        emptyInput.create().show();
 
     }
 

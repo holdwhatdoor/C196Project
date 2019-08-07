@@ -34,7 +34,7 @@ public class CourseViewModel extends AndroidViewModel {
         super(application);
 
         mRepository = AppRepository.getInstance(getApplication());
-        mTerms = mRepository.mTerms;
+      //  mTerms = mRepository.mTerms;
         mCourses = mRepository.mCourses;
 
     }
