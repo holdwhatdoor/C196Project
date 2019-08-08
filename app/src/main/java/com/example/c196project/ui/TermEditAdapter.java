@@ -16,6 +16,7 @@ import com.example.c196project.CourseEdit;
 import com.example.c196project.R;
 import com.example.c196project.TermEdit;
 import com.example.c196project.database.CourseEntity;
+import com.example.c196project.database.DateConverter;
 
 import java.util.Date;
 import java.util.List;
@@ -64,8 +65,8 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
         final CourseEntity course = mCourses.get(position);
 
         holder.mListItem.setText(course.getCourseTitle());
- //       holder.mStartDate.setText(DateConverter.formatDateString(course.getStartDate().toString()));
- //       holder.mEndDate.setText(DateConverter.formatDateString(course.getEndDate().toString()));
+        holder.mStartDate.setText(DateConverter.formatDateString(course.getStartDate().toString()));
+        holder.mEndDate.setText(DateConverter.formatDateString(course.getEndDate().toString()));
 
         holder.mDelBtn.setOnClickListener(new View.OnClickListener() {
             @Override

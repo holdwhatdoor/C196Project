@@ -50,16 +50,15 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     private static final String TAG ="TermEdit";
 
+    // Header Variables
+    public TextView pageTitle;
+    public ImageButton homeBtn;  // id = home_btn_term
     // View Models
     public TermViewModel termVM;
     public CourseViewModel courseVM;
     // Course data array lists and adapters
     private List<CourseEntity> courseData = new ArrayList<>();
     private TermEditAdapter mCourseAdapter;
-
-    // Header Variables
-    public TextView pageTitle;
-    public ImageButton homeBtn;  // id = home_btn_term
 
     // Initialized Calendar date variable
     Calendar calendar = Calendar.getInstance();
@@ -270,14 +269,45 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         saveBtn.setOnClickListener(v -> {
 //            TermEntity passedTerm = getPassedTerm();
 //            int termId = passedTerm.getTermId();
-            String termTitle1 = termTitleEdit.getText().toString();
-            String termStart = termStartDate.getText().toString();
-            String termEnd = termEndDate.getText().toString();
-            Date start = DateConverter.toDate(termStart);
-            Date end = DateConverter.toDate(termEnd);
-            TermEntity updatedTerm = new TermEntity(termId, termTitle1, start, end);
-            termVM.updateTerm(updatedTerm);
-            finish();
+
+            TimeZone localTZ = TimeZone.getDefault();
+            Locale locale = Locale.getDefault();
+
+            Date today = Calendar.getInstance(localTZ, locale).getTime();
+
+            try{
+                if(TextUtils.isEmpty(termTitleEdit.getText())){
+                    showNoInputAlert();
+                } else if (TextUtils.isEmpty(termStartDate.getText())){
+                    showNoInputAlert();
+                } else if (TextUtils.isEmpty(termEndDate.getText())){
+                    showNoInputAlert();
+                } else {
+
+                    String updateTitle = termTitleEdit.getText().toString();
+                    String termStart = termStartDate.getText().toString();
+                    String termEnd = termEndDate.getText().toString();
+                    Date start = DateConverter.toDate(termStart);
+                    Date end = DateConverter.toDate(termEnd);
+
+                    Log.d(TAG, "Term title update: " + updateTitle);
+                    Log.d(TAG, "Term start date string update: " + termStart);
+                    Log.d(TAG, "Term end date string update: " + termEnd);
+                    Log.d(TAG, "Term start Date format update: " + start);
+                    Log.d(TAG, "Term end Date format update: " + end);
+
+                    if(start.before(end) && start.after(today)){
+                        TermEntity updatedTerm = new TermEntity(termId, updateTitle, start, end);
+                        Log.d(TAG, "Updated Term: " + updatedTerm);
+                        termVM.updateTerm(updatedTerm);
+                        Log.d(TAG, "updateTerm method run");
+                        finish();
+                    }
+                }
+            } catch (Exception ex){
+
+            }
+
         });
 
         // set add course button id and onClickListener
@@ -357,6 +387,13 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         courseVM.insertCourse(newCourse);
 
                         Log.d(TAG, "Course insert complete.");
+
+                        courseTitleInput.setHint("");
+                        courseStartDate.setHint("");
+                        courseEndDate.setHint(null);
+                        courseMentor.setHint("");
+                        mentorPhone.setHint("");
+                        mentorEmail.setHint("");
 
                         courseTitleInput.getText().clear();
                         courseStartDate.setText(null);

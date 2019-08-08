@@ -71,7 +71,7 @@
                     android:id="@+id/edit_term_title"
                     android:layout_width="225dp"
                     android:layout_height="match_parent"
-                    android:hint="Enter Term Title"
+                    android:hint="@string/enter_term_title"
                     android:textAlignment="center"/>
 
                 <LinearLayout
@@ -94,7 +94,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:text="@string/blank_date"
+                            android:hint="@string/blank_date"
                             android:textAlignment="viewEnd" />
 
                     </LinearLayout>
@@ -114,7 +114,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:text="@string/blank_date"
+                            android:hint="@string/blank_date"
                             android:textAlignment="viewEnd" />
 
                     </LinearLayout>
@@ -155,13 +155,13 @@
                         android:id="@+id/et_courseTitle"
                         android:layout_width="225dp"
                         android:layout_height="wrap_content"
-                        android:hint="Enter Course Title" />
+                        android:hint="@string/enter_course_title" />
 
                     <EditText
                         android:id="@+id/et_mentorName"
                         android:layout_width="225dp"
                         android:layout_height="wrap_content"
-                        android:hint="Enter Mentor Name" />
+                        android:hint="@string/enter_mentor_name" />
 
                 </LinearLayout>
 
@@ -185,7 +185,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:text="mm/dd/yyyy"
+                            android:hint="@string/blank_date"
                             android:textAlignment="viewEnd" />
 
                     </LinearLayout>
@@ -205,7 +205,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:text="mm/dd/yyyy"
+                            android:hint="@string/blank_date"
                             android:textAlignment="viewEnd" />
 
 
@@ -225,13 +225,13 @@
                     android:id="@+id/et_mentorEmail"
                     android:layout_width="225dp"
                     android:layout_height="match_parent"
-                    android:hint="Enter Mentor Email" />
+                    android:hint="@string/enter_mentor_email" />
 
                 <EditText
                     android:id="@+id/et_mentorPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:hint="Enter Mentor Phone #" />
+                    android:hint="@string/enter_mentor_phone" />
 
             </LinearLayout>
 
@@ -248,7 +248,7 @@
 
                 <Spinner
                     android:id="@+id/et_courseStatus"
-                    android:layout_width="150dp"
+                    android:layout_width="175dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textAlignment="center" />
@@ -315,7 +315,7 @@
         <ScrollView
             android:id="@+id/term_scroll"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="wrap_content"
             android:fillViewport="true"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="8dp"

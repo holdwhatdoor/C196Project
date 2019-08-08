@@ -136,17 +136,17 @@
                         android:id="@+id/assess_radio_grp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:paddingRight="35dp">
+                        android:orientation="horizontal">
 
                         <RadioButton
-                            android:id="@+id/pa_radio"
+                            android:id="@+id/asses_pa_radio"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="@string/oa_radio_txt" />
+                            android:text="@string/oa_radio_txt"
+                            android:paddingRight="35dp"/>
 
                         <RadioButton
-                            android:id="@+id/oa_radio"
+                            android:id="@+id/assess_oa_radio"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"

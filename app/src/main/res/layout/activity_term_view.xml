@@ -68,21 +68,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/start_date"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:paddingRight="10dp"/>
 
             <TextView
                 android:id="@+id/termViewStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:text="@string/blank_date" />
+                android:text="@string/blank_date"
+                android:textAlignment="center"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/end_date"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:paddingRight="10dp"/>
 
             <TextView
                 android:id="@+id/termViewEnd"

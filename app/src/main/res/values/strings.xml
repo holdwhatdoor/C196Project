@@ -39,7 +39,6 @@
 <string name="add_course_btn">Add Course</string>
 <string name="del_all_course">Delete Courses</string>
 
-
 // Activity Course page string labels
 <string name="course_activity_title">Courses</string>
 <string name="new_course">New Course</string>
@@ -48,7 +47,7 @@
 <string name="status_text">Status:</string>
 
 <string name="course_mentor">Mentor:</string>
-<string name="mentor_contact">Contact:</string>
+<string name="assess_type">Assessment Type:</string>
 
 <string name="assessments">Course Assessments</string>
 <string name="course_list">Course List</string>
@@ -60,14 +59,14 @@
 
 // Activity Course view string labels
 <string name="course_view_title">Course View</string>
-<string name="course_name_label">Course Name:</string>
+<string name="course_title_label">Course Title:</string>
 <string name="course_enter_mentor">Mentor Name</string>
 <string name="course_enter_phone">Phone</string>
 <string name="course_enter_email">Email</string>
 <string name="assess_select">Choose Assessment:</string>
 <string name="course_assess_name">Assessment Name</string>
-<string name="oa_radio_txt">OA</string>
-<string name="pa_radio_txt">PA</string>
+<string name="oa_radio_txt">Objective</string>
+<string name="pa_radio_txt">Performance</string>
 
 // Activity Course edit string labels
 <string name="course_edit_title">Edit Course</string>
@@ -89,6 +88,7 @@
 
 // Activity Assessment edit string labels
 <string name="assess_edit_title">Edit Assessment</string>
+<string name="assess_title">Assessment Title: </string>
 
 // Button string labels
 <string name="create_btn_txt">Create</string>
@@ -106,6 +106,14 @@
 // Button description string labels
 <string name="home_btn_desc">Home Button</string>
 <string name="back_btn_desc">Back Button</string>
+
+//EditText hint strings
+<string name="enter_term_title">Enter Term Title</string>
+<string name="enter_course_title">Enter Course Title</string>
+<string name="enter_mentor_name">Enter Mentor Name</string>
+<string name="enter_mentor_email">Enter Mentor Email</string>
+<string name="enter_mentor_phone">Enter Mentor Phone #</string>
+<string name="enter_assess_title">Enter Assessment Title</string>
 
 
 // Multi-use string labels

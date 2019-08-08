@@ -30,29 +30,116 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/colorGrey"
             android:orientation="vertical">
 
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorSubHeaders"
+                android:gravity="center"
+                android:text="@string/course_edit_title" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/colorSubHeaders"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/ce_courseTitle"
+                        android:layout_width="225dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_course_title" />
+
+                    <EditText
+                        android:id="@+id/ce_mentorName"
+                        android:layout_width="225dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_mentor_name" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/start_date" />
+
+                        <EditText
+                            android:id="@+id/ce_courseStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:hint="@string/blank_date"
+                            android:textAlignment="viewEnd" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/end_date" />
+
+                        <EditText
+                            android:id="@+id/ce_courseEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:hint="@string/blank_date"
+                            android:textAlignment="viewEnd" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ce_mentorEmail"
+                    android:layout_width="225dp"
+                    android:layout_height="match_parent"
+                    android:hint="@string/enter_mentor_email" />
+
+                <EditText
+                    android:id="@+id/ce_mentorPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/course_name_label" />
+                    android:hint="@string/enter_mentor_phone" />
 
-                <TextView
-                    android:id="@+id/course_view_title"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="Course "
-                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -61,67 +148,91 @@
                     android:text="@string/status_text" />
 
                 <Spinner
-                    android:id="@+id/course_edit_status"
-                    android:layout_width="match_parent"
+                    android:id="@+id/ce_courseStatus"
+                    android:layout_width="175dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textAlignment="center" />
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/ce_noteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/addNoteBtn"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorGrey"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorSubHeaders"
+                android:gravity="center"
+                android:text="@string/new_assess" />
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+
                 <TextView
-                    android:layout_width="50dp"
+                    android:layout_width="125dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/course_mentor" />
+                    android:text="@string/assess_title" />
 
                 <EditText
-                    android:id="@+id/edit_mentor_name"
-                    android:layout_width="match_parent"
+                    android:id="@+id/ce_assess_title"
+                    android:layout_width="275dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/course_enter_mentor"
+                    android:hint="@string/enter_assess_title"
                     android:textAlignment="center" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
-                    android:layout_width="50dp"
+                    android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/mentor_contact" />
+                    android:layout_gravity="center"
+                    android:text="@string/assess_type" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                  <RadioGroup
+                      android:id="@+id/ce_assess_radio_grp"
+                      android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent">
 
+                      <RadioButton
+                          android:id="@+id/course_pa_radio"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/oa_radio_txt"
+                          android:paddingRight="35dp"/>
 
-                    <EditText
-                        android:id="@+id/edit_mentor_email"
-                        android:layout_width="200dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/course_enter_email" />
+                      <RadioButton
+                          android:id="@+id/course_oa_radio"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/pa_radio_txt"/>
 
-                    <EditText
-                        android:id="@+id/edit_mentor_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/course_enter_phone" />
+                  </RadioGroup>
 
-
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -138,12 +249,13 @@
                     android:text="@string/start_date" />
 
                 <TextView
-                    android:id="@+id/course_start_date"
+                    android:id="@+id/ce_assess_start"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="mm/dd/yyyy"/>
+                    android:text="@string/blank_date"
+                    android:textAlignment="center"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -153,22 +265,17 @@
                     android:text="@string/end_date" />
 
                 <TextView
-                    android:id="@+id/course_end_date"
+                    android:id="@+id/ce_assess_end"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="mm/dd/yyyy" />
+                    android:text="@string/blank_date"
+                    android:textAlignment="center"/>
 
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/ce_noteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/notes"/>
 
         </LinearLayout>
 
@@ -193,7 +300,14 @@
             <ScrollView
                 android:id="@+id/course_edit_scroll"
                 android:layout_width="match_parent"
-                android:layout_height="225dp">
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_assess_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
             </ScrollView>
 
