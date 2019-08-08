@@ -156,12 +156,25 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/ce_noteBtn"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/addNoteBtn"/>
+                android:layout_gravity="center">
+
+                <Button
+                    android:id="@+id/ce_noteBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addNoteBtn"/>
+
+                <Button
+                    android:id="@+id/ce_del_course"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/del_course_btn"/>
+
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -191,7 +204,7 @@
                     android:text="@string/assess_title" />
 
                 <EditText
-                    android:id="@+id/ce_assess_title"
+                    android:id="@+id/ce_assessTitle"
                     android:layout_width="275dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -213,20 +226,20 @@
                     android:text="@string/assess_type" />
 
                   <RadioGroup
-                      android:id="@+id/ce_assess_radio_grp"
+                      android:id="@+id/ce_assessRadio_grp"
                       android:orientation="horizontal"
                       android:layout_width="match_parent"
                       android:layout_height="match_parent">
 
                       <RadioButton
-                          android:id="@+id/course_pa_radio"
+                          android:id="@+id/ce_oaRadio"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="@string/oa_radio_txt"
                           android:paddingRight="35dp"/>
 
                       <RadioButton
-                          android:id="@+id/course_oa_radio"
+                          android:id="@+id/ce_paRadio"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="@string/pa_radio_txt"/>
@@ -248,13 +261,13 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/start_date" />
 
-                <TextView
-                    android:id="@+id/ce_assess_start"
+                <EditText
+                    android:id="@+id/ce_assessStart"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/blank_date"
+                    android:hint="@string/blank_date"
                     android:textAlignment="center"/>
 
                 <TextView
@@ -264,18 +277,38 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/end_date" />
 
-                <TextView
-                    android:id="@+id/ce_assess_end"
+                <EditText
+                    android:id="@+id/ce_assessEnd"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/blank_date"
+                    android:hint="@string/blank_date"
                     android:textAlignment="center"/>
 
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
 
+                <Button
+                    android:id="@+id/ce_addAssess"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/add_assess_btn">
+
+                </Button>
+
+                <Button
+                    android:id="@+id/ce_del_assess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/del_assess"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

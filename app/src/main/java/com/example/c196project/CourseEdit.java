@@ -55,34 +55,34 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     /**
      *   Edit Course data display/input elements
      */
-    public EditText courseTitleEdit;  // id = term_title_edit
+    public EditText courseTitleEdit;                                // id = ce_courseTitle
     // Term declarations for start/end date EditText with DatePickerDialog listeners and SimpleDateFormat
-    public EditText courseStartDate;
+    public EditText courseStartDate;                                // id = ce_courseStart
     public DatePickerDialog.OnDateSetListener courseStartListener;
-    public EditText courseEndDate;
+    public EditText courseEndDate;                                  // id = ce_courseEnd
     public DatePickerDialog.OnDateSetListener courseEndListener;
     // Add course mentor info
-    public EditText courseMentor;
-    public EditText mentorPhone;
-    public EditText mentorEmail;
-    public Spinner statusSpinner;
+    public EditText courseMentor;                                   // id = ce_ courseMentor
+    public EditText mentorPhone;                                    // id = ce_mentorPhone
+    public EditText mentorEmail;                                    // id = ce_mentorEmail
+    public Spinner statusSpinner;                                   // id = ce_courseStatus
     public String[] spinnerOptions = {"No Selection", "Planned", "In Progress", "Completed", "Dropped"};
 
     /**
      *  Add Assessment input data display/imput elements
      */
-    public EditText assessTitleInput;
+    public EditText assessTitleInput;                               // id = ce_assessTitle
     // Add Course declarations for start/end date EditText with DatePickerDialog listeners
-    public EditText assessStartDate;
+    public EditText assessStartDate;                                // id = ce_assessStart
     public DatePickerDialog.OnDateSetListener assessStartListener;
-    public EditText assessEndDate;
+    public EditText assessEndDate;                                  // id = ce_assessEnd
     public DatePickerDialog.OnDateSetListener assessEndListener;
     // Radio button group and selections for Assessment type
-    public RadioGroup assessType;
-    public RadioButton assessPA;
-    public RadioButton assessOA;
+    public RadioGroup assessType;                                   // id = ce_assessRadio_grp
+    public RadioButton assessOA;                                    // id = ce_oaRadio
+    public RadioButton assessPA;                                    // id = ce_paRadio
     // Spinner for status of assessments assigned
-    public Spinner assessStatus;
+    public Spinner assessStatus;                                    // id = ce_
     public String[] statusOptions = {"No Selection", "Dropped", "Failed", "Passed"};
 
     // Button variables
@@ -90,6 +90,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public Button saveBtn;
     public Button addAssess;
     public Button delAssessmentsBtn;
+    public Button addNote;          // id = ce_noteBtn
 
     // Recycler view components
     @BindView(R.id.rv_assess_list)
