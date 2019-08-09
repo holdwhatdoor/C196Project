@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.ui.AssessItemAdapter;
-import com.example.c196project.ui.CourseItemAdapter;
+import com.example.c196project.ui.CourseEditAdapter;
 import com.example.c196project.viewmodel.AssessViewModel;
 import com.example.c196project.viewmodel.CourseViewModel;
 
@@ -42,7 +42,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public AssessViewModel assessVM;
     // Course data array lists and adapters
     private List<CourseEntity> courseData = new ArrayList<>();
-    private CourseItemAdapter mCourseAdapter;
+    private CourseEditAdapter mCourseAdapter;
     //Assessment data array lists and adapters
     private List<AssessmentEntity> assessData = new ArrayList<>();
     private AssessItemAdapter mAssessAdapter;

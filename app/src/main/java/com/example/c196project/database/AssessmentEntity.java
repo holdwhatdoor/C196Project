@@ -24,6 +24,8 @@ public class AssessmentEntity{
     private String assessName;
     @ColumnInfo(name = "assess_type")
     private String assessType;
+    @ColumnInfo(name = "assess_start")
+    private Date assessStart;
     @ColumnInfo(name = "assess_end")
     private Date assessEnd;
     @ColumnInfo(name = "assess_notes")
@@ -37,10 +39,11 @@ public class AssessmentEntity{
     }
 
     // constructor
-    public AssessmentEntity(String assessName, String assessType, Date assessEnd, String assessNotes,
-                            int courseId) {
+    public AssessmentEntity(String assessName, String assessType, Date assessStart, Date assessEnd,
+                            String assessNotes, int courseId) {
         this.assessName = assessName;
         this.assessType = assessType;
+        this.assessStart = assessStart;
         this.assessEnd = assessEnd;
         this.assessNotes = assessNotes;
         this.courseId = courseId;
@@ -60,6 +63,11 @@ public class AssessmentEntity{
     public String getAssessType() {
 
         return assessType;
+    }
+
+    public Date getAssessStart() {
+
+        return assessStart;
     }
 
     public Date getAssessEnd() {
@@ -91,6 +99,10 @@ public class AssessmentEntity{
         this.assessType = assessType;
     }
 
+    public void setAssessStart(Date assessStart) {
+        this.assessStart = assessStart;
+    }
+
     public void setAssessEnd(Date assessEnd) {
 
         this.assessEnd = assessEnd;
@@ -104,15 +116,4 @@ public class AssessmentEntity{
         this.courseId = courseId;
     }
 
- /*   ContentValues toValues(){
-        ContentValues values = new ContentValues();
-
-        values.put(AssessmentTable.assessIdCol, assessId);
-        values.put(AssessmentTable.assessNameCol, assessName);
-        values.put(AssessmentTable.assessTypeCol, assessType);
-        values.put(AssessmentTable.assessEndDateCol, DatabaseHelper.dateToString(assessEnd));
-
-        return values;
-    }
-*/
 }
