@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="app_name">WGU App</string>
+<string name="app_name">WGU App</string>
 <string name="app_header">WGU App</string>
 
 // AppBar strings
@@ -70,7 +70,7 @@
 
 // Activity Course edit string labels
 <string name="course_edit_title">Edit Course</string>
-
+<string name="save_course_btn">Save Course</string>
 
 // Activity Assessment page string labels
 <string name="assess_activity_title">Assessments</string>

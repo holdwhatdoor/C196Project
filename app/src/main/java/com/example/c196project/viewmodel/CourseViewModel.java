@@ -46,12 +46,9 @@ public class CourseViewModel extends AndroidViewModel {
     }
 
     public void loadCourse(final int courseId){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                CourseEntity course = mRepository.getCourseById(courseId);
-                mLiveCourse.postValue(course);
-            }
+        executor.execute(() -> {
+            CourseEntity course = mRepository.getCourseById(courseId);
+            mLiveCourse.postValue(course);
         });
     }
 

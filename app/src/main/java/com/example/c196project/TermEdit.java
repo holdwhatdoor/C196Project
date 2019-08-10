@@ -125,9 +125,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         homeBtn.setOnClickListener(this);
 
         // instantiate/set page title
-        pageTitle = findViewById(R.id.app_bar_title);
-        pageTitle.setText("Term Edit");
         TextView title = findViewById(R.id.title);
+        title.setText("Edit Term");
 
         // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);
@@ -144,7 +143,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         Log.d(TAG,"Term Start retrieved: " + startStr);
         Log.d(TAG,"Term End retrieved: " + endStr);
 
-        /**Start and End date TextView id's and onClick override functionality
+        /**
+         *   Start and End date TextView ids and onClick override functionality
          */
         // Initialized Term DatePickerDialog date listener start/end dates
         DatePickerDialog.OnDateSetListener sDate = (view, year, month, dayOfMonth) -> {
@@ -189,7 +189,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         termStartDate.setText(startFormat);
         termEndDate.setText(endFormat);
 
-        // Course input elements id assignments
+        // Course input element id assignments
         courseTitleInput = findViewById(R.id.et_courseTitle);
         courseMentor = findViewById(R.id.et_mentorName);
         mentorPhone = findViewById(R.id.et_mentorPhone);
@@ -255,7 +255,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         delTermBtn.setOnClickListener(v -> {
 
             Log.d(TAG, "Course Data: " + courseData.toString());
-            if(!courseData.isEmpty() ){
+            if(!courseData.isEmpty()){
                 deleteTermError();
             }else{
                 termVM.deleteTerm(termId);
@@ -388,19 +388,19 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
                         Log.d(TAG, "Course insert complete.");
 
-                        courseTitleInput.setHint("");
-                        courseStartDate.setHint("");
-                        courseEndDate.setHint(null);
-                        courseMentor.setHint("");
-                        mentorPhone.setHint("");
-                        mentorEmail.setHint("");
+                        courseTitleInput.setHint("Enter Course Title");
+                        courseStartDate.setHint("mm/dd/yyyy");
+                        courseEndDate.setHint("mm/dd/yyyy");
+                        courseMentor.setHint("Enter Mentor Name");
+                        mentorPhone.setHint("Enter Mentor Phone");
+                        mentorEmail.setHint("Enter Mentor Email");
 
-                        courseTitleInput.getText().clear();
-                        courseStartDate.setText(null);
-                        courseEndDate.setText(null);
-                        courseMentor.getText().clear();
-                        mentorPhone.getText().clear();
-                        mentorEmail.getText().clear();
+                 //       courseTitleInput.getText().clear();
+                 //       courseStartDate.setText(null);
+                 //       courseEndDate.setText(null);
+                 //       courseMentor.getText().clear();
+                 //       mentorPhone.getText().clear();
+                 //       mentorEmail.getText().clear();
                         statusSpinner.setSelection(-1);
                     } else {
 

@@ -86,19 +86,4 @@ public class TermEntity {
         return "TermEntity{" + "TermId= " + termId + ", Term Title= " + termTitle + ", Term Start= " +
                 start + ", Term End= " + end + "}";
     }
-
-
- /*   ContentValues toValues(){
-        ContentValues values = new ContentValues();
-
-        values.put(TermTable.termIdCol, termId);
-        values.put(TermTable.termTitleCol, termTitle);
-        //     values.put(TermTable.termStartCol, start);
-        //     values.put(TermTable.termEndCol, DatabaseHelper.dateToString(end));
-
-        return values;
-    }
-*/
-    // Method to insert a new Term record into the database
-
 }

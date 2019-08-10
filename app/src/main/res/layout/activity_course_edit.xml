@@ -162,13 +162,20 @@
                 android:layout_gravity="center">
 
                 <Button
+                    android:id="@+id/ce_courseSave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save_course_btn"
+                    />
+
+                <Button
                     android:id="@+id/ce_noteBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/addNoteBtn"/>
 
                 <Button
-                    android:id="@+id/ce_del_course"
+                    android:id="@+id/ce_delCourse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/del_course_btn"/>
@@ -245,8 +252,6 @@
                           android:text="@string/pa_radio_txt"/>
 
                   </RadioGroup>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -285,9 +290,16 @@
                     android:layout_marginBottom="10dp"
                     android:hint="@string/blank_date"
                     android:textAlignment="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
 
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -303,7 +315,7 @@
                 </Button>
 
                 <Button
-                    android:id="@+id/ce_del_assess"
+                    android:id="@+id/ce_delAssess"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/del_assess"/>
