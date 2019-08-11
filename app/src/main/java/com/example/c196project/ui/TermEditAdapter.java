@@ -125,7 +125,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 Log.d(TAG, "Course Data: " + course.toString());
 
                 Intent intent = new Intent(mContext, CourseEdit.class);
-                intent.putExtra(COURSE_ID_KEY, course.getTermId());
+                intent.putExtra(COURSE_ID_KEY, course.getCourseId());
                 intent.putExtra(COURSE_TITLE_KEY, course.getCourseTitle());
                 intent.putExtra(COURSE_START_KEY, course.getStartDate().toString());
                 intent.putExtra(COURSE_END_KEY, course.getEndDate().toString());
@@ -134,6 +134,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 intent.putExtra(COURSE_PHONE_KEY, course.getMentorPhone());
                 intent.putExtra(COURSE_EMAIL_KEY, course.getMentorEmail());
                 intent.putExtra(COURSE_NOTES_KEY, course.getCourseNotes());
+                intent.putExtra(TERM_ID_KEY, course.getTermId());
 
                 mContext.startActivity(intent);
 

@@ -487,8 +487,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
-
-
+    // Method returning term passed via Bundle/Intent from TermActivity page
     public TermEntity getPassedTerm(){
         Bundle extras = getIntent().getExtras();
         int termId = extras.getInt(TERM_ID_KEY);

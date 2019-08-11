@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.c196project.database.AssessmentEntity;
@@ -416,6 +417,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     public void onChanged(List<AssessmentEntity> assessmentEntities) {
 
                         int courseId = getPassedCourse().getCourseId();
+                        Log.d(TAG, "Course Edit Page: Course ID: " + courseId);
                         assessData.clear();
                         getCourseAssessments(courseId, assessmentEntities);
 
@@ -434,7 +436,12 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
     // Initialize recycler view
     private void initRecyclerView() {
+        assessRV.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        assessRV.setLayoutManager(layoutManager);
 
+        mAssessAdapter = new CourseEditAdapter(assessData, this);
+        assessRV.setAdapter(mAssessAdapter);
     }
 
     @Override
@@ -446,6 +453,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    // Method returning course passed via Bundle/Intent from TermEdit page
     public CourseEntity getPassedCourse(){
         Bundle extras = getIntent().getExtras();
         int courseId = extras.getInt(COURSE_ID_KEY);
