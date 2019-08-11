@@ -129,11 +129,11 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 intent.putExtra(COURSE_TITLE_KEY, course.getCourseTitle());
                 intent.putExtra(COURSE_START_KEY, course.getStartDate().toString());
                 intent.putExtra(COURSE_END_KEY, course.getEndDate().toString());
-                intent.putExtra(COURSE_STATUS_KEY, course.getEndDate().toString());
-                intent.putExtra(COURSE_MENTOR_KEY, course.getEndDate().toString());
-                intent.putExtra(COURSE_PHONE_KEY, course.getEndDate().toString());
-                intent.putExtra(COURSE_EMAIL_KEY, course.getEndDate().toString());
-                intent.putExtra(COURSE_NOTES_KEY, course.getEndDate().toString());
+                intent.putExtra(COURSE_STATUS_KEY, course.getStatus());
+                intent.putExtra(COURSE_MENTOR_KEY, course.getMentorName());
+                intent.putExtra(COURSE_PHONE_KEY, course.getMentorPhone());
+                intent.putExtra(COURSE_EMAIL_KEY, course.getMentorEmail());
+                intent.putExtra(COURSE_NOTES_KEY, course.getCourseNotes());
 
                 mContext.startActivity(intent);
 

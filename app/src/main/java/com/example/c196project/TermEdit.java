@@ -125,8 +125,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         homeBtn.setOnClickListener(this);
 
         // instantiate/set page title
-        TextView title = findViewById(R.id.title);
-        title.setText("Edit Term");
+ //       TextView title = findViewById(R.id.title);
+ //       title.setText("Edit Term");
 
         // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);
@@ -388,20 +388,20 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
                         Log.d(TAG, "Course insert complete.");
 
-                        courseTitleInput.setHint("Enter Course Title");
+      /**                  courseTitleInput.setHint("Enter Course Title");
                         courseStartDate.setHint("mm/dd/yyyy");
                         courseEndDate.setHint("mm/dd/yyyy");
                         courseMentor.setHint("Enter Mentor Name");
                         mentorPhone.setHint("Enter Mentor Phone");
                         mentorEmail.setHint("Enter Mentor Email");
-
-                 //       courseTitleInput.getText().clear();
-                 //       courseStartDate.setText(null);
-                 //       courseEndDate.setText(null);
-                 //       courseMentor.getText().clear();
-                 //       mentorPhone.getText().clear();
-                 //       mentorEmail.getText().clear();
-                        statusSpinner.setSelection(-1);
+*/
+                        courseTitleInput.getText().clear();
+                        courseStartDate.setText(null);
+                        courseEndDate.setText(null);
+                        courseMentor.getText().clear();
+                        mentorPhone.getText().clear();
+                        mentorEmail.getText().clear();
+                        statusSpinner.setSelection(0);
                     } else {
 
                         Log.d(TAG, "today date: " + today);

@@ -38,9 +38,20 @@ public class AssessmentEntity{
     public AssessmentEntity() {
     }
 
-    // constructor
+    @Ignore
     public AssessmentEntity(String assessName, String assessType, Date assessStart, Date assessEnd,
                             int courseId) {
+        this.assessName = assessName;
+        this.assessType = assessType;
+        this.assessStart = assessStart;
+        this.assessEnd = assessEnd;
+        this.courseId = courseId;
+    }
+
+    // constructor
+    public AssessmentEntity(int assessId, String assessName, String assessType, Date assessStart, Date assessEnd,
+                            int courseId) {
+        this.assessId = assessId;
         this.assessName = assessName;
         this.assessType = assessType;
         this.assessStart = assessStart;

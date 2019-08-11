@@ -111,7 +111,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public RadioButton assessPA;                                    // id = ce_paRadio
     // Spinner for status of assessments assigned
     public Spinner assessStatus;                                    // id = ce_
-    public String[] statusOptions = {"No Selection", "Dropped", "Failed", "Passed"};
+    public String[] assessOptions = {"No Selection", "Dropped", "Failed", "Passed"};
 
     // Button variables
     public Button saveBtn;
@@ -137,13 +137,21 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String courseStart = extras.getString(COURSE_START_KEY);
         String courseEnd = extras.getString(COURSE_END_KEY);
         String courseMentor = extras.getString(COURSE_MENTOR_KEY);
-        String courseEmail = extras.getString(COURSE_EMAIL_KEY);
-        String coursePhone = extras.getString(COURSE_PHONE_KEY);
+        String mentorEmail = extras.getString(COURSE_EMAIL_KEY);
+        String mentorPhone = extras.getString(COURSE_PHONE_KEY);
         String courseStatus = extras.getString(COURSE_STATUS_KEY);
         String courseNotes = extras.getString(COURSE_NOTES_KEY);
         Date cStartDate = DateConverter.toDate(courseStart);
         Date cEndDate = DateConverter.toDate(courseEnd);
 
+        Log.d(TAG, "Course Edit received Course Title: " + courseTitle);
+        Log.d(TAG, "Course Edit received Course Start: " + courseStart);
+        Log.d(TAG, "Course Edit received Course End: " + courseEnd);
+        Log.d(TAG, "Course Edit received Course Mentor: " + courseMentor);
+        Log.d(TAG, "Course Edit received Mentor Email: " + mentorEmail);
+        Log.d(TAG, "Course Edit received Mentor Phone: " + mentorPhone);
+        Log.d(TAG, "Course Edit received Course Status: " + courseStatus);
+        Log.d(TAG, "Course Edit received Course Notes: " + courseNotes);
         // AssessmentEntity data
         int assessId = extras.getInt(ASSESS_ID_KEY);
         String assessTitle = extras.getString(ASSESS_TITLE_KEY);
@@ -158,8 +166,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String assessEndFormat = DateConverter.formatDateString(assessEnd);
 
         // instantiate/set page title
-        TextView title = (TextView) findViewById(R.id.title);
-        title.setText("Edit Course");
+//        TextView title = (TextView) findViewById(R.id.title);
+//        title.setText("Edit Course");
 
         // header element id assignments
         pageTitle = findViewById(R.id.app_bar_title);
@@ -228,10 +236,47 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             courseEndDate.setText(endDate);
         };
 
-        // Course button id assignments/functionality
+        // Set edit text with selected course information
+        courseTitleEdit.setText(courseTitle);
+        courseMentorEdit.setText(courseMentor);
+        courseStartDate.setText(courseStartFormat);
+        courseEndDate.setText(courseEndFormat);
+        mentorEmailEdit.setText(mentorEmail);
+        mentorPhoneEdit.setText(mentorPhone);
+        Log.d(TAG, "Status selection ID: " + getStatusSelectionId(courseStatus));
+        courseSpinner.setSelection(getStatusSelectionId(courseStatus));
+
+
+        /**
+         *  Course button id assignments/functionality
+         */
+        // Save updated course input info assignment/function
         saveBtn = findViewById(R.id.ce_courseSave);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        // Add note button assignment/function
         addNoteBtn = findViewById(R.id.ce_noteBtn);
+        addNoteBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        // Delete course button assignment/function
         delCourseBtn = findViewById(R.id.ce_delCourse);
+        delCourseBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
 
         /**
@@ -286,7 +331,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
         // Assessment Button id assignments/functionality
         addAssessBtn = findViewById(R.id.ce_addAssess);
-        addAssessBtn.setOnClickListener(v ->{
+        addAssessBtn.setOnClickListener(v -> {
 
             TimeZone localTZ = TimeZone.getDefault();
             Locale locale = Locale.getDefault();
@@ -296,15 +341,15 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             try {
 
                 if (TextUtils.isEmpty(assessTitleInput.getText())) {
-                    assessNoInputAlert();
-                } else if (!assessOA.isChecked() && !assessPA.isChecked()){
-                    assessNoType();
+                    CourseEdit.this.assessNoInputAlert();
+                } else if (!assessOA.isChecked() && !assessPA.isChecked()) {
+                    CourseEdit.this.assessNoType();
                 } else if (assessStartDate.getText().toString().equals("") ||
-                    assessStartDate.getText().toString().equals("mm/dd/yyyy")) {
-                    assessNoInputAlert();
+                        assessStartDate.getText().toString().equals("mm/dd/yyyy")) {
+                    CourseEdit.this.assessNoInputAlert();
                 } else if (assessEndDate.getText().toString().equals("") ||
-                    assessEndDate.getText().toString().equals("mm/dd/yyyy")) {
-                    assessNoInputAlert();
+                        assessEndDate.getText().toString().equals("mm/dd/yyyy")) {
+                    CourseEdit.this.assessNoInputAlert();
                 } else {
 
                     String assess = assessTitleInput.getText().toString();
@@ -312,10 +357,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     Date start = DateConverter.toDate(startString);
                     String endString = assessEndDate.getText().toString();
                     Date end = DateConverter.toDate(endString);
-                    String selectedType = getSelectedAssessmentType();
+                    String selectedType = CourseEdit.this.getSelectedAssessmentType();
                     int courseID = courseId;
 
-                    if(start.before(end) && !start.before(today)) {
+                    if (start.before(end) && !start.before(today)) {
                         AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, start,
                                 end, courseID);
 
@@ -328,10 +373,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         Log.d(TAG, "Assessment insert complete.");
 
                     } else {
-                        assessConflictAlert();
+                        CourseEdit.this.assessConflictAlert();
                     }
                 }
-            } catch(Exception ex) {
+            } catch (Exception ex) {
 
             }
 
@@ -354,10 +399,14 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 courseStartDate.setText(DateConverter.formatDateString(courseEntity.getStartDate().toString()));
                 courseEndDate.setText(DateConverter.formatDateString(courseEntity.getEndDate().toString()));
                 courseMentorEdit.setText(courseEntity.getMentorName());
+                Log.d(TAG, "Course Mentor EditText set to: " + courseMentorEdit.getText());
                 mentorEmailEdit.setText(courseEntity.getMentorEmail());
+                Log.d(TAG, "Course Email EditText set to: " + mentorEmailEdit.getText());
                 mentorPhoneEdit.setText(courseEntity.getMentorPhone());
+                Log.d(TAG, "Course Phone EditText set to: " + mentorPhoneEdit.getText());
                 int spinnerPos = spinAdapter.getPosition(courseEntity.getStatus());
                 courseSpinner.setSelection(spinnerPos);
+                Log.d(TAG, "Course Status Spinner set to: " + courseSpinner.getSelectedItem().toString());
             }
         });
 
@@ -416,6 +465,18 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 courseMentor, mentorPhone, mentorEmail, courseNotes, termId);
 
         return passedCourse;
+    }
+
+    // Method to set course status spinner selection to reflect course data
+    public int getStatusSelectionId(String selection){
+        int position = -1;
+        for(int i = 0; i < courseOptions.length; i++){
+            if(courseOptions[i].equals(selection)){
+                position = i;
+                Log.d(TAG, "Status position selected: " + position);
+            }
+        }
+        return position;
     }
 
     // Method returning list of Assessment entities with passed courseId parameter

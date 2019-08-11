@@ -56,6 +56,7 @@ public class CourseEntity {
         this.termId = termId;
     }
 
+    // constructor
     public CourseEntity(int courseId, String courseTitle, Date startDate, Date endDate, String status,
                         String mentorName, String mentorPhone, String mentorEmail, String courseNotes, int termId) {
 
