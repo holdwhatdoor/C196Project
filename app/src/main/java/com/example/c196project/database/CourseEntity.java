@@ -168,18 +168,4 @@ public class CourseEntity {
                 startDate + ", Course End= " + endDate + ", Course Mentor= " + mentorName + "Mentor Email= " +
                 mentorEmail + "Course Notes= " + courseNotes + "Mentor Phone= " + mentorPhone + "Term ID= " + termId + "}";
     }
-
-
-/*    ContentValues toCourseValues() {
-        ContentValues values = new ContentValues(5);
-
-        values.put(CourseTable.courseIdCol, courseId);
-        values.put(CourseTable.courseTitleCol, courseTitle);
-        values.put(CourseTable.courseStartCol, DatabaseHelper.dateToString(startDate));
-        values.put(CourseTable.courseEndCol, DatabaseHelper.dateToString(endDate));
-        values.put(CourseTable.courseStatusCol, status);
-
-        return values;
-    }*/
-
 }

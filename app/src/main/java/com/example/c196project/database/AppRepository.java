@@ -230,4 +230,14 @@ public class AppRepository {
             }
         });
     }
+
+    public void updateAssessment(AssessmentEntity assess) {
+        executor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                mDb.assessmentDAO().updateAssessment(assess);
+            }
+        });
+    }
 }

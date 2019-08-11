@@ -25,4 +25,8 @@ public class Constants {
     public static final String ASSESS_END_KEY = "assess_end_key";
 
 
+    // Assessment radio group button id assignments
+    public static final int OA_ID = 1;
+    public static final int PA_ID = 2;
+
 }

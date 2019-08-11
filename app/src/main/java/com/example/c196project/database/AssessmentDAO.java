@@ -18,7 +18,7 @@ public interface AssessmentDAO {
     void insert(AssessmentEntity assessmentEntity);
 
     @Update
-    void update(AssessmentEntity assessmentEntity);
+    void updateAssessment(AssessmentEntity assessmentEntity);
 
     @Delete
     void delete(AssessmentEntity assessmentEntity);

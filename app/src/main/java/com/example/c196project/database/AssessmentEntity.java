@@ -28,8 +28,8 @@ public class AssessmentEntity{
     private Date assessStart;
     @ColumnInfo(name = "assess_end")
     private Date assessEnd;
-    @ColumnInfo(name = "assess_notes")
-    private String assessNotes;
+//    @ColumnInfo(name = "assess_notes")
+//    private String assessNotes;
 
 
 
@@ -40,12 +40,11 @@ public class AssessmentEntity{
 
     // constructor
     public AssessmentEntity(String assessName, String assessType, Date assessStart, Date assessEnd,
-                            String assessNotes, int courseId) {
+                            int courseId) {
         this.assessName = assessName;
         this.assessType = assessType;
         this.assessStart = assessStart;
         this.assessEnd = assessEnd;
-        this.assessNotes = assessNotes;
         this.courseId = courseId;
     }
 
@@ -75,9 +74,9 @@ public class AssessmentEntity{
         return assessEnd;
     }
 
-    public String getAssessNotes() {
+ /**   public String getAssessNotes() {
         return assessNotes;
-    }
+    }*/
 
     public int getCourseId(){
         return courseId;
@@ -108,9 +107,9 @@ public class AssessmentEntity{
         this.assessEnd = assessEnd;
     }
 
-    public void setAssessNotes(String notes) {
+ /**   public void setAssessNotes(String notes) {
         this.assessNotes = notes;
-    }
+    }*/
 
     public void setCourseId(int courseId){
         this.courseId = courseId;

@@ -19,13 +19,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
-import com.example.c196project.ui.AssessItemAdapter;
 import com.example.c196project.ui.CourseEditAdapter;
 import com.example.c196project.viewmodel.AssessViewModel;
 import com.example.c196project.viewmodel.CourseViewModel;
@@ -55,6 +55,7 @@ import static com.example.c196project.utilities.Constants.COURSE_PHONE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_STATUS_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
+import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
 public class CourseEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
@@ -72,7 +73,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     private CourseEditAdapter mCourseAdapter;
     //Assessment data array lists and adapters
     private List<AssessmentEntity> assessData = new ArrayList<>();
-    private AssessItemAdapter mAssessAdapter;
+    private CourseEditAdapter mAssessAdapter;
 
     // Initialized Calendar date variable
     Calendar calendar = Calendar.getInstance();
@@ -140,10 +141,13 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String coursePhone = extras.getString(COURSE_PHONE_KEY);
         String courseStatus = extras.getString(COURSE_STATUS_KEY);
         String courseNotes = extras.getString(COURSE_NOTES_KEY);
+        Date cStartDate = DateConverter.toDate(courseStart);
+        Date cEndDate = DateConverter.toDate(courseEnd);
+
         // AssessmentEntity data
         int assessId = extras.getInt(ASSESS_ID_KEY);
         String assessTitle = extras.getString(ASSESS_TITLE_KEY);
-        String assessType = extras.getString(ASSESS_TYPE_KEY);
+        String type = extras.getString(ASSESS_TYPE_KEY);
         String assessStart = extras.getString(ASSESS_START_KEY);
         String assessEnd = extras.getString(ASSESS_END_KEY);
 
@@ -235,7 +239,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
          */
         // Assessment input element id assignments
         assessTitleInput = findViewById(R.id.ce_assessTitle);
-   //     assessType = findViewById(R.id.ce_assessRadio_grp);
+        assessType = findViewById(R.id.ce_assessRadio_grp);
         assessOA = findViewById(R.id.ce_oaRadio);
         assessPA = findViewById(R.id.ce_paRadio);
         assessStartDate = findViewById(R.id.ce_assessStart);
@@ -303,6 +307,29 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     assessNoInputAlert();
                 } else {
 
+                    String assess = assessTitleInput.getText().toString();
+                    String startString = assessStartDate.getText().toString();
+                    Date start = DateConverter.toDate(startString);
+                    String endString = assessEndDate.getText().toString();
+                    Date end = DateConverter.toDate(endString);
+                    String selectedType = getSelectedAssessmentType();
+                    int courseID = courseId;
+
+                    if(start.before(end) && !start.before(today)) {
+                        AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, start,
+                                end, courseID);
+
+                        assessVM.insertAssessment(assessment);
+
+                        assessTitleInput.setHint("Enter Assessment Name");
+                        assessStartDate.setHint("mm/dd/yyyy");
+                        assessEndDate.setHint("mm/dd/yyyy");
+                        assessType.clearCheck();
+                        Log.d(TAG, "Assessment insert complete.");
+
+                    } else {
+                        assessConflictAlert();
+                    }
                 }
             } catch(Exception ex) {
 
@@ -311,7 +338,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         });
         delAssessmentsBtn = findViewById(R.id.ce_delAssess);
         delAssessmentsBtn.setOnClickListener(v ->{
-            courseVM.deleteAll();
+            assessVM.deleteAll();
         });
 
     }
@@ -333,6 +360,27 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 courseSpinner.setSelection(spinnerPos);
             }
         });
+
+        final Observer<List<AssessmentEntity>> assessObserver =
+                new Observer<List<AssessmentEntity>>() {
+                    @Override
+                    public void onChanged(List<AssessmentEntity> assessmentEntities) {
+
+                        int courseId = getPassedCourse().getCourseId();
+                        assessData.clear();
+                        getCourseAssessments(courseId, assessmentEntities);
+
+                        if (mAssessAdapter == null) {
+                            mAssessAdapter = new CourseEditAdapter(assessData, CourseEdit.this);
+                            assessRV.setAdapter(mAssessAdapter);
+                        } else {
+                            mAssessAdapter.notifyDataSetChanged();
+                        }
+                    }
+                };
+        assessVM = ViewModelProviders.of(this)
+                .get(AssessViewModel.class);
+        assessVM.mAssessments.observe(this, assessObserver);
     }
 
     // Initialize recycler view
@@ -347,6 +395,52 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 Intent mainIntent = new Intent(this, MainActivity.class);
                 this.startActivity(mainIntent);
         }
+    }
+
+    public CourseEntity getPassedCourse(){
+        Bundle extras = getIntent().getExtras();
+        int courseId = extras.getInt(COURSE_ID_KEY);
+        String courseTitle = extras.getString(COURSE_TITLE_KEY);
+        String courseStart = extras.getString(COURSE_START_KEY);
+        String courseEnd = extras.getString(COURSE_END_KEY);
+        String courseMentor = extras.getString(COURSE_MENTOR_KEY);
+        String mentorEmail = extras.getString(COURSE_EMAIL_KEY);
+        String mentorPhone = extras.getString(COURSE_PHONE_KEY);
+        String courseStatus = extras.getString(COURSE_STATUS_KEY);
+        String courseNotes = extras.getString(COURSE_NOTES_KEY);
+        Date cStartDate = DateConverter.toDate(courseStart);
+        Date cEndDate = DateConverter.toDate(courseEnd);
+        int termId = extras.getInt(TERM_ID_KEY);
+
+        CourseEntity passedCourse = new CourseEntity(courseId, courseTitle, cStartDate, cEndDate, courseStatus,
+                courseMentor, mentorPhone, mentorEmail, courseNotes, termId);
+
+        return passedCourse;
+    }
+
+    // Method returning list of Assessment entities with passed courseId parameter
+    public List<AssessmentEntity> getCourseAssessments(int courseId, List<AssessmentEntity> assessmentEntities){
+
+        for(int i = 0; i < assessmentEntities.size(); i++){
+            if(assessmentEntities.get(i).getCourseId() == courseId){
+                assessData.add(assessmentEntities.get(i));
+            }
+        }
+        return assessData;
+    }
+
+    // Method to return selected radio button data returned as String variable
+    public String getSelectedAssessmentType(){
+        String type = null;
+        if(assessOA.isChecked()) {
+            type = "Objective";
+        } else if(assessPA.isChecked()) {
+            type = "Performance";
+        } else {
+            type = "No selection made";
+        }
+
+        return type;
     }
 
     // Alert messages
@@ -374,10 +468,22 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public void assessNoType() {
         AlertDialog.Builder noSelection = new AlertDialog.Builder(this);
         noSelection.setTitle("No type selected");
-        noSelection.setMessage("Select an assessment type");
+        noSelection.setMessage("Select an assessment type from the selections available.");
         noSelection.setPositiveButton("OK", (dialog, which) -> {
         });
     }
+    // Assessment date conflict
+    public void assessConflictAlert() {
+        AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
+        dateConflict.setTitle("Date Conflict");
+        dateConflict.setMessage("Choose a start and end date and ensure the start date is before end" +
+                " date and that no other assessments overlap chosen dates.");
+        dateConflict.setPositiveButton("OK", (dialog, which) -> {
+
+        });
+        dateConflict.create().show();
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
