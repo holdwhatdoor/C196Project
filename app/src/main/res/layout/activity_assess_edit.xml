@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                             android:layout_marginBottom="10dp"
                             android:text="@string/start_date" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/assess_start_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -87,7 +88,7 @@
                             android:layout_marginBottom="10dp"
                             android:text="@string/end_date" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/assess_due_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -139,14 +140,14 @@
                         android:orientation="horizontal">
 
                         <RadioButton
-                            android:id="@+id/asses_pa_radio"
+                            android:id="@+id/asses_oa_radio"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="@string/oa_radio_txt"
                             android:paddingRight="35dp"/>
 
                         <RadioButton
-                            android:id="@+id/assess_oa_radio"
+                            android:id="@+id/assess_pa_radio"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"
@@ -155,18 +156,37 @@
                     </RadioGroup>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                <Button
-                    android:id="@+id/create_assess_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/create_assess_txt"
-                    android:textAlignment="center" />
+                    <Button
+                        android:id="@+id/save_assess_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/save_assess_txt"
+                        android:textAlignment="center" />
+
+                    <Button
+                        android:id="@+id/del_assess_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/del_one_assess"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/set_alert_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_assess_alert" />
 
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

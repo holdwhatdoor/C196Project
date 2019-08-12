@@ -100,9 +100,11 @@
 <string name="add_btn">Add</string>
 <string name="new_assess_btn">New Assessment</string>
 <string name="del_course_btn">Delete Course</string>
-<string name="create_assess_txt">Create Assessment</string>
+<string name="save_assess_txt">Save</string>
 <string name="add_assess_btn">Add Assessment</string>
 <string name="del_assess">Delete Assessments</string>
+<string name="del_one_assess">Delete</string>
+<string name="set_assess_alert">Set Alert</string>
 
 // Button description string labels
 <string name="home_btn_desc">Home Button</string>

@@ -52,7 +52,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     // Header Variables
     public TextView pageTitle;
-    public ImageButton homeBtn;  // id = home_btn_term
+    public ImageButton homeBtn;
     // View Models
     public TermViewModel termVM;
     public CourseViewModel courseVM;
@@ -68,7 +68,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     /**
      *   Term data display/input elements
      */
-    public EditText termTitleEdit;  // id = term_title_edit
+    public EditText termTitleEdit;
     // Term declarations for start/end date EditText with DatePickerDialog listeners and SimpleDateFormat
     public EditText termStartDate;
     public DatePickerDialog.OnDateSetListener termStartListener;
@@ -123,10 +123,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         pageTitle.setText("Edit Term");
         homeBtn =  findViewById(R.id.appBar_homeBtn);
         homeBtn.setOnClickListener(this);
-
-        // instantiate/set page title
- //       TextView title = findViewById(R.id.title);
- //       title.setText("Edit Term");
 
         // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);

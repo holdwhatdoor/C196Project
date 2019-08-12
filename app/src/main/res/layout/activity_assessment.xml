@@ -151,7 +151,7 @@
                     android:id="@+id/create_assess_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/create_assess_txt"
+                    android:text="Create"
                     android:textAlignment="center" />
             </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.example.c196project.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,9 +67,13 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
             public void onClick(View v) {
 
                 int assessId = getAssessmentAtPos(position).getAssessId();
+                Log.d(TAG, "Assess Id on Edit click: " + assessId);
                 String assessTitle = getAssessmentAtPos(position).getAssessName();
+                Log.d(TAG, "Assess Name on Edit click: " + assessTitle);
                 Date start = getAssessmentAtPos(position).getAssessStart();
+                Log.d(TAG, "Assess Start: " + start);
                 Date end = getAssessmentAtPos(position).getAssessEnd();
+                Log.d(TAG, "Assess End: " + end);
                 String type = getAssessmentAtPos(position).getAssessType();
                 int courseId = getAssessmentAtPos(position).getCourseId();
 
@@ -78,8 +83,8 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
                 Intent intent = new Intent(mContext, AssessmentEdit.class);
                 intent.putExtra(ASSESS_ID_KEY, assessment.getAssessId());
                 intent.putExtra(ASSESS_TITLE_KEY, assessment.getAssessName());
-                intent.putExtra(ASSESS_START_KEY, assessment.getAssessStart());
-                intent.putExtra(ASSESS_END_KEY, assessment.getAssessEnd());
+                intent.putExtra(ASSESS_START_KEY, assessment.getAssessStart().toString());
+                intent.putExtra(ASSESS_END_KEY, assessment.getAssessEnd().toString());
                 intent.putExtra(ASSESS_TYPE_KEY, assessment.getAssessType());
 
                 mContext.startActivity(intent);
