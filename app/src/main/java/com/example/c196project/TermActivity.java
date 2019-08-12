@@ -200,9 +200,15 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                         if (start.before(end) && !start.before(today)) {
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
+
                             termTitleInput.getText().clear();
                             startDisplayDate.getText().clear();
                             endDisplayDate.getText().clear();
+
+                            termTitleInput.setHint("Enter Term Title");
+                            startDisplayDate.setHint("mm/dd/yyyy");
+                            endDisplayDate.setHint("mm/dd/yyyy");
+
                         } else {
 
                             Log.d(TAG, "today date: " + today);
@@ -225,30 +231,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                 termVM.deleteAll();
             }
         });
-
-
-/**        Button editListItem = itemList.findViewById(R.id.item_edit_btn);
-        editListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        Button delListItem = itemList.findViewById(R.id.item_del_btn);
-        delListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Bundle extras = getIntent().getExtras();
-                int termToDeleteID = extras.getInt(TERM_ID_KEY);
-                termVM.loadTerm(termToDeleteID);
-                Log.d("Term Id to delete: ", Integer.toString(termToDeleteID));
-                termVM.deleteTerm(termToDeleteID);
-            }
-        });
-*/
     }
 
     // Initiates view model

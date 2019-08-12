@@ -384,13 +384,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
                         Log.d(TAG, "Course insert complete.");
 
-      /**                  courseTitleInput.setHint("Enter Course Title");
-                        courseStartDate.setHint("mm/dd/yyyy");
-                        courseEndDate.setHint("mm/dd/yyyy");
-                        courseMentor.setHint("Enter Mentor Name");
-                        mentorPhone.setHint("Enter Mentor Phone");
-                        mentorEmail.setHint("Enter Mentor Email");
-*/
                         courseTitleInput.getText().clear();
                         courseStartDate.setText(null);
                         courseEndDate.setText(null);
@@ -398,6 +391,14 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         mentorPhone.getText().clear();
                         mentorEmail.getText().clear();
                         statusSpinner.setSelection(0);
+
+                        courseTitleInput.setHint("Enter Course Title");
+                        courseStartDate.setHint("mm/dd/yyyy");
+                        courseEndDate.setHint("mm/dd/yyyy");
+                        courseMentor.setHint("Enter Mentor Name");
+                        mentorPhone.setHint("Enter Mentor Phone");
+                        mentorEmail.setHint("Enter Mentor Email");
+
                     } else {
 
                         Log.d(TAG, "today date: " + today);

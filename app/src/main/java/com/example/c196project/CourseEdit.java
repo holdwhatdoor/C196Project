@@ -371,6 +371,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
                         assessVM.insertAssessment(assessment);
 
+                        assessTitleInput.getText().clear();
+                        assessStartDate.getText().clear();
+                        assessEndDate.getText().clear();
+
                         assessTitleInput.setHint("Enter Assessment Name");
                         assessStartDate.setHint("mm/dd/yyyy");
                         assessEndDate.setHint("mm/dd/yyyy");
