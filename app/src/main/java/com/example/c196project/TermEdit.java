@@ -375,7 +375,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
 
                     if (start.before(end) && !start.before(today) && start.after(termStart) &&
-                            end.before(termEnd)) {
+                            end.before(termEnd) && !overlappingCourses(start, end)) {
                         Log.d(TAG, "Entered if that calls insertCourse()");
 
                         CourseEntity newCourse = new CourseEntity(course, start,
@@ -514,6 +514,27 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         return courseData;
     }
 
+    // Method to check for overlapping start and end dates for courses in database
+    private boolean overlappingCourses(Date newStart, Date newEnd){
+        boolean courseOverlap = false;
+        Log.d(TAG, "courseData is: " + courseData);
+        if(courseData.isEmpty() || courseData == null){
+            courseOverlap = false;
+        } else {
+            for(int i = 0; i < courseData.size(); i++){
+                CourseEntity course = courseData.get(i);
+                if(newStart.after(course.getStartDate()) && newStart.before(course.getEndDate())){
+                    courseOverlap = true;
+                } else if(newEnd.after(course.getStartDate()) && newEnd.before(course.getEndDate())){
+                    courseOverlap = true;
+                }else if(newStart.before(course.getStartDate()) && newEnd.after(course.getEndDate())){
+                    courseOverlap = true;
+                }
+            }
+        }
+        return courseOverlap;
+    }
+
     // Alert messages
     public void showNoInputAlert() {
         AlertDialog.Builder emptyInput = new AlertDialog.Builder(this);
@@ -547,7 +568,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         });
         dateConflict.create().show();
     }
-
 
     //Performing action onItemSelected and onNothing selected
     @Override

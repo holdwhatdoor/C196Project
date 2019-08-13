@@ -341,7 +341,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     Log.d(TAG, "cEndDate: " + cEndDate + ", due: " + due + ", cStartDate: " +
                             cStartDate);
 
-                    if (due.before(cEndDate) && due.after(cStartDate)) {
+                    if (due.before(cEndDate) && due.after(cStartDate) && !assessmentConflict(due)) {
                         AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, due,
                                 courseID);
 
@@ -356,7 +356,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         Log.d(TAG, "Assessment insert complete.");
 
                     } else {
-                        CourseEdit.this.assessConflictAlert();
+                        assessConflictAlert();
                     }
                 }
             } catch (Exception ex) {
@@ -498,6 +498,23 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         return type;
     }
 
+    // Method to check for assessments scheduled on the same day
+    private boolean assessmentConflict(Date due){
+        boolean assessConflict = false;
+
+        if(assessData == null){
+            assessConflict = false;
+        } else {
+            for(int i = 0; i < assessData.size(); i++){
+                AssessmentEntity assess = assessData.get(i);
+                if(due.equals(assess.getAssessDue())){
+                    assessConflict = true;
+                }
+            }
+        }
+        return assessConflict;
+    }
+
     // Alert messages
     // Course no input alert
     public void courseNoInputAlert() {
@@ -531,8 +548,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public void assessConflictAlert() {
         AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
         dateConflict.setTitle("Date Conflict");
-        dateConflict.setMessage("Choose a start and end date and ensure the start date is before end" +
-                " date and that no other assessments overlap chosen dates.");
+        dateConflict.setMessage("Assessment already scheduled for chosen date or falls outside " +
+                "the Course start and end dates.  Please select a different date");
         dateConflict.setPositiveButton("OK", (dialog, which) -> {
 
         });

@@ -53,16 +53,16 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     private TermItemAdapter mTermAdapter;
 
     // App bar components
-    private TextView pageTitle;         // id= app_bar_title
-    private ImageButton homeBtn;        // id= appBar_homeBtn
+    private TextView pageTitle;
+    private ImageButton homeBtn;
     // Term page components
-    private EditText termTitleInput;    // id= term_title_input
-    private EditText startDisplayDate;     // id= term_sd_input
+    private EditText termTitleInput;
+    private EditText startDisplayDate;
     private DatePickerDialog.OnDateSetListener startDateSetListener;
-    private EditText endDisplayDate;     // id = term_ed_input
+    private EditText endDisplayDate;
     private DatePickerDialog.OnDateSetListener endDateSetListener;
-    public Button addTermBtn;   // id= add_term_btn
-    public Button delAllTermBtn;    // id= del_all_term
+    public Button addTermBtn;
+    public Button delAllTermBtn;
 
     // Recycler view binding
     @BindView(R.id.rv_term_list)
@@ -197,7 +197,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                         Date end = DateConverter.toDate(endString);
                         Log.d(TAG, "End Date converted: " + end);
 
-                        if (start.before(end) && !start.before(today)) {
+                        if (start.before(end) && !start.before(today) && !overlappingTerms(start, end)) {
                             TermEntity newTerm = new TermEntity(term, start, end);
                             termVM.insertTerm(newTerm);
 
@@ -328,7 +328,29 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         date.setText(sdf.format(calendar.getTime()));
     }
 
+    // Method to check for overlapping start and end dates for terms in database
+    private boolean overlappingTerms(Date newStart, Date newEnd){
+        boolean termOverlap = false;
+
+        if(termData == null){
+            termOverlap = false;
+        } else {
+            for(int i = 0; i < termData.size(); i++){
+                TermEntity term = termData.get(i);
+                if(newStart.after(term.getStart()) && newStart.before(term.getEnd())){
+                    termOverlap = true;
+                } else if(newEnd.after(term.getStart()) && newEnd.before(term.getEnd())){
+                    termOverlap = true;
+                }else if(newStart.before(term.getStart()) && newEnd.after(term.getEnd())){
+                    termOverlap = true;
+                }
+            }
+        }
+        return termOverlap;
+    }
+
     // Alert messages
+    // Empty input fields alert
     public void showNoInputAlert() {
         AlertDialog.Builder emptyInput = new AlertDialog.Builder(this);
         emptyInput.setTitle("Empty Input Field(s)");
@@ -342,7 +364,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         emptyInput.create().show();
 
     }
-
+    // Date conflict alert
     public void dateConflictAlert() {
         AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
         dateConflict.setTitle("Date Conflict");
