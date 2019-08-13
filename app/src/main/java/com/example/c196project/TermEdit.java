@@ -117,6 +117,9 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         String endFormat = DateConverter.formatDateString(endStr);
         Log.d("TAG", "Formatted start date: " + startFormat);
         Log.d("TAG", "Formatted end date: " + endFormat);
+        Date termStart = DateConverter.toDate(startFormat);
+        Date termEnd = DateConverter.toDate(endFormat);
+
 
         // header element id assignments
         pageTitle = findViewById(R.id.app_bar_title);
@@ -281,10 +284,10 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 } else {
 
                     String updateTitle = termTitleEdit.getText().toString();
-                    String termStart = termStartDate.getText().toString();
-                    String termEnd = termEndDate.getText().toString();
-                    Date start = DateConverter.toDate(termStart);
-                    Date end = DateConverter.toDate(termEnd);
+                    String tStart = termStartDate.getText().toString();
+                    String tEnd = termEndDate.getText().toString();
+                    Date start = DateConverter.toDate(tStart);
+                    Date end = DateConverter.toDate(tEnd);
 
                     Log.d(TAG, "Term title update: " + updateTitle);
                     Log.d(TAG, "Term start date string update: " + termStart);
@@ -371,7 +374,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                     Log.d(TAG, "Start not before today: " + !start.before(today));
 
 
-                    if (start.before(end) && !start.before(today)) {
+                    if (start.before(end) && !start.before(today) && start.after(termStart) &&
+                            end.before(termEnd)) {
                         Log.d(TAG, "Entered if that calls insertCourse()");
 
                         CourseEntity newCourse = new CourseEntity(course, start,

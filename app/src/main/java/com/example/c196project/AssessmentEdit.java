@@ -26,9 +26,8 @@ import java.util.Date;
 
 import butterknife.ButterKnife;
 
-import static com.example.c196project.utilities.Constants.ASSESS_END_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
-import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
@@ -54,11 +53,11 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
      *   Assessment data display/input elements
      */
     public EditText assessName;
-    // Assessment declarations fro start/end date EditText with DatePickerDialog listener and SimpleDateFormat
-    public EditText startDisplayDate;
-    private DatePickerDialog.OnDateSetListener startDateSetListener;
-    public EditText endDisplayDate;
-    private DatePickerDialog.OnDateSetListener endDateSetListener;
+    // Assessment declarations for due date EditText with DatePickerDialog listener and SimpleDateFormat
+    public EditText dueDate;
+    private DatePickerDialog.OnDateSetListener dueDateSetListener;
+
+    // Radio Button instantiations
     public RadioGroup radioGroup;
     public RadioButton oaRadio;
     public RadioButton paRadio;
@@ -91,31 +90,25 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
         // Assessment input element id assignments
         assessName = findViewById(R.id.enter_assess_name);
-        startDisplayDate = findViewById(R.id.assess_start_date);
-        endDisplayDate = findViewById(R.id.assess_due_date);
+        dueDate = findViewById(R.id.assess_due_date);
         // Radio group and button id assignments
         radioGroup = findViewById(R.id.assess_radio_grp);
         oaRadio = findViewById(R.id.asses_oa_radio);
         paRadio = findViewById(R.id.assess_pa_radio);
 
         /**
-         *  Start and End date EditText ids and onClick override functionality
+         *  Due date EditText id and onClick override functionality
          */
-        //  Initialized Assessment DatePickerDialog date listener start/end dates
-        DatePickerDialog.OnDateSetListener aStart = (view, year, month, dayOfMonth) -> {
+        //  Initialized Assessment DatePickerDialog date listener due
+        DatePickerDialog.OnDateSetListener aDue = (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            DateConverter.updateDateText(startDisplayDate, calendar);
+            DateConverter.updateDateText(dueDate, calendar);
         };
-        DatePickerDialog.OnDateSetListener aEnd = (view, year, month, dayOfMonth) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            DateConverter.updateDateText(endDisplayDate, calendar);
-        };
-        // Assessment start date setOnClickListener
-        startDisplayDate.setOnClickListener(v -> {
+
+        // Assessment due date setOnClickListener
+        dueDate.setOnClickListener(v -> {
             Calendar calStart = Calendar.getInstance();
             int startYear = calStart.get(Calendar.YEAR);
             int startMonth = calStart.get(Calendar.MONTH);
@@ -123,44 +116,22 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
             DatePickerDialog startDialog = new DatePickerDialog(
                     AssessmentEdit.this, android.R.style.Theme_DeviceDefault,
-                    startDateSetListener, startYear, startMonth, startDay);
+                    dueDateSetListener, startYear, startMonth, startDay);
             startDialog.show();
         });
-        // Assessment end date setOnClickListener
-        endDisplayDate.setOnClickListener(v -> {
-            Calendar calEnd = Calendar.getInstance();
-            int endYear = calEnd.get(Calendar.YEAR);
-            int endMonth = calEnd.get(Calendar.MONTH);
-            int endDay = calEnd.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog endDialog = new DatePickerDialog(
-                    AssessmentEdit.this, android.R.style.Theme_DeviceDefault,
-                    endDateSetListener, endYear, endMonth, endDay);
-            endDialog.show();
-        });
+        dueDateSetListener = (view, year, month, dayOfMonth) -> {
+            Log.d(TAG, "dueDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
-        endDateSetListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "onEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
-            String endDate = month + "/" + dayOfMonth + "/" + year;
-            endDisplayDate.setText(endDate);
-        };
-
-        startDateSetListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "onStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
-            String startDate = month + "/" + dayOfMonth + "/" + year;
-            startDisplayDate.setText(startDate);
+            String dueDateString = month + "/" + dayOfMonth + "/" + year;
+            dueDate.setText(dueDateString);
         };
 
         // Populate input fields with passed assessment information
         assessName.setText(passedAssessment.getAssessName());
-        Date sDate = passedAssessment.getAssessStart();
-        Date eDate = passedAssessment.getAssessEnd();
-        String start = passedAssessment.getAssessStart().toString();
-        String end = passedAssessment.getAssessEnd().toString();
-        startDisplayDate.setText(DateConverter.formatDateString(start));
-        endDisplayDate.setText(DateConverter.formatDateString(end));
+        Date dDate = passedAssessment.getAssessDue();
+        String due = passedAssessment.getAssessDue().toString();
+        dueDate.setText(DateConverter.formatDateString(due));
         setAssessType(passedAssessment);
 
         // Button id assignments and functionality
@@ -186,8 +157,7 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
             if(assessmentEntity !=null) {
                 Calendar calendar = Calendar.getInstance();
                 assessName.setText(assessmentEntity.getAssessName());
-                startDisplayDate.setText(DateConverter.formatDateString(assessmentEntity.getAssessStart().toString()));
-                endDisplayDate.setText(DateConverter.formatDateString(assessmentEntity.getAssessEnd().toString()));
+                dueDate.setText(DateConverter.formatDateString(assessmentEntity.getAssessDue().toString()));
                 setAssessType(assessmentEntity);
             }
         });
@@ -209,19 +179,16 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         Log.d(TAG, "Assess ID: " + assessId);
         String assessName = extras.getString(ASSESS_TITLE_KEY);
         Log.d(TAG, "Assess Name: " + assessName);
-        String start = extras.getString(ASSESS_START_KEY);
-        Log.d(TAG, "Start date string: " + start);
-        String end = extras.getString(ASSESS_END_KEY);
-        String formatStart = DateConverter.formatDateString(start);
-        String formatEnd = DateConverter.formatDateString(end);
-        Date assessStart = DateConverter.toDate(formatStart);
-        Log.d(TAG, "Start date DATE: " + assessStart);
-        Date assessEnd = DateConverter.toDate(formatEnd);
+        String due = extras.getString(ASSESS_DUE_KEY);
+        Log.d(TAG, "Start date string: " + due);
+        String formatDue = DateConverter.formatDateString(due);
+        Date assessDue = DateConverter.toDate(formatDue);
+        Log.d(TAG, "Start date DATE: " + assessDue);
         String assessType = extras.getString(ASSESS_TYPE_KEY);
         int courseId = extras.getInt(COURSE_ID_KEY);
 
-        AssessmentEntity passedAssessment = new AssessmentEntity(assessId, assessName, assessType, assessStart,
-                assessEnd, courseId);
+        AssessmentEntity passedAssessment = new AssessmentEntity(assessId, assessName, assessType,
+                assessDue, courseId);
 
         return passedAssessment;
     }
@@ -236,49 +203,4 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
             paRadio.setChecked(true);
         }
     }
-
-
-/**    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_items, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch(item.getItemId()){
-            case R.id.menu_home:
-                Intent homeIntent = new Intent(this, MainActivity.class);
-                Toast.makeText(this, "Home selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(homeIntent);
-                return true;
-            case R.id.menu_terms:
-                Intent termIntent = new Intent(this, TermActivity.class);
-                Toast.makeText(this, "Terms selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(termIntent);
-                return true;
-            case R.id.menu_courses:
-                Intent courseIntent = new Intent(this, CourseActivity.class);
-                Toast.makeText(this, "Courses selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(courseIntent);
-                return true;
-            case R.id.menu_tests:
-                Intent testIntent = new Intent(this, AssessmentActivity.class);
-                Toast.makeText(this, "Tests selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(testIntent);
-                return true;
-            default:
-                return true /*super.onOptionsItemSelected(item)*/;
-  /**      }
-    }*/
-
 }

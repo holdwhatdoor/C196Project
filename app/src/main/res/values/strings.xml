@@ -94,6 +94,7 @@
 <string name="create_btn_txt">Create</string>
 <string name="home">Home</string>
 <string name="back_btn">Back</string>
+<string name="due_date">Due Date:</string>
 <string name="delete_btn">Delete</string>
 <string name="view_btn">View</string>
 <string name="edit_btn">Edit</string>

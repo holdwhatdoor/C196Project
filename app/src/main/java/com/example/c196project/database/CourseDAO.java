@@ -46,7 +46,7 @@ public interface CourseDAO {
     @Query("SELECT * FROM course_table WHERE course_id = :id")
     CourseEntity getCourseById(int id);
 
-    @Query("SELECT * FROM course_table ORDER BY start_date DESC")
+    @Query("SELECT * FROM course_table ORDER BY start_date")
     LiveData<List<CourseEntity>> getAll();
 
     @Query("DELETE FROM course_table")

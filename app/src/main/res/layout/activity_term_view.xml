@@ -282,13 +282,16 @@
             android:layout_width="match_parent"
             android:layout_height="275dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/course_list_rv"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/course_list_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-            </androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
 
         </ScrollView>
 

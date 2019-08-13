@@ -21,8 +21,7 @@ public class Constants {
     public static final String ASSESS_ID_KEY = "assess_id_key";
     public static final String ASSESS_TITLE_KEY = "assess_title_key";
     public static final String ASSESS_TYPE_KEY = "assess_type_key";
-    public static final String ASSESS_START_KEY = "assess_start_key";
-    public static final String ASSESS_END_KEY = "assess_end_key";
+    public static final String ASSESS_DUE_KEY = "assess_due_key";
 
 
     // Assessment radio group button id assignments

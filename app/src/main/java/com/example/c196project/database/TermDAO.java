@@ -40,7 +40,7 @@ public interface TermDAO {
     @Query("SELECT * FROM term_table WHERE term_id = :id")
     TermEntity getTermById(int id);
 
-    @Query("SELECT * FROM term_table ORDER BY start DESC")
+    @Query("SELECT * FROM term_table ORDER BY start")
     LiveData<List<TermEntity>> getAll();
 
     @Query("DELETE FROM term_table")

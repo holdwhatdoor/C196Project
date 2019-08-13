@@ -23,9 +23,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.c196project.utilities.Constants.ASSESS_END_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
-import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 
@@ -48,7 +47,7 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
     @Override
     public CourseEditHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.layout_itemlist, parent, false);
+        View view = inflater.inflate(R.layout.layout_assesslist, parent, false);
         return new CourseEditHolder(view);
     }
 
@@ -58,8 +57,7 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
         final AssessmentEntity assessment = mAssessments.get(position);
 
         holder.mListItem.setText(assessment.getAssessName());
-        holder.mStartDate.setText(DateConverter.formatDateString(assessment.getAssessStart().toString()));
-        holder.mEndDate.setText(DateConverter.formatDateString(assessment.getAssessEnd().toString()));
+        holder.mDueDate.setText(DateConverter.formatDateString(assessment.getAssessDue().toString()));
 
         holder.mEditBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -70,21 +68,18 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
                 Log.d(TAG, "Assess Id on Edit click: " + assessId);
                 String assessTitle = getAssessmentAtPos(position).getAssessName();
                 Log.d(TAG, "Assess Name on Edit click: " + assessTitle);
-                Date start = getAssessmentAtPos(position).getAssessStart();
-                Log.d(TAG, "Assess Start: " + start);
-                Date end = getAssessmentAtPos(position).getAssessEnd();
-                Log.d(TAG, "Assess End: " + end);
+                Date due = getAssessmentAtPos(position).getAssessDue();
+                Log.d(TAG, "Assess Start: " + due);
                 String type = getAssessmentAtPos(position).getAssessType();
                 int courseId = getAssessmentAtPos(position).getCourseId();
 
-                AssessmentEntity assessment = new AssessmentEntity(assessId, assessTitle, type, start, end,
+                AssessmentEntity assessment = new AssessmentEntity(assessId, assessTitle, type, due,
                         courseId);
 
                 Intent intent = new Intent(mContext, AssessmentEdit.class);
                 intent.putExtra(ASSESS_ID_KEY, assessment.getAssessId());
                 intent.putExtra(ASSESS_TITLE_KEY, assessment.getAssessName());
-                intent.putExtra(ASSESS_START_KEY, assessment.getAssessStart().toString());
-                intent.putExtra(ASSESS_END_KEY, assessment.getAssessEnd().toString());
+                intent.putExtra(ASSESS_DUE_KEY, assessment.getAssessDue().toString());
                 intent.putExtra(ASSESS_TYPE_KEY, assessment.getAssessType());
 
                 mContext.startActivity(intent);
@@ -111,15 +106,13 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
 
     public class CourseEditHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.list_item)
+        @BindView(R.id.assess_item)
         TextView mListItem;
-        @BindView(R.id.start_date)
-        TextView mStartDate;
-        @BindView(R.id.end_date)
-        TextView mEndDate;
-        @BindView(R.id.item_del_btn)
+        @BindView(R.id.due_date)
+        TextView mDueDate;
+        @BindView(R.id.assess_del_btn)
         Button mDelBtn;
-        @BindView(R.id.item_edit_btn)
+        @BindView(R.id.assess_edit_btn)
         Button mEditBtn;
 
 

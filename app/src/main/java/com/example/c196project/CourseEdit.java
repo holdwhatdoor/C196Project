@@ -42,9 +42,8 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.c196project.utilities.Constants.ASSESS_END_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
-import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_EMAIL_KEY;
@@ -102,10 +101,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
      */
     public EditText assessTitleInput;                               // id = ce_assessTitle
     // Add Course declarations for start/end date EditText with DatePickerDialog listeners
-    public EditText assessStartDate;                                // id = ce_assessStart
-    public DatePickerDialog.OnDateSetListener assessStartListener;
-    public EditText assessEndDate;                                  // id = ce_assessEnd
-    public DatePickerDialog.OnDateSetListener assessEndListener;
+    public EditText assessDueDate;                                // id = ce_assessStart
+    public DatePickerDialog.OnDateSetListener assessDueDateListener;
     // Radio button group and selections for Assessment type
     public RadioGroup assessType;                                   // id = ce_assessRadio_grp
     public RadioButton assessOA;                                    // id = ce_oaRadio
@@ -142,8 +139,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String mentorPhone = extras.getString(COURSE_PHONE_KEY);
         String courseStatus = extras.getString(COURSE_STATUS_KEY);
         String courseNotes = extras.getString(COURSE_NOTES_KEY);
-        Date cStartDate = DateConverter.toDate(courseStart);
-        Date cEndDate = DateConverter.toDate(courseEnd);
+        String formatStart = DateConverter.formatDateString(courseStart);
+        String formatEnd = DateConverter.formatDateString(courseEnd);
+        Date cStartDate = DateConverter.toDate(formatStart);
+        Date cEndDate = DateConverter.toDate(formatEnd);
 
         Log.d(TAG, "Course Edit received Course Title: " + courseTitle);
         Log.d(TAG, "Course Edit received Course Start: " + courseStart);
@@ -157,14 +156,12 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         int assessId = extras.getInt(ASSESS_ID_KEY);
         String assessTitle = extras.getString(ASSESS_TITLE_KEY);
         String type = extras.getString(ASSESS_TYPE_KEY);
-        String assessStart = extras.getString(ASSESS_START_KEY);
-        String assessEnd = extras.getString(ASSESS_END_KEY);
+        String assessDue = extras.getString(ASSESS_DUE_KEY);
 
         // converts dates to MM/dd/yyyy format
         String courseStartFormat = DateConverter.formatDateString(courseStart);
         String courseEndFormat = DateConverter.formatDateString(courseEnd);
-        String assessStartFormat = DateConverter.formatDateString(assessStart);
-        String assessEndFormat = DateConverter.formatDateString(assessEnd);
+        String assessDueFormat = DateConverter.formatDateString(assessDue);
 
         // instantiate/set page title
 //        TextView title = (TextView) findViewById(R.id.title);
@@ -288,46 +285,28 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         assessType = findViewById(R.id.ce_assessRadio_grp);
         assessOA = findViewById(R.id.ce_oaRadio);
         assessPA = findViewById(R.id.ce_paRadio);
-        assessStartDate = findViewById(R.id.ce_assessStart);
-        assessEndDate = findViewById(R.id.ce_assessEnd);
+        assessDueDate = findViewById(R.id.ce_assessDue);
 
         /**
-         *  Start and End date EditText ids and onClick override functionality
+         *  Due date EditText id and onClick override functionality
          */
         //  Initialized Course DatePickerDialog date listener start/end dates
-        DatePickerDialog.OnDateSetListener aStart = (view, year, month, dayOfMonth) -> {
+        DatePickerDialog.OnDateSetListener aDue = (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            DateConverter.updateDateText(assessStartDate, calendar);
+            DateConverter.updateDateText(assessDueDate, calendar);
         };
-        DatePickerDialog.OnDateSetListener aEnd = (view, year, month, dayOfMonth) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            DateConverter.updateDateText(assessEndDate, calendar);
-        };
-        // Course start date setOnClickListener
-        assessStartDate.setOnClickListener(v -> new DatePickerDialog(CourseEdit.this, aStart, calendar
+        // Assessment due date setOnClickListener
+        assessDueDate.setOnClickListener(v -> new DatePickerDialog(CourseEdit.this, aDue, calendar
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
                 .get(Calendar.DAY_OF_MONTH)).show());
-        // Course end date setOnClickListener
-        assessEndDate.setOnClickListener(v -> new DatePickerDialog(CourseEdit.this, aEnd, calendar
-                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
-                .get(Calendar.DAY_OF_MONTH)).show());
-        // Term start date listener functionality
-        assessStartListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "assessStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
+        //  Assessment due date listener functionality
+        assessDueDateListener = (view, year, month, dayOfMonth) -> {
+            Log.d(TAG, "assessDueDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
 
             String startDate = month + "/" + dayOfMonth + "/" + year;
             courseStartDate.setText(startDate);
-        };
-        // Course end date listener functionality
-        assessEndListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "assessEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
-            String endDate = month + "/" + dayOfMonth + "/" + year;
-            courseEndDate.setText(endDate);
         };
 
         // Assessment Button id assignments/functionality
@@ -345,39 +324,34 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     CourseEdit.this.assessNoInputAlert();
                 } else if (!assessOA.isChecked() && !assessPA.isChecked()) {
                     CourseEdit.this.assessNoType();
-                } else if (assessStartDate.getText().toString().equals("") ||
-                        assessStartDate.getText().toString().equals("mm/dd/yyyy") ||
-                        assessStartDate.equals(null)) {
-                    CourseEdit.this.assessNoInputAlert();
-                } else if (assessEndDate.getText().toString().equals("") ||
-                        assessEndDate.getText().toString().equals("mm/dd/yyyy") ||
-                        assessEndDate.equals(null)) {
+                } else if (assessDueDate.getText().toString().equals("") ||
+                        assessDueDate.getText().toString().equals("mm/dd/yyyy") ||
+                        assessDueDate.equals(null)) {
                     CourseEdit.this.assessNoInputAlert();
                 } else {
 
                     String assess = assessTitleInput.getText().toString();
-                    String startString = assessStartDate.getText().toString();
-                    Log.d(TAG, "Assess String Start Date: " + startString);
-                    Date start = DateConverter.toDate(startString);
-                    Log.d(TAG, "Assess Date Start Date: " + start);
-                    String endString = assessEndDate.getText().toString();
-                    Date end = DateConverter.toDate(endString);
+                    String dueString = assessDueDate.getText().toString();
+                    Log.d(TAG, "Assess String Due Date: " + dueString);
+                    Date due = DateConverter.toDate(dueString);
+                    Log.d(TAG, "Assess Date Due Date: " + due);
                     String selectedType = CourseEdit.this.getSelectedAssessmentType();
                     int courseID = courseId;
 
-                    if (start.before(end) && !start.before(today)) {
-                        AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, start,
-                                end, courseID);
+                    Log.d(TAG, "cEndDate: " + cEndDate + ", due: " + due + ", cStartDate: " +
+                            cStartDate);
+
+                    if (due.before(cEndDate) && due.after(cStartDate)) {
+                        AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, due,
+                                courseID);
 
                         assessVM.insertAssessment(assessment);
 
                         assessTitleInput.getText().clear();
-                        assessStartDate.getText().clear();
-                        assessEndDate.getText().clear();
+                        assessDueDate.getText().clear();
 
                         assessTitleInput.setHint("Enter Assessment Name");
-                        assessStartDate.setHint("mm/dd/yyyy");
-                        assessEndDate.setHint("mm/dd/yyyy");
+                        assessDueDate.setHint("mm/dd/yyyy");
                         assessType.clearCheck();
                         Log.d(TAG, "Assessment insert complete.");
 
@@ -447,7 +421,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         assessRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         assessRV.setLayoutManager(layoutManager);
-
         mAssessAdapter = new CourseEditAdapter(assessData, this);
         assessRV.setAdapter(mAssessAdapter);
     }
@@ -566,6 +539,16 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         dateConflict.create().show();
     }
 
+    public void deleteCourseError(){
+        AlertDialog.Builder deleteCourseError = new AlertDialog.Builder(this);
+        deleteCourseError.setTitle("Course Delete Error");
+        deleteCourseError.setMessage("Course has assessments assigned to it, delete all assessments " +
+                "before deleting course.");
+        deleteCourseError.setPositiveButton("OK", (dialog, which) -> {
+
+        });
+        deleteCourseError.create().show();
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

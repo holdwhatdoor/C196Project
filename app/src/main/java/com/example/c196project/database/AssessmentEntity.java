@@ -24,14 +24,8 @@ public class AssessmentEntity{
     private String assessName;
     @ColumnInfo(name = "assess_type")
     private String assessType;
-    @ColumnInfo(name = "assess_start")
-    private Date assessStart;
-    @ColumnInfo(name = "assess_end")
-    private Date assessEnd;
-//    @ColumnInfo(name = "assess_notes")
-//    private String assessNotes;
-
-
+    @ColumnInfo(name = "assess_due")
+    private Date assessDue;
 
     // empty constructor
     @Ignore
@@ -39,23 +33,21 @@ public class AssessmentEntity{
     }
 
     @Ignore
-    public AssessmentEntity(String assessName, String assessType, Date assessStart, Date assessEnd,
+    public AssessmentEntity(String assessName, String assessType, Date assessDue,
                             int courseId) {
         this.assessName = assessName;
         this.assessType = assessType;
-        this.assessStart = assessStart;
-        this.assessEnd = assessEnd;
+        this.assessDue = assessDue;
         this.courseId = courseId;
     }
 
     // constructor
-    public AssessmentEntity(int assessId, String assessName, String assessType, Date assessStart, Date assessEnd,
+    public AssessmentEntity(int assessId, String assessName, String assessType, Date assessDue,
                             int courseId) {
         this.assessId = assessId;
         this.assessName = assessName;
         this.assessType = assessType;
-        this.assessStart = assessStart;
-        this.assessEnd = assessEnd;
+        this.assessDue = assessDue;
         this.courseId = courseId;
     }
 
@@ -75,14 +67,9 @@ public class AssessmentEntity{
         return assessType;
     }
 
-    public Date getAssessStart() {
+    public Date getAssessDue() {
 
-        return assessStart;
-    }
-
-    public Date getAssessEnd() {
-
-        return assessEnd;
+        return assessDue;
     }
 
  /**   public String getAssessNotes() {
@@ -109,13 +96,9 @@ public class AssessmentEntity{
         this.assessType = assessType;
     }
 
-    public void setAssessStart(Date assessStart) {
-        this.assessStart = assessStart;
-    }
+    public void setAssessDue(Date assessDue) {
 
-    public void setAssessEnd(Date assessEnd) {
-
-        this.assessEnd = assessEnd;
+        this.assessDue = assessDue;
     }
 
  /**   public void setAssessNotes(String notes) {

@@ -44,7 +44,7 @@ public interface AssessmentDAO {
     @Query("SELECT * FROM assess_table WHERE assess_id = :id")
     AssessmentEntity getAssessmentById(int id);
 
-    @Query("SELECT * FROM assess_table ORDER BY assess_end DESC")
+    @Query("SELECT * FROM assess_table ORDER BY assess_due")
     LiveData<List<AssessmentEntity>> getAll();
 
     @Query("DELETE FROM assess_table")
