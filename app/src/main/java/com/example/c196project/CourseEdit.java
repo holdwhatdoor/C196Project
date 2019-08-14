@@ -272,7 +272,13 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
             @Override
             public void onClick(View v) {
-
+                Log.d(TAG, "Assess Data: " + assessData.toString());
+                if(!assessData.isEmpty()){
+                    deleteCourseError();
+                }else{
+                    courseVM.deleteCourse(courseId);
+                    finish();
+                }
             }
         });
 

@@ -88,6 +88,7 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         // instantiates passed assessment
         AssessmentEntity passedAssessment = getPassedAssessment();
 
+
         // Assessment input element id assignments
         assessName = findViewById(R.id.enter_assess_name);
         dueDate = findViewById(R.id.assess_due_date);
@@ -141,7 +142,9 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         });
         deleteAssess = findViewById(R.id.del_assess_btn);
         deleteAssess.setOnClickListener(v ->{
-
+            int assessId = getPassedAssessment().getAssessId();
+             assessVM.deleteAssessment(assessId);
+             finish();
         });
         setAlert = findViewById(R.id.set_alert_btn);
         setAlert.setOnClickListener(v ->{
