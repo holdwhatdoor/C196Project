@@ -462,14 +462,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 .get(CourseViewModel.class);
         courseVM.mCourses.observe(this, coursesObserver);
 
-        Bundle extras = getIntent().getExtras();
-        if(extras == null){
-
-        }
-        else{
-            int termId = extras.getInt(TERM_ID_KEY);
-            termVM.loadTerm(termId);
-        }
     }
 
     // Initiates recycler view

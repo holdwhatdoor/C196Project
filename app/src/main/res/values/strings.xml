@@ -19,6 +19,7 @@
 <string name="current_term">Current Term</string>
 <string name="term_title">Term Title</string>
 <string name="alerts">Alerts</string>
+<string name="default_main_term">No Current Term</string>
 
 
 // Activity Term page string labels

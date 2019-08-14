@@ -45,6 +45,12 @@ tools:context="com.example.c196project.MainActivity">
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
             <TextView
                 android:id="@+id/home_term_title"
                 android:layout_width="225dp"

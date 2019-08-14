@@ -2,6 +2,7 @@ package com.example.c196project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,13 +15,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.c196project.database.AppDatabase;
 import com.example.c196project.database.TermEntity;
-import com.example.c196project.ui.TermItemAdapter;
+import com.example.c196project.ui.MainViewAdapter;
 import com.example.c196project.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -29,23 +33,24 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "MainActivity";
+
     // View model
     private MainViewModel mainVM;
 
     // Term Data array list and adapter
     private List<TermEntity> termData = new ArrayList<>();
-    private TermItemAdapter mTermAdapter;
+    private MainViewAdapter mMainAdapter;
+
+    @BindView(R.id.main_rv)
+    public RecyclerView currentTermRV;
 
     // App bar components
     private TextView pageTitle;         // id= app_bar_title
     private ImageButton homeBtn;        // id= appBar_homeBtn
 
-    @BindView(R.id.home_term_title)
-    TextView currentTerm;
-    @BindView(R.id.home_start_txt)
-    TextView startDate;
-    @BindView(R.id.home_end_txt)
-    TextView endDate;
+
+    public MainViewModel mainView;
 
     public Date today = new Date();
 
@@ -59,38 +64,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         db = AppDatabase.getInstance(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        Toolbar toolbar = findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         today.getTime();
 
         ButterKnife.bind(this);
+        initRecyclerView();
         initViewModel();
 
-        pageTitle = (TextView) findViewById(R.id.app_bar_title);
+        pageTitle = findViewById(R.id.app_bar_title);
         pageTitle.setText("Home");
-        homeBtn = (ImageButton)findViewById(R.id.appBar_homeBtn);
+        homeBtn = findViewById(R.id.appBar_homeBtn);
         homeBtn.setOnClickListener(this);
 
-//        mDataSource = new DataSource(this);
-//        mDataSource.open();
-//        Toast.makeText(this, "Database acquired", Toast.LENGTH_SHORT).show();
+        pageTitle = findViewById(R.id.app_bar_title);
 
-        pageTitle = (TextView) findViewById(R.id.app_bar_title);
-        currentTerm = (TextView) findViewById(R.id.home_term_title);
-        startDate = (TextView) findViewById(R.id.home_start_txt);
-        endDate = (TextView) findViewById(R.id.home_end_txt);
-
-        try{
-
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
-        finally{
-
-        }
     }
 
 
@@ -100,27 +91,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChanged(List<TermEntity> termEntities) {
                 termData.clear();
-                termData.addAll(termEntities);
+                TermEntity currentTerm = getCurrentTerm(termEntities);
+                termData.add(currentTerm);
 
-                if(mTermAdapter == null){
-                    mTermAdapter = new TermItemAdapter(termData, MainActivity.this);
+                if (mMainAdapter == null) {
+                    mMainAdapter = new MainViewAdapter(termData, MainActivity.this);
+                } else {
+                    mMainAdapter.notifyDataSetChanged();
                 }
             }
         };
 
-        mainVM = ViewModelProviders.of(this).get(MainViewModel.class);
+        mainVM = ViewModelProviders.of(this)
+                .get(MainViewModel.class);
+        mainVM.mTerms.observe(this, termsObserver);
 
     }
 
     private void initRecyclerView() {
+        currentTermRV.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        currentTermRV.setLayoutManager(layoutManager);
 
+        mMainAdapter = new MainViewAdapter(termData, this);
+        currentTermRV.setAdapter(mMainAdapter);
     }
 
-
-
     @Override
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
 
             case R.id.appBar_homeBtn:
                 Intent mainIntent = new Intent(this, MainActivity.class);
@@ -131,15 +130,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-   //     mDataSource.close();
+        //     mDataSource.close();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-   //     mDataSource.open();
+        //     mDataSource.open();
     }
-
 
 
     @Override
@@ -154,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_home:
                 Intent homeIntent = new Intent(this, MainActivity.class);
                 Toast.makeText(this, "Home selected", Toast.LENGTH_SHORT).show();
@@ -165,22 +163,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Terms selected", Toast.LENGTH_SHORT).show();
                 this.startActivity(termIntent);
                 return true;
-            case R.id.menu_courses:
-                Intent courseIntent = new Intent(this, CourseActivity.class);
-                Toast.makeText(this, "Courses selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(courseIntent);
-                return true;
-            case R.id.menu_tests:
-                Intent testIntent = new Intent(this, AssessmentActivity.class);
-                Toast.makeText(this, "Assessments selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(testIntent);
-                return true;
             default:
                 return true /*super.onOptionsItemSelected(item)*/;
         }
     }
 
-    private void initMenu(){
+    // Method to get current term
+    public TermEntity getCurrentTerm(List<TermEntity> termEntities) {
+         Log.d(TAG, "all terms: " + termEntities);
+         TermEntity currentTerm = null;
+         List<Date> endDates = new ArrayList<>();
 
+        if (termEntities != null) {
+            for (int i = 0; i < termEntities.size(); i++) {
+                if (termEntities.get(i).getEnd().after(today)) {
+                    Date end = termEntities.get(i).getEnd();
+                    endDates.add(end);
+                }
+            }
+            Date earliest = Collections.min(endDates);
+            for (int i = 0; i < termEntities.size(); i++) {
+                if (earliest.equals(termEntities.get(i).getEnd())) {
+                    currentTerm = termEntities.get(i);
+                }
+            }
+        }
+        return currentTerm;
     }
+
 }
+
