@@ -372,7 +372,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         });
         delAssessmentsBtn = findViewById(R.id.ce_delAssess);
         delAssessmentsBtn.setOnClickListener(v ->{
-            assessVM.deleteAll();
+            assessVM.deleteAssessments(courseId);
         });
 
     }

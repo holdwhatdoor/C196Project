@@ -44,11 +44,17 @@ public interface AssessmentDAO {
     @Query("SELECT * FROM assess_table WHERE assess_id = :id")
     AssessmentEntity getAssessmentById(int id);
 
+    @Query("SELECT * FROM assess_table WHERE course_id = :id")
+    List<AssessmentEntity> getCourseAssessments(int id);
+
     @Query("SELECT * FROM assess_table ORDER BY assess_due")
     LiveData<List<AssessmentEntity>> getAll();
 
     @Query("DELETE FROM assess_table")
     int deleteAll();
+
+    @Query("DELETE FROM assess_table WHERE course_id = :id")
+    int deleteAssessments(int id);
 
     @Query("SELECT COUNT(*) FROM assess_table")
     int getCount();

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
@@ -59,6 +60,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     // Course data array lists and adapters
     private List<CourseEntity> courseData = new ArrayList<>();
     private TermEditAdapter mCourseAdapter;
+    private List<AssessmentEntity> courseAssessData = new ArrayList<>();
+    private TermEditAdapter mAssessAdapter;
 
     // Initialized Calendar date variable
     Calendar calendar = Calendar.getInstance();
@@ -419,7 +422,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         // set delete all courses id and OnClickListener
         delCoursesBtn = findViewById(R.id.delAllCourse);
         delCoursesBtn.setOnClickListener(v -> {
-            courseVM.deleteAll();
+            courseVM.deleteCourses(termId);
         });
     }
 
@@ -508,10 +511,27 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
         for(int i = 0; i < courseEntities.size(); i++){
             if(courseEntities.get(i).getTermId() == termId){
+                Log.d(TAG, "GET TERM COURSES METHOD: " + courseEntities.get(i).getCourseId());
                 courseData.add(courseEntities.get(i));
             }
         }
         return courseData;
+    }
+
+    //Method returning list of assessment entities with passed courseId parameter
+    public List<AssessmentEntity> getCourseAssessments(List<CourseEntity> termCourses, List<AssessmentEntity> assessmentEntities){
+
+
+        for(int i = 0; i < termCourses.size(); i++){
+            Log.d(TAG, "Course entity: " + i);
+            for(int j = 0; j < assessmentEntities.size(); j++){
+                Log.d(TAG, "Assessment entity: " + j);
+                if(assessmentEntities.get(j).getCourseId() == termCourses.get(i).getCourseId()){
+                    courseAssessData.add(assessmentEntities.get(j));
+                }
+            }
+        }
+        return courseAssessData;
     }
 
     // Method to check for overlapping start and end dates for courses in database

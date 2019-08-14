@@ -143,7 +143,7 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         deleteAssess = findViewById(R.id.del_assess_btn);
         deleteAssess.setOnClickListener(v ->{
             int assessId = getPassedAssessment().getAssessId();
-             assessVM.deleteAssessment(assessId);
+             assessVM.deleteAssess(assessId);
              finish();
         });
         setAlert = findViewById(R.id.set_alert_btn);

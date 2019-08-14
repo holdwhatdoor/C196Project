@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {TermEntity.class, CourseEntity.class, AssessmentEntity.class, AlertEntity.class},
-        version = 5, exportSchema = false)
+        version = 6, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 

@@ -40,17 +40,24 @@ public interface CourseDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ArrayList<CourseEntity> courseEntities);
 
-    @Delete
-    void deleteCourse(CourseEntity courseEntity);
-
     @Query("SELECT * FROM course_table WHERE course_id = :id")
     CourseEntity getCourseById(int id);
+
+    @Query("SELECT * FROM course_table WHERE term_id = :id")
+    List<CourseEntity> getTermCourses(int id);
 
     @Query("SELECT * FROM course_table ORDER BY start_date")
     LiveData<List<CourseEntity>> getAll();
 
     @Query("DELETE FROM course_table")
     int deleteAll();
+
+    @Delete
+    void deleteCourse(CourseEntity courseEntity);
+
+    @Query("DELETE FROM course_table WHERE term_id = :id")
+    int deleteCourses(int id);
+
 
     @Query("SELECT COUNT(*) FROM course_table")
     int getCount();

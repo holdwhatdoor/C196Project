@@ -53,15 +53,16 @@ public class AssessViewModel extends AndroidViewModel {
         });
     }
 
-    public void deleteAssessment(int assessId){
+    public void deleteAssess(int assessId){
         Log.d("Assessment to delete: ", mRepository.getAssessmentById(assessId).getAssessName());
         Log.d("Assessment to del: ", mRepository.getAssessmentById(assessId).toString());
-        mRepository.deleteAssessment(mRepository.getAssessmentById(assessId));
+        mRepository.deleteAssess(mRepository.getAssessmentById(assessId));
 
     }
 
-    public void deleteAssessment(){
-        mRepository.deleteAssessment(mAssess.getValue());
+
+    public void deleteAssessments(int courseId){
+        mRepository.deleteAssessments(courseId);
 
     }
 
@@ -75,6 +76,7 @@ public class AssessViewModel extends AndroidViewModel {
     public void updateAssessment(AssessmentEntity assessmentEntity){
         mRepository.updateAssessment(mAssess.getValue());
     }
+
 
     public void deleteAll() {
         mRepository.deleteAllAssessments();

@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.c196project.database.AppRepository;
+import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.TermEntity;
 
@@ -22,10 +23,13 @@ public class TermViewModel extends AndroidViewModel {
     public MutableLiveData<List<TermEntity>> mLiveTerms = new MutableLiveData<>();
     public LiveData<TermEntity> mTerm;
     public LiveData<List<TermEntity>> mTerms;
+
     public MutableLiveData<CourseEntity> mLiveCourse = new MutableLiveData<>();
     public MutableLiveData<List<CourseEntity>> mLiveCourses = new MutableLiveData<>();
     public LiveData<CourseEntity> mCourse;
     public LiveData<List<CourseEntity>> mCourses;
+
+    public LiveData<List<AssessmentEntity>> mAssessments;
 
     public AppRepository mRepository;
     public Executor executor = Executors.newSingleThreadExecutor();
@@ -36,6 +40,7 @@ public class TermViewModel extends AndroidViewModel {
         mRepository = AppRepository.getInstance(getApplication());
         mTerms = mRepository.mTerms;
         mCourses = mRepository.mCourses;
+        mAssessments = mRepository.mAssessments;
 
     }
 

@@ -59,6 +59,10 @@ public class CourseViewModel extends AndroidViewModel {
 
     }
 
+    public void deleteCourses(int termId){
+        mRepository.deleteCourses(termId);
+    }
+
     public void deleteCourse(){
         mRepository.deleteCourse(mCourse.getValue());
 

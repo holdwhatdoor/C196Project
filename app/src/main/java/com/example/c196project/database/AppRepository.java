@@ -4,9 +4,6 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.c196project.utilities.SampleData;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -46,15 +43,6 @@ public class AppRepository {
         mAlerts = getAllAlerts();
     }
 
-    public void addSampleData() {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                      mDb.termDAO().insertAll((ArrayList<TermEntity>) SampleData.getTerms());
-            }
-        });
-    }
-
     // get methods for all live data arraylists for each object entity
     private LiveData<List<TermEntity>> getAllTerms() {
         return mDb.termDAO().getAll();
@@ -84,6 +72,14 @@ public class AppRepository {
     }
     public AlertEntity getAlertById(int alertId) {
         return mDb.alertDAO().getAlertById(alertId);
+    }
+
+    // get entity lists by foreign id
+    public List<CourseEntity> getTermCourses(int termId){
+        return mDb.courseDAO().getTermCourses(termId);
+    }
+    public List<AssessmentEntity> getCourseAssessments(int courseId){
+        return mDb.assessmentDAO().getCourseAssessments(courseId);
     }
 
     // Term insert method
@@ -162,6 +158,14 @@ public class AppRepository {
         });
     }
 
+    public void deleteCourses(int termId){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.courseDAO().deleteCourses(termId);
+            }
+        });
+    }
 
     public void deleteAllCourses() {
         executor.execute(new Runnable() {
@@ -173,7 +177,7 @@ public class AppRepository {
     }
 
     // delete assessment methods
-    public void deleteAssessment(final AssessmentEntity assessment) {
+    public void deleteAssess(final AssessmentEntity assessment) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -182,6 +186,14 @@ public class AppRepository {
         });
     }
 
+    public void deleteAssessments(int courseId){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.assessmentDAO().deleteAssessments(courseId);
+            }
+        });
+    }
 
     public void deleteAllAssessments() {
         executor.execute(new Runnable() {
