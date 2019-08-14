@@ -44,16 +44,27 @@ public class MainViewAdapter extends RecyclerView.Adapter<MainViewAdapter.MainHo
     public void onBindViewHolder(@NonNull MainHolder holder, int position) {
         final TermEntity term = mTerms.get(position);
 
-        holder.mTermItem.setText(term.getTermTitle());
-        holder.mStartDate.setText(DateConverter.formatDateString(term.getStart().toString()));
-        holder.mEndDate.setText(DateConverter.formatDateString(term.getEnd().toString()));
+        if(term != null) {
 
+            holder.mTermItem.setText(term.getTermTitle());
+            holder.mStartDate.setText(DateConverter.formatDateString(term.getStart().toString()));
+            holder.mEndDate.setText(DateConverter.formatDateString(term.getEnd().toString()));
+        } else {
+            holder.mTermItem.setText("No Terms exist");
+            holder.mStartDate.setText("mm/dd/yyyy");
+            holder.mEndDate.setText("mm/dd/yyyy");
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull MainHolder holder, int position, @NonNull List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
 
+    }
+
+    public TermEntity getTermAtPos(int position) {
+
+        return mTerms != null ? mTerms.get(position) :null;
     }
 
     @Override

@@ -26,6 +26,8 @@ public class AssessmentEntity{
     private String assessType;
     @ColumnInfo(name = "assess_due")
     private Date assessDue;
+    @ColumnInfo(name = "assess_alert")
+    private String assessAlert;
 
     // empty constructor
     @Ignore
@@ -34,20 +36,22 @@ public class AssessmentEntity{
 
     @Ignore
     public AssessmentEntity(String assessName, String assessType, Date assessDue,
-                            int courseId) {
+                            String assessAlert, int courseId) {
         this.assessName = assessName;
         this.assessType = assessType;
         this.assessDue = assessDue;
+        this.assessAlert = assessAlert;
         this.courseId = courseId;
     }
 
     // constructor
     public AssessmentEntity(int assessId, String assessName, String assessType, Date assessDue,
-                            int courseId) {
+                            String assessAlert, int courseId) {
         this.assessId = assessId;
         this.assessName = assessName;
         this.assessType = assessType;
         this.assessDue = assessDue;
+        this.assessAlert = assessAlert;
         this.courseId = courseId;
     }
 
@@ -72,9 +76,9 @@ public class AssessmentEntity{
         return assessDue;
     }
 
- /**   public String getAssessNotes() {
-        return assessNotes;
-    }*/
+    public String getAssessAlert() {
+        return assessAlert;
+    }
 
     public int getCourseId(){
         return courseId;
@@ -101,9 +105,9 @@ public class AssessmentEntity{
         this.assessDue = assessDue;
     }
 
- /**   public void setAssessNotes(String notes) {
-        this.assessNotes = notes;
-    }*/
+    public void setAssessAlert(String alert) {
+        this.assessAlert = alert;
+    }
 
     public void setCourseId(int courseId){
         this.courseId = courseId;

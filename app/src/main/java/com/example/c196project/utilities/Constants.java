@@ -17,11 +17,14 @@ public class Constants {
     public static final String COURSE_PHONE_KEY = "course_phone_key";
     public static final String COURSE_EMAIL_KEY = "course_email_key";
     public static final String COURSE_NOTES_KEY = "course_notes_key";
+    public static final String COURSE_ALERT_START_KEY = "course_alert_start_key";
+    public static final String COURSE_ALERT_END_KEY = "course_alert_end_key";
     // Assess key constants
     public static final String ASSESS_ID_KEY = "assess_id_key";
     public static final String ASSESS_TITLE_KEY = "assess_title_key";
     public static final String ASSESS_TYPE_KEY = "assess_type_key";
     public static final String ASSESS_DUE_KEY = "assess_due_key";
+    public static final String ASSESS_ALERT_KEY = "assess_alert_key";
 
 
     // Assessment radio group button id assignments

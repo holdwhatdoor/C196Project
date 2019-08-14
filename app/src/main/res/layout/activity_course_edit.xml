@@ -157,6 +157,36 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Set Alert on Start: "/>
+
+                <CheckBox
+                    android:id="@+id/ce_start_alert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:text="Set Alert on End: "/>
+
+                <CheckBox
+                    android:id="@+id/ce_end_alert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
@@ -263,25 +293,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:text="@string/due_date" />
 
                 <EditText
                     android:id="@+id/ce_assessDue"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:hint="@string/blank_date"
                     android:textAlignment="center"/>
 
-            </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Set Due Date Alert: "/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                <CheckBox
+                    android:id="@+id/ce_due_alert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
 
             </LinearLayout>

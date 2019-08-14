@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -42,10 +43,12 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_ALERT_END_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_ALERT_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_EMAIL_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_END_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
@@ -96,6 +99,9 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public Spinner courseSpinner;                                   // id = ce_courseStatus
     public String[] courseOptions = {"No Selection", "Planned", "In Progress", "Completed", "Dropped"};
     public ArrayAdapter spinAdapter;
+    public CheckBox startAlert;
+    public CheckBox endAlert;
+
     /**
      *  Add Assessment input data display/imput elements
      */
@@ -103,6 +109,9 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     // Add Course declarations for start/end date EditText with DatePickerDialog listeners
     public EditText assessDueDate;                                // id = ce_assessStart
     public DatePickerDialog.OnDateSetListener assessDueDateListener;
+    // Checkbox for setting alert
+    public CheckBox assessDueAlert;
+
     // Radio button group and selections for Assessment type
     public RadioGroup assessType;                                   // id = ce_assessRadio_grp
     public RadioButton assessOA;                                    // id = ce_oaRadio
@@ -143,6 +152,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String formatEnd = DateConverter.formatDateString(courseEnd);
         Date cStartDate = DateConverter.toDate(formatStart);
         Date cEndDate = DateConverter.toDate(formatEnd);
+        String alertStart = extras.getString(COURSE_ALERT_START_KEY);
+        String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
 
         Log.d(TAG, "Course Edit received Course Title: " + courseTitle);
         Log.d(TAG, "Course Edit received Course Start: " + courseStart);
@@ -194,6 +205,9 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 courseOptions);
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseSpinner.setAdapter(spinAdapter);
+        startAlert = findViewById(R.id.ce_start_alert);
+        endAlert = findViewById(R.id.ce_end_alert);
+
 
         /**
          *  Start and End date EditText ids and onClick override functionality
@@ -243,7 +257,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         mentorPhoneEdit.setText(mentorPhone);
         Log.d(TAG, "Status selection ID: " + getStatusSelectionId(courseStatus));
         courseSpinner.setSelection(getStatusSelectionId(courseStatus));
-
+        setAlertsChecked(alertStart, alertEnd);
 
         /**
          *  Course button id assignments/functionality
@@ -292,6 +306,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         assessOA = findViewById(R.id.ce_oaRadio);
         assessPA = findViewById(R.id.ce_paRadio);
         assessDueDate = findViewById(R.id.ce_assessDue);
+        assessDueAlert = findViewById(R.id.ce_due_alert);
 
         /**
          *  Due date EditText id and onClick override functionality
@@ -342,6 +357,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     Date due = DateConverter.toDate(dueString);
                     Log.d(TAG, "Assess Date Due Date: " + due);
                     String selectedType = CourseEdit.this.getSelectedAssessmentType();
+                    String dueAlert = "not set";
+                    if(assessDueAlert.isChecked()){
+                        dueAlert = "set";
+                    }
                     int courseID = courseId;
 
                     Log.d(TAG, "cEndDate: " + cEndDate + ", due: " + due + ", cStartDate: " +
@@ -349,12 +368,13 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
                     if (due.before(cEndDate) && due.after(cStartDate) && !assessmentConflict(due)) {
                         AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, due,
-                                courseID);
+                                dueAlert, courseID);
 
                         assessVM.insertAssessment(assessment);
 
                         assessTitleInput.getText().clear();
                         assessDueDate.getText().clear();
+                        assessDueAlert.setChecked(false);
 
                         assessTitleInput.setHint("Enter Assessment Name");
                         assessDueDate.setHint("mm/dd/yyyy");
@@ -396,6 +416,12 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 int spinnerPos = spinAdapter.getPosition(courseEntity.getStatus());
                 courseSpinner.setSelection(spinnerPos);
                 Log.d(TAG, "Course Status Spinner set to: " + courseSpinner.getSelectedItem().toString());
+                if(courseEntity.getAlertStart().equals("set")){
+                    startAlert.setChecked(true);
+                }
+                if(courseEntity.getAlertEnd().equals("set")) {
+                    endAlert.setChecked(true);
+                }
             }
         });
 
@@ -458,11 +484,13 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         Date cStartDate = DateConverter.toDate(formatStart);
         Log.d(TAG, "Course Start date DATE: " + cStartDate);
         Date cEndDate = DateConverter.toDate(formatEnd);
+        String alertStart = extras.getString(COURSE_ALERT_START_KEY);
+        String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
 
         int termId = extras.getInt(TERM_ID_KEY);
 
         CourseEntity passedCourse = new CourseEntity(courseId, courseTitle, cStartDate, cEndDate, courseStatus,
-                courseMentor, mentorPhone, mentorEmail, courseNotes, termId);
+                courseMentor, mentorPhone, mentorEmail, courseNotes, alertStart, alertEnd, termId);
 
         return passedCourse;
     }
@@ -477,6 +505,16 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             }
         }
         return position;
+    }
+
+    // Checks to see alert status and sets Radio button true if alert is set
+    public void setAlertsChecked(String start, String end) {
+         if(start.equals("set")) {
+             startAlert.setChecked(true);
+         }
+         if(end.equals("set")) {
+             endAlert.setChecked(true);
+         }
     }
 
     // Method returning list of Assessment entities with passed courseId parameter

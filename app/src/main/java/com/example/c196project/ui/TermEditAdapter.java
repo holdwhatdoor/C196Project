@@ -23,6 +23,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.c196project.utilities.Constants.COURSE_ALERT_END_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_ALERT_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_EMAIL_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_END_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
@@ -80,10 +82,12 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 String mentorPhone = getCourseAtPos(position).getMentorPhone();
                 String mentorEmail = getCourseAtPos(position).getMentorEmail();
                 String notes = getCourseAtPos(position).getCourseNotes();
+                String startAlert = getCourseAtPos(position).getAlertStart();
+                String endAlert = getCourseAtPos(position).getAlertEnd();
                 int termId = getCourseAtPos(position).getTermId();
 
                 CourseEntity course = new CourseEntity(courseId, courseTitle, start, end, status,
-                        mentor, mentorPhone, mentorEmail, notes, termId);
+                        mentor, mentorPhone, mentorEmail, notes, startAlert, endAlert, termId);
 
                 Log.d(TAG, "Course ID: " + courseId);
                 Log.d(TAG, "Course Title: " + courseTitle);
@@ -101,6 +105,8 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
                 intent.putExtra(COURSE_PHONE_KEY, course.getMentorPhone());
                 intent.putExtra(COURSE_EMAIL_KEY, course.getMentorEmail());
                 intent.putExtra(COURSE_NOTES_KEY, course.getCourseNotes());
+                intent.putExtra(COURSE_ALERT_START_KEY, course.getAlertStart());
+                intent.putExtra(COURSE_ALERT_END_KEY, course.getAlertEnd());
                 intent.putExtra(TERM_ID_KEY, course.getTermId());
 
                 mContext.startActivity(intent);

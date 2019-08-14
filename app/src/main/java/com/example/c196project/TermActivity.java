@@ -305,16 +305,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Terms selected", Toast.LENGTH_SHORT).show();
                 this.startActivity(termIntent);
                 return true;
-            case R.id.menu_courses:
-                Intent courseIntent = new Intent(this, CourseActivity.class);
-                Toast.makeText(this, "Courses selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(courseIntent);
-                return true;
-            case R.id.menu_tests:
-                Intent testIntent = new Intent(this, AssessmentActivity.class);
-                Toast.makeText(this, "Tests selected", Toast.LENGTH_SHORT).show();
-                this.startActivity(testIntent);
-                return true;
             default:
                 return true /*super.onOptionsItemSelected(item)*/;
         }

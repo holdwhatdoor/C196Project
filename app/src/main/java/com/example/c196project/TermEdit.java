@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -87,12 +88,15 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     public DatePickerDialog.OnDateSetListener courseStartListener;
     public EditText courseEndDate;
     public DatePickerDialog.OnDateSetListener courseEndListener;
-    // Add course mentor info
+    // Add course mentor info inputs
     public EditText courseMentor;
     public EditText mentorPhone;
     public EditText mentorEmail;
+    // Course status and alert inputs
     public Spinner statusSpinner;
     public String[] spinnerOptions = {"No Selection", "Planned", "In Progress", "Completed", "Dropped"};
+    public CheckBox startAlert;
+    public CheckBox endAlert;
 
     // Button variables
     public Button delTermBtn;
@@ -204,6 +208,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(spinAdapter);
 
+        startAlert = findViewById(R.id.start_alert);
+        endAlert = findViewById(R.id.end_alert);
 
         // Course start date instantiation/functionality
         DatePickerDialog.OnDateSetListener courseStart = (view, year, month, dayOfMonth) -> {
@@ -371,6 +377,15 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                     String notes = ".";
                     Log.d(TAG, "Notes: " + notes);
 
+                    String alertStart = "not set";
+                    String alertEnd = "not set";
+                    if(startAlert.isChecked()) {
+                        alertStart = "set";
+                    }
+                    if(endAlert.isChecked()) {
+                        alertEnd = "set";
+                    }
+
                   //  int termId = getPassedTerm().getTermId();
                     Log.d(TAG, "Term ID: " + termId);
                     Log.d(TAG, "Start before end:  " + start.before(end));
@@ -382,7 +397,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         Log.d(TAG, "Entered if that calls insertCourse()");
 
                         CourseEntity newCourse = new CourseEntity(course, start,
-                                end, status, mentor, phone, email, notes, termId);
+                                end, status, mentor, phone, email, notes, alertStart, alertEnd, termId);
 
                         Log.d(TAG, "Course object created");
                         Log.d(TAG, "Course title: " + newCourse.getCourseTitle());
@@ -398,6 +413,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         mentorPhone.getText().clear();
                         mentorEmail.getText().clear();
                         statusSpinner.setSelection(0);
+                        startAlert.setChecked(false);
+                        endAlert.setChecked(false);
 
                         courseTitleInput.setHint("Enter Course Title");
                         courseStartDate.setHint("mm/dd/yyyy");
@@ -508,22 +525,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             }
         }
         return courseData;
-    }
-
-    //Method returning list of assessment entities with passed courseId parameter
-    public List<AssessmentEntity> getCourseAssessments(List<CourseEntity> termCourses, List<AssessmentEntity> assessmentEntities){
-
-
-        for(int i = 0; i < termCourses.size(); i++){
-            Log.d(TAG, "Course entity: " + i);
-            for(int j = 0; j < assessmentEntities.size(); j++){
-                Log.d(TAG, "Assessment entity: " + j);
-                if(assessmentEntities.get(j).getCourseId() == termCourses.get(i).getCourseId()){
-                    courseAssessData.add(assessmentEntities.get(j));
-                }
-            }
-        }
-        return courseAssessData;
     }
 
     // Method to check for overlapping start and end dates for courses in database

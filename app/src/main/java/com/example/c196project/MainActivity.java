@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         today.getTime();
 
         ButterKnife.bind(this);
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          TermEntity currentTerm = null;
          List<Date> endDates = new ArrayList<>();
 
-        if (termEntities != null) {
+        if (!termEntities.isEmpty()) {
             for (int i = 0; i < termEntities.size(); i++) {
                 if (termEntities.get(i).getEnd().after(today)) {
                     Date end = termEntities.get(i).getEnd();

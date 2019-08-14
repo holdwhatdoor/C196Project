@@ -36,6 +36,10 @@ public class CourseEntity {
     private String mentorEmail;
     @ColumnInfo(name = "course_notes")
     private String courseNotes;
+    @ColumnInfo(name = "alert_start")
+    private String alertStart;
+    @ColumnInfo(name = "alert_end")
+    private String alertEnd;
 
     // empty constructor
     @Ignore
@@ -45,7 +49,8 @@ public class CourseEntity {
 
     @Ignore
     public CourseEntity(String courseTitle, Date startDate, Date endDate, String status,
-                        String mentorName, String mentorPhone, String mentorEmail, String courseNotes, int termId){
+                        String mentorName, String mentorPhone, String mentorEmail, String courseNotes,
+                        String alertStart, String alertEnd, int termId){
         this.courseTitle = courseTitle;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -54,12 +59,15 @@ public class CourseEntity {
         this.mentorPhone = mentorPhone;
         this.mentorEmail = mentorEmail;
         this.courseNotes = courseNotes;
+        this.alertStart = alertStart;
+        this.alertEnd = alertEnd;
         this.termId = termId;
     }
 
     // constructor
     public CourseEntity(int courseId, String courseTitle, Date startDate, Date endDate, String status,
-                        String mentorName, String mentorPhone, String mentorEmail, String courseNotes, int termId) {
+                        String mentorName, String mentorPhone, String mentorEmail, String courseNotes,
+                        String alertStart, String alertEnd, int termId) {
 
         this.courseId = courseId;
         this.courseTitle = courseTitle;
@@ -70,6 +78,8 @@ public class CourseEntity {
         this.mentorPhone = mentorPhone;
         this.mentorEmail = mentorEmail;
         this.courseNotes = courseNotes;
+        this.alertStart = alertStart;
+        this.alertEnd = alertEnd;
         this.termId = termId;
     }
 
@@ -116,6 +126,10 @@ public class CourseEntity {
         return courseNotes;
     }
 
+    public String getAlertStart() { return alertStart; }
+
+    public String getAlertEnd() { return alertEnd; }
+
     public int getTermId(){
         return termId;
     }
@@ -160,6 +174,10 @@ public class CourseEntity {
 
     public void setCourseNotes(String courseNotes) { this.courseNotes = courseNotes; }
 
+    public void setAlertStart(String alertStart) { this.alertStart = alertStart; }
+
+    public void setAlertEnd(String alertEnd) { this.alertEnd = alertEnd; }
+
     public void setTermId(int termId){
         this.termId = termId;
     }
@@ -167,7 +185,8 @@ public class CourseEntity {
     @Override
     public String toString(){
         return "CourseEntity{" + "CourseId= " + courseId + ", Course Title= " + courseTitle + ", Course Start= " +
-                startDate + ", Course End= " + endDate + ", Course Mentor= " + mentorName + "Mentor Email= " +
-                mentorEmail + "Course Notes= " + courseNotes + "Mentor Phone= " + mentorPhone + "Term ID= " + termId + "}";
+                startDate + ", Course End= " + endDate + ", Course Mentor= " + mentorName + ", Mentor Email= " +
+                mentorEmail + ", Course Notes= " + courseNotes + ", Mentor Phone= " + mentorPhone +
+                ", ALert Start= " + alertStart + ", Alert End= " + alertEnd + ", Term ID= " + termId + "}";
     }
 }

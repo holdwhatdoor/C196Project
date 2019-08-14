@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -30,6 +31,7 @@ import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_ALERT_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
 
 public class AssessmentEdit extends AppCompatActivity implements View.OnClickListener{
@@ -57,6 +59,9 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
     public EditText dueDate;
     private DatePickerDialog.OnDateSetListener dueDateSetListener;
 
+    // Set Alert checkbox
+    public CheckBox setAlert;
+
     // Radio Button instantiations
     public RadioGroup radioGroup;
     public RadioButton oaRadio;
@@ -65,7 +70,6 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
     // Button variables
     public Button saveAssess;
     public Button deleteAssess;
-    public Button setAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +92,10 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         // instantiates passed assessment
         AssessmentEntity passedAssessment = getPassedAssessment();
 
-
         // Assessment input element id assignments
         assessName = findViewById(R.id.enter_assess_name);
         dueDate = findViewById(R.id.assess_due_date);
+        setAlert = findViewById(R.id.assess_cb_alert);
         // Radio group and button id assignments
         radioGroup = findViewById(R.id.assess_radio_grp);
         oaRadio = findViewById(R.id.asses_oa_radio);
@@ -130,10 +134,14 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
         // Populate input fields with passed assessment information
         assessName.setText(passedAssessment.getAssessName());
+        // Date retrieval, format convesion and text set
         Date dDate = passedAssessment.getAssessDue();
         String due = passedAssessment.getAssessDue().toString();
         dueDate.setText(DateConverter.formatDateString(due));
+       // method calls to set assessment type and whether alert checkbox is set
+
         setAssessType(passedAssessment);
+        setAlertChecked(passedAssessment);
 
         // Button id assignments and functionality
         saveAssess = findViewById(R.id.save_assess_btn);
@@ -145,10 +153,6 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
             int assessId = getPassedAssessment().getAssessId();
              assessVM.deleteAssess(assessId);
              finish();
-        });
-        setAlert = findViewById(R.id.set_alert_btn);
-        setAlert.setOnClickListener(v ->{
-
         });
     }
 
@@ -188,10 +192,11 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         Date assessDue = DateConverter.toDate(formatDue);
         Log.d(TAG, "Start date DATE: " + assessDue);
         String assessType = extras.getString(ASSESS_TYPE_KEY);
+        String assessAlert = extras.getString(ASSESS_ALERT_KEY);
         int courseId = extras.getInt(COURSE_ID_KEY);
 
         AssessmentEntity passedAssessment = new AssessmentEntity(assessId, assessName, assessType,
-                assessDue, courseId);
+                assessDue, assessAlert, courseId);
 
         return passedAssessment;
     }
@@ -204,6 +209,15 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
             oaRadio.setChecked(true);
         } else if(assessType.equals("Performance")){
             paRadio.setChecked(true);
+        }
+    }
+
+    // Method to set if Alert box is checked
+    public void setAlertChecked(AssessmentEntity assessmentEntity) {
+        String alertChecked = assessmentEntity.getAssessAlert();
+        Log.d(TAG, "Alert is.... " + alertChecked);
+        if(alertChecked.equals("set")){
+            setAlert.setChecked(true);
         }
     }
 }
