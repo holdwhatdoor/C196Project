@@ -110,8 +110,6 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
         TextView mListItem;
         @BindView(R.id.due_date)
         TextView mDueDate;
-        @BindView(R.id.assess_del_btn)
-        Button mDelBtn;
         @BindView(R.id.assess_edit_btn)
         Button mEditBtn;
 

@@ -59,28 +59,6 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.TermHo
         holder.mStartDate.setText(DateConverter.formatDateString(term.getStart().toString()));
         holder.mEndDate.setText(DateConverter.formatDateString(term.getEnd().toString()));
 
-        holder.mDelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int termId = getTermAtPos(position).getTermId();
-                String termTitle = getTermAtPos(position).getTermTitle();
-                Date start = getTermAtPos(position).getStart();
-                Date end = getTermAtPos(position).getEnd();
-                TermEntity term = new TermEntity(termId, termTitle, start, end);
-
-                Log.d(TAG, "Term ID: " + termId);
-                Log.d(TAG, "Term Title: " + termTitle);
-                Log.d(TAG, "Term Start Date: " + start);
-                Log.d(TAG, "Term End Date: " + end);
-                Log.d(TAG, "Term Data: " + term.toString());
-
-                Intent intent = new Intent(mContext, TermEdit.class);
-                intent.putExtra(TERM_ID_KEY, term.getTermId());
-                mContext.startActivity(intent);
-            }
-        });
-
         holder.mEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,8 +110,6 @@ public class TermItemAdapter extends RecyclerView.Adapter<TermItemAdapter.TermHo
         TextView mStartDate;
         @BindView(R.id.end_date)
         TextView mEndDate;
-        @BindView(R.id.item_del_btn)
-        Button mDelBtn;
         @BindView(R.id.item_edit_btn)
         Button mEditBtn;
 

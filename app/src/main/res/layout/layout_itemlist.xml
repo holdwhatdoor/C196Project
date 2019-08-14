@@ -26,15 +26,8 @@
             android:id="@+id/item_edit_btn"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/item_del_btn"
-            android:text="Edit"/>
-
-        <Button
-            android:id="@+id/item_del_btn"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Delete"/>
+            android:text="Edit"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"

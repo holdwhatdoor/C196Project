@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.c196project.CourseEdit;
 import com.example.c196project.R;
-import com.example.c196project.TermEdit;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 
@@ -67,38 +66,6 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
         holder.mListItem.setText(course.getCourseTitle());
         holder.mStartDate.setText(DateConverter.formatDateString(course.getStartDate().toString()));
         holder.mEndDate.setText(DateConverter.formatDateString(course.getEndDate().toString()));
-
-        holder.mDelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int courseId = getCourseAtPos(position).getCourseId();
-                String courseTitle = getCourseAtPos(position).getCourseTitle();
-                Date start = getCourseAtPos(position).getStartDate();
-                Date end = getCourseAtPos(position).getEndDate();
-                String status = getCourseAtPos(position).getStatus();
-                String mentor = getCourseAtPos(position).getMentorName();
-                String mentorPhone = getCourseAtPos(position).getMentorPhone();
-                String mentorEmail = getCourseAtPos(position).getMentorEmail();
-                String notes = getCourseAtPos(position).getCourseNotes();
-                int termId = getCourseAtPos(position).getTermId();
-
-
-                CourseEntity course = new CourseEntity(courseId, courseTitle, start, end, status,
-                        mentor, mentorPhone, mentorEmail, notes, termId);
-
-
-                Log.d(TAG, "Course ID: " + courseId);
-                Log.d(TAG, "Course Title: " + courseTitle);
-                Log.d(TAG, "Course Start Date: " + start);
-                Log.d(TAG, "Course End Date: " + end);
-                Log.d(TAG, "Course Data: " + course.toString());
-
-                Intent intent = new Intent(mContext, TermEdit.class);
-                intent.putExtra(TERM_ID_KEY, course.getTermId());
-                mContext.startActivity(intent);
-            }
-        });
 
         holder.mEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,8 +133,6 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
         TextView mStartDate;
         @BindView(R.id.end_date)
         TextView mEndDate;
-        @BindView(R.id.item_del_btn)
-        Button mDelBtn;
         @BindView(R.id.item_edit_btn)
         Button mEditBtn;
 
