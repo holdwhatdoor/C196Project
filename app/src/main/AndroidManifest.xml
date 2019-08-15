@@ -42,6 +42,11 @@
             android:label="@string/course_edit_title"
             android:theme="@style/NoActionBar" />
         <activity
+            android:name=".CourseNotes"
+            android:label="@string/course_note_title"
+            />
+
+        <activity
             android:name=".TermActivity"
             android:label="@string/term_activity_title"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

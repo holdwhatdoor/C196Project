@@ -138,7 +138,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
         // retrieves course data passed from adapter
         Bundle extras = getIntent().getExtras();
-        // CourseEntity data
+        // passed CourseEntity data
         int courseId = extras.getInt(COURSE_ID_KEY);
         String courseTitle = extras.getString(COURSE_TITLE_KEY);
         String courseStart = extras.getString(COURSE_START_KEY);
@@ -274,12 +274,26 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         // Add note button assignment/function
         addNoteBtn = findViewById(R.id.ce_noteBtn);
         addNoteBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
+                @Override
             public void onClick(View v) {
+                    Intent intent = new Intent (v.getContext(), CourseNotes.class);
 
-            }
+                    intent.putExtra(COURSE_ID_KEY, courseId);
+                    intent.putExtra(COURSE_TITLE_KEY, courseTitle);
+                    intent.putExtra(COURSE_START_KEY, courseStart);
+                    intent.putExtra(COURSE_END_KEY, courseEnd);
+                    intent.putExtra(COURSE_MENTOR_KEY, courseMentor);
+                    intent.putExtra(COURSE_EMAIL_KEY, mentorEmail);
+                    intent.putExtra(COURSE_PHONE_KEY, mentorPhone);
+                    intent.putExtra(COURSE_STATUS_KEY, courseStatus);
+                    intent.putExtra(COURSE_NOTES_KEY, courseNotes);
+                    intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
+                    intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
+
+                    v.getContext().startActivity(intent);
+                }
         });
+
         // Delete course button assignment/function
         delCourseBtn = findViewById(R.id.ce_delCourse);
         delCourseBtn.setOnClickListener(new View.OnClickListener() {

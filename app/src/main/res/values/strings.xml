@@ -73,6 +73,9 @@
 <string name="course_edit_title">Edit Course</string>
 <string name="save_course_btn">Save Course</string>
 
+// Course Note string labels
+<string name="course_note_title">Course Notes</string>
+
 // Activity Assessment page string labels
 <string name="assess_activity_title">Assessments</string>
 <string name="new_assess">New Assessment</string>

@@ -40,6 +40,9 @@ public interface CourseDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(ArrayList<CourseEntity> courseEntities);
 
+ //   @Update("UPDATE course_table SET course_notes = :note WHERE course_id = :id")
+ //   void updateCourseNotes(String note, int id);
+
     @Query("SELECT * FROM course_table WHERE course_id = :id")
     CourseEntity getCourseById(int id);
 

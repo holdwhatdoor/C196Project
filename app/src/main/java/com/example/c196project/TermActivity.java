@@ -75,7 +75,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_term);
 
         // Instantiate Toolbar by id
-        Toolbar toolbar = (Toolbar) findViewById(R.id.t_appbar);
+        Toolbar toolbar = findViewById(R.id.t_appbar);
         setSupportActionBar(toolbar);
 
         // Set Toolbar text and home button id and function
@@ -166,7 +166,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
 
-                termTitleInput = (EditText) findViewById(R.id.term_title_input);
+                termTitleInput = findViewById(R.id.term_title_input);
                 TimeZone localTZ = TimeZone.getDefault();
                 Locale locale = Locale.getDefault();
 

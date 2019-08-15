@@ -26,7 +26,7 @@
         <ScrollView
             android:id="@+id/note_scroll"
             android:layout_width="match_parent"
-            android:layout_height="240dp">
+            android:layout_height="200dp">
 
             <EditText
                 android:id="@+id/note_text"
@@ -46,16 +46,22 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/save_btn"
+                android:id="@+id/note_save_btn"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
                 android:text="@string/save_btn" />
 
             <Button
-                android:id="@+id/clear_btn"
+                android:id="@+id/note_clear_btn"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
                 android:text="@string/clear" />
+
+            <Button
+                android:id="@+id/note_cancel_btn"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="@string/cancel_btn"/>
 
         </LinearLayout>
 

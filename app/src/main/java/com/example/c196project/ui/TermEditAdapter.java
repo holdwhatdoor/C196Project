@@ -113,6 +113,7 @@ public class TermEditAdapter extends RecyclerView.Adapter<TermEditAdapter.TermEd
 
             }
         });
+
     }
 
     @Override
