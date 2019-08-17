@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
+import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.CourseEditAdapter;
 import com.example.c196project.viewmodel.AssessViewModel;
 import com.example.c196project.viewmodel.CourseViewModel;
@@ -71,6 +72,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     // View Models
     public CourseViewModel courseVM;
     public AssessViewModel assessVM;
+    // Term data array list
+    private List<TermEntity> termData = new ArrayList<>();
     // Course data array lists and adapters
     private List<CourseEntity> courseData = new ArrayList<>();
     private CourseEditAdapter mCourseAdapter;
@@ -271,6 +274,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
             }
         });
+
         // Add note button assignment/function
         addNoteBtn = findViewById(R.id.ce_noteBtn);
         addNoteBtn.setOnClickListener(new View.OnClickListener() {
@@ -440,30 +444,29 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         });
 
         final Observer<List<AssessmentEntity>> assessObserver =
-                new Observer<List<AssessmentEntity>>() {
-                    @Override
-                    public void onChanged(List<AssessmentEntity> assessmentEntities) {
+                assessmentEntities -> {
 
-                        int courseId = getPassedCourse().getCourseId();
-                        Log.d(TAG, "Course Edit Page: Course ID: " + courseId);
-                        Log.d(TAG, "Assess Entities: " + assessmentEntities);
+                    int courseId = getPassedCourse().getCourseId();
+                    Log.d(TAG, "Course Edit Page: Course ID: " + courseId);
+                    Log.d(TAG, "Assess Entities: " + assessmentEntities);
 
-                        assessData.clear();
-                        assessData.addAll(assessmentEntities);
+                    assessData.clear();
+                    assessData.addAll(assessmentEntities);
 
-                        if (mAssessAdapter == null) {
-                            mAssessAdapter = new CourseEditAdapter(assessData, CourseEdit.this);
-                            assessRV.setAdapter(mAssessAdapter);
-                        } else {
-                            mAssessAdapter.notifyDataSetChanged();
-                        }
+                    if (mAssessAdapter == null) {
+                        mAssessAdapter = new CourseEditAdapter(assessData, CourseEdit.this);
+                        assessRV.setAdapter(mAssessAdapter);
+                    } else {
+                        mAssessAdapter.notifyDataSetChanged();
                     }
                 };
         assessVM = ViewModelProviders.of(this)
                 .get(AssessViewModel.class);
         assessVM.mAssessments.observe(this, assessObserver);
 
-        Log.d(TAG, "AssessData: " + assessData);
+        Log.d(TAG, "CourseData: " + courseData);
+        termData = courseVM.mTerms.getValue();
+        Log.d(TAG, "TermData: " + termData);
     }
 
     // Initialize recycler view

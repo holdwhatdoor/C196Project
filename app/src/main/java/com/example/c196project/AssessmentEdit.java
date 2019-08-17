@@ -202,12 +202,12 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
     private void initViewModel() {
         assessVM = ViewModelProviders.of(this)
                 .get(AssessViewModel.class);
-        assessVM.mLiveAssess.observe(this, (assessmentEntity) -> {
+        assessVM.mLiveAssess.observe(this, assessmentEntity -> {
             if (assessmentEntity != null) {
                 Calendar calendar = Calendar.getInstance();
                 assessName.setText(assessmentEntity.getAssessName());
                 dueDate.setText(DateConverter.formatDateString(assessmentEntity.getAssessDue().toString()));
-                setAssessType(assessmentEntity);
+                AssessmentEdit.this.setAssessType(assessmentEntity);
             }
         });
 

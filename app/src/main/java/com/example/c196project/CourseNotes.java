@@ -8,12 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.viewmodel.CourseViewModel;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -36,7 +40,8 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
 
     // View Model instantiate
     public CourseViewModel courseVM;
-
+    // Course Data list
+    public List<CourseEntity> courseData = new ArrayList<>();
     // Course Notes components
     public EditText noteText;
 
@@ -44,7 +49,6 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
     public Button saveBtn;
     public Button clearBtn;
     public Button cancelBtn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,7 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
                 v.getContext().startActivity(intent);
 
                 courseVM.insertCourse(updatedCourse);
+                finish();
             }
         });
 
@@ -147,7 +152,21 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
     }
 
     private void initViewModel() {
+        courseVM = ViewModelProviders.of(this)
+                .get(CourseViewModel.class);
 
+        courseVM.mLiveCourse.observe(this, (courseEntity -> {
+            if(courseEntity != null){
+                noteText.setText(courseEntity.getCourseNotes());
+            }
+        }));
+
+        final Observer<CourseEntity> courseEntityObserver =
+                courseEntity -> {
+                    courseData.clear();
+                    courseData.add(courseEntity);
+                };
+        Log.d(TAG, "Course Data: " + courseData);
     }
 
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.c196project.database.AppRepository;
 import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
+import com.example.c196project.database.TermEntity;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -18,6 +19,8 @@ import java.util.concurrent.Executors;
 
 public class CourseViewModel extends AndroidViewModel {
 
+    // Term LiveData List
+    public LiveData<List<TermEntity>> mTerms;
     // Course Mutable/Live Data variables
     public MutableLiveData<CourseEntity> mLiveCourse = new MutableLiveData<>();
     public MutableLiveData<List<CourseEntity>> mLiveCourses = new MutableLiveData<>();
@@ -38,6 +41,8 @@ public class CourseViewModel extends AndroidViewModel {
         mRepository = AppRepository.getInstance(getApplication());
         mAssessments = mRepository.mAssessments;
         mCourses = mRepository.mCourses;
+        mTerms = mRepository.mTerms;
+
 
     }
 
