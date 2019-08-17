@@ -23,17 +23,6 @@ public interface CourseDAO {
     @Delete
     void delete(CourseEntity courseEntity);
 
-
-//    @Query("DELETE FROM course_table")
-//    void deleteAll();
-
-//    @Query("SELECT * FROM course_table ORDER BY startDate")
-//    LiveData<ArrayList<CourseEntity>> getAll();
-
-
-
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCourse(CourseEntity courseEntity);
 

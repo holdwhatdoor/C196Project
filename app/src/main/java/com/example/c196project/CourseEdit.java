@@ -362,7 +362,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 } else if (assessDueDate.getText().toString().equals("") ||
                         assessDueDate.getText().toString().equals("mm/dd/yyyy") ||
                         assessDueDate.equals(null)) {
-                    CourseEdit.this.assessNoInputAlert();
+                        assessNoInputAlert();
                 } else {
 
                     String assess = assessTitleInput.getText().toString();
@@ -370,7 +370,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     Log.d(TAG, "Assess String Due Date: " + dueString);
                     Date due = DateConverter.toDate(dueString);
                     Log.d(TAG, "Assess Date Due Date: " + due);
-                    String selectedType = CourseEdit.this.getSelectedAssessmentType();
+                    String selectedType = getSelectedAssessmentType();
                     String dueAlert = "not set";
                     if(assessDueAlert.isChecked()){
                         dueAlert = "set";
@@ -446,8 +446,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
                         int courseId = getPassedCourse().getCourseId();
                         Log.d(TAG, "Course Edit Page: Course ID: " + courseId);
+                        Log.d(TAG, "Assess Entities: " + assessmentEntities);
+
                         assessData.clear();
-                        getCourseAssessments(courseId, assessmentEntities);
+                        assessData.addAll(assessmentEntities);
 
                         if (mAssessAdapter == null) {
                             mAssessAdapter = new CourseEditAdapter(assessData, CourseEdit.this);
@@ -460,6 +462,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         assessVM = ViewModelProviders.of(this)
                 .get(AssessViewModel.class);
         assessVM.mAssessments.observe(this, assessObserver);
+
+        Log.d(TAG, "AssessData: " + assessData);
     }
 
     // Initialize recycler view
@@ -544,7 +548,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
     // Method to return selected radio button data returned as String variable
     public String getSelectedAssessmentType(){
-        String type = null;
+        String type;
         if(assessOA.isChecked()) {
             type = "Objective";
         } else if(assessPA.isChecked()) {

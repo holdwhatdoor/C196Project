@@ -469,6 +469,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             }
         });
 
+
+
         termData = termVM.mTerms.getValue();
         Log.d(TAG, ".......Term Data:........ " + termData);
 

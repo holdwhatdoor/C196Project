@@ -103,7 +103,7 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
 
                 v.getContext().startActivity(intent);
 
-                courseVM.updateCourse(updatedCourse);
+                courseVM.insertCourse(updatedCourse);
             }
         });
 
