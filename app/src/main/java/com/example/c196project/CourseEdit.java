@@ -157,6 +157,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         Date cEndDate = DateConverter.toDate(formatEnd);
         String alertStart = extras.getString(COURSE_ALERT_START_KEY);
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
+        int termId = extras.getInt(TERM_ID_KEY);
 
         Log.d(TAG, "Course Edit received Course Title: " + courseTitle);
         Log.d(TAG, "Course Edit received Course Start: " + courseStart);
@@ -293,6 +294,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     intent.putExtra(COURSE_NOTES_KEY, courseNotes);
                     intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
                     intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
+                    intent.putExtra(TERM_ID_KEY, termId);
 
                     v.getContext().startActivity(intent);
                 }

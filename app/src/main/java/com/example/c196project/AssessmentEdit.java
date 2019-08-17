@@ -130,8 +130,6 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 .get(Calendar.DAY_OF_MONTH)).show());
 
         dueDateSetListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "dueDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
             String dueDateString = month + "/" + dayOfMonth + "/" + year;
             dueDate.setText(dueDateString);
         };
@@ -172,7 +170,6 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 if(setAlert.isChecked()){
                     dueAlert = "set";
                 }
-                Log.d(TAG, "Parent Course: " + courseData.get(0));
                 Date parentCourseStart = courseData.get(0).getStartDate();
                 Date parentCourseEnd = courseData.get(0).getEndDate();
 
@@ -234,10 +231,10 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         String assessName = extras.getString(ASSESS_TITLE_KEY);
         Log.d(TAG, "Assess Name: " + assessName);
         String due = extras.getString(ASSESS_DUE_KEY);
-        Log.d(TAG, "Start date string: " + due);
+        Log.d(TAG, "Due date string: " + due);
         String formatDue = DateConverter.formatDateString(due);
         Date assessDue = DateConverter.toDate(formatDue);
-        Log.d(TAG, "Start date DATE: " + assessDue);
+        Log.d(TAG, "Due date DATE: " + assessDue);
         String assessType = extras.getString(ASSESS_TYPE_KEY);
         String assessAlert = extras.getString(ASSESS_ALERT_KEY);
         int courseId = extras.getInt(COURSE_ID_KEY);

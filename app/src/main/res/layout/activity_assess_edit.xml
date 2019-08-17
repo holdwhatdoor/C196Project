@@ -170,17 +170,7 @@
                         android:text="@string/del_one_assess"/>
 
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
-        <Button
-            android:id="@+id/set_alert_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/set_assess_alert" />
-
     </LinearLayout>
-
 </ScrollView>

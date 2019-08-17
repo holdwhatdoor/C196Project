@@ -74,6 +74,7 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
         String alertStart = extras.getString(COURSE_ALERT_START_KEY);
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
         int termId = extras.getInt(TERM_ID_KEY);
+        Log.d(TAG, "Course Term ID: " + termId);
 
         noteText = findViewById(R.id.note_text);
         noteText.setText(courseNotes);
@@ -138,6 +139,8 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
                 intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
                 intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
                 intent.putExtra(TERM_ID_KEY, termId);
+
+
 
                 v.getContext().startActivity(intent);
             }
