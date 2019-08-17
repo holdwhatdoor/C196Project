@@ -2,6 +2,7 @@ package com.example.c196project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,6 +83,7 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
                 CourseEntity updatedCourse = new CourseEntity(courseId, courseTitle, cStart, cEnd, courseMentor,
                         mentorEmail, mentorPhone, courseStatus, newNote, alertStart, alertEnd, termId);
 
+                Log.d(TAG, "Updated Course: " + updatedCourse);
                 // call update to update course and return back to course edit
                 Intent intent = new Intent(v.getContext(), CourseEdit.class);
 
