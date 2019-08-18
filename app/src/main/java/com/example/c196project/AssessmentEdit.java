@@ -149,8 +149,27 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         saveAssess = findViewById(R.id.save_assess_btn);
         saveAssess.setOnClickListener(v -> {
 
+            Log.d(TAG, "Assess Data" + assessData);
+            Log.d(TAG, "Course Data" + courseData);
+
+            if(assessData != null) {
+                for(int i = 0; i < assessData.size(); i++){
+                    Log.d(TAG, "Assess Name: " + assessData.get(i).getAssessName());
+                    Log.d(TAG, "Assess courseID: " + assessData.get(i).getCourseId());
+
+                }
+            }
+
+            if(courseData != null) {
+                for(int i = 0; i < courseData.size(); i++){
+                    Log.d(TAG, "Course Name: " + courseData.get(i).getCourseTitle());
+
+                }
+            }
+
             int assessId = getPassedAssessment().getAssessId();
             int courseId = getPassedAssessment().getCourseId();
+            Log.d(TAG, "passedAssess courseID: " + courseId);
 
             if (TextUtils.isEmpty(assessName.getText())) {
                 assessNoInputAlert();
@@ -170,8 +189,14 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 if(setAlert.isChecked()){
                     dueAlert = "set";
                 }
-                Date parentCourseStart = courseData.get(0).getStartDate();
-                Date parentCourseEnd = courseData.get(0).getEndDate();
+                Date parentCourseStart = getParentCourse(courseId).getStartDate();
+                Date parentCourseEnd = getParentCourse(courseId).getEndDate();
+                Log.d(TAG, "parentCourseStart: " + courseData.get(0).getStartDate());
+                Log.d(TAG, "parentCourseEnd: " + courseData.get(0).getEndDate());
+
+                Log.d(TAG, "dueDate.before(parentCourseStart): " + dueDate.before(parentCourseStart));
+                Log.d(TAG, "dueDate.after(parentCourseEnd): " + dueDate.after(parentCourseEnd));
+                Log.d(TAG, "assessmentConflict(aId, date)" + assessmentConflict(assessId, dueDate));
 
                 if(dueDate.before(parentCourseStart) || dueDate.after(parentCourseEnd) ||
                         assessmentConflict(assessId, dueDate)) {
@@ -245,6 +270,11 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         return passedAssessment;
     }
 
+    // Method to get parent course of selected assessment to edit
+ //   public CourseEntity getAssessmentCourse(){
+
+ //   }
+
     // Method to set selected assessment type from passed assessment entity
     public void setAssessType(AssessmentEntity assessmentEntity) {
         String assessType = assessmentEntity.getAssessType();
@@ -301,6 +331,7 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         for(int i = 0; i < courseData.size(); i++) {
             if(courseData.get(i).getCourseId() == courseId){
                 parentCourse = courseData.get(i);
+                break;
             }
         }
         return parentCourse;

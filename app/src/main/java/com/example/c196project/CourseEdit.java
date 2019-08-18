@@ -61,9 +61,9 @@ import static com.example.c196project.utilities.Constants.COURSE_STATUS_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
-public class CourseEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class CourseEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private static final String TAG ="CourseEdit";
+    private static final String TAG = "CourseEdit";
 
     // Header Variables
     public TextView pageTitle;
@@ -77,6 +77,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     // Course data array lists and adapters
     private List<CourseEntity> courseData = new ArrayList<>();
     private CourseEditAdapter mCourseAdapter;
+    private List<CourseEntity> allCourses = new ArrayList<>();
     //Assessment data array lists and adapters
     private List<AssessmentEntity> assessData = new ArrayList<>();
     private CourseEditAdapter mAssessAdapter;
@@ -87,7 +88,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     /**
-     *   Edit Course data display/input elements
+     * Edit Course data display/input elements
      */
     public EditText courseTitleEdit;                                // id = ce_courseTitle
     // Course declarations for start/end date EditText with DatePickerDialog listeners and SimpleDateFormat
@@ -106,7 +107,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public CheckBox endAlert;
 
     /**
-     *  Add Assessment input data display/imput elements
+     * Add Assessment input data display/imput elements
      */
     public EditText assessTitleInput;                               // id = ce_assessTitle
     // Add Course declarations for start/end date EditText with DatePickerDialog listeners
@@ -273,31 +274,63 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
+                if (courseData != null) {
+                    for (int i = 0; i < courseData.size(); i++) {
+                        Log.d(TAG, "Course name: " + courseData.get(i).getCourseTitle());
+                    }
+                }
+                if (termData != null) {
+                    for (int i = 0; i < termData.size(); i++) {
+                        Log.d(TAG, "term name: " + termData.get(i).getTermTitle());
+                    }
+                }
+                if (assessData != null) {
+                    for (int i = 0; i < assessData.size(); i++) {
+                        Log.d(TAG, "Assess Name: " + assessData.get(i).getAssessName());
+                    }
+                }
+
+                CourseEntity course = getPassedCourse();
+                Log.d(TAG, "selected course id:" + course);
+                Log.d(TAG, "selected course name:" + course);
+                Log.d(TAG, "selected course start:" + course);
+                Log.d(TAG, "selected course end:" + course);
+                Log.d(TAG, "selected course :" + course);
+                Log.d(TAG, "selected course :" + course);
+                Log.d(TAG, "selected course :" + course);
+                Log.d(TAG, "selected course :" + course);
+                Log.d(TAG, "selected course :" + course);
+
+
+
+                Log.d(TAG, "COURSE DATA: " + courseData);
+                Log.d(TAG, "Assessment Data: " + assessData);
+                Log.d(TAG, "Term Data: " + termData);
             }
         });
 
         // Add note button assignment/function
         addNoteBtn = findViewById(R.id.ce_noteBtn);
         addNoteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
+            @Override
             public void onClick(View v) {
-                    Intent intent = new Intent (v.getContext(), CourseNotes.class);
+                Intent intent = new Intent(v.getContext(), CourseNotes.class);
 
-                    intent.putExtra(COURSE_ID_KEY, courseId);
-                    intent.putExtra(COURSE_TITLE_KEY, courseTitle);
-                    intent.putExtra(COURSE_START_KEY, courseStart);
-                    intent.putExtra(COURSE_END_KEY, courseEnd);
-                    intent.putExtra(COURSE_MENTOR_KEY, courseMentor);
-                    intent.putExtra(COURSE_EMAIL_KEY, mentorEmail);
-                    intent.putExtra(COURSE_PHONE_KEY, mentorPhone);
-                    intent.putExtra(COURSE_STATUS_KEY, courseStatus);
-                    intent.putExtra(COURSE_NOTES_KEY, courseNotes);
-                    intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
-                    intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
-                    intent.putExtra(TERM_ID_KEY, termId);
+                intent.putExtra(COURSE_ID_KEY, courseId);
+                intent.putExtra(COURSE_TITLE_KEY, courseTitle);
+                intent.putExtra(COURSE_START_KEY, courseStart);
+                intent.putExtra(COURSE_END_KEY, courseEnd);
+                intent.putExtra(COURSE_MENTOR_KEY, courseMentor);
+                intent.putExtra(COURSE_EMAIL_KEY, mentorEmail);
+                intent.putExtra(COURSE_PHONE_KEY, mentorPhone);
+                intent.putExtra(COURSE_STATUS_KEY, courseStatus);
+                intent.putExtra(COURSE_NOTES_KEY, courseNotes);
+                intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
+                intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
+                intent.putExtra(TERM_ID_KEY, termId);
 
-                    v.getContext().startActivity(intent);
-                }
+                v.getContext().startActivity(intent);
+            }
         });
 
         // Delete course button assignment/function
@@ -307,9 +340,9 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Assess Data: " + assessData.toString());
-                if(!assessData.isEmpty()){
+                if (!assessData.isEmpty()) {
                     deleteCourseError();
-                }else{
+                } else {
                     courseVM.deleteCourse(courseId);
                     finish();
                 }
@@ -358,6 +391,22 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             Locale locale = Locale.getDefault();
 
             Date today = Calendar.getInstance(localTZ, locale).getTime();
+//delete below here
+            if(assessData != null) {
+                for(int i = 0; i < assessData.size(); i++){
+                    Log.d(TAG, "Assess Name: " + assessData.get(i).getAssessName());
+                    Log.d(TAG, "Assess courseID: " + assessData.get(i).getCourseId());
+                }
+            }
+
+            if(courseData != null) {
+                for(int i = 0; i < courseData.size(); i++){
+                    Log.d(TAG, "Course Name: " + courseData.get(i).getCourseTitle());
+
+                }
+            }
+// stop delete here
+            Log.d(TAG, "Assess Data: " + assessData);
 
             try {
 
@@ -368,7 +417,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 } else if (assessDueDate.getText().toString().equals("") ||
                         assessDueDate.getText().toString().equals("mm/dd/yyyy") ||
                         assessDueDate.equals(null)) {
-                        assessNoInputAlert();
+                    assessNoInputAlert();
                 } else {
 
                     String assess = assessTitleInput.getText().toString();
@@ -378,7 +427,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     Log.d(TAG, "Assess Date Due Date: " + due);
                     String selectedType = getSelectedAssessmentType();
                     String dueAlert = "not set";
-                    if(assessDueAlert.isChecked()){
+                    if (assessDueAlert.isChecked()) {
                         dueAlert = "set";
                     }
                     int courseID = courseId;
@@ -411,7 +460,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
         });
         delAssessmentsBtn = findViewById(R.id.ce_delAssess);
-        delAssessmentsBtn.setOnClickListener(v ->{
+        delAssessmentsBtn.setOnClickListener(v -> {
             assessVM.deleteAssessments(courseId);
         });
 
@@ -422,7 +471,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         courseVM = ViewModelProviders.of(this)
                 .get(CourseViewModel.class);
         courseVM.mLiveCourse.observe(this, (courseEntity) -> {
-            if(courseEntity != null){
+            if (courseEntity != null) {
                 Calendar calendar = Calendar.getInstance();
                 courseTitleEdit.setText(courseEntity.getCourseTitle());
                 courseStartDate.setText(DateConverter.formatDateString(courseEntity.getStartDate().toString()));
@@ -436,10 +485,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 int spinnerPos = spinAdapter.getPosition(courseEntity.getStatus());
                 courseSpinner.setSelection(spinnerPos);
                 Log.d(TAG, "Course Status Spinner set to: " + courseSpinner.getSelectedItem().toString());
-                if(courseEntity.getAlertStart().equals("set")){
+                if (courseEntity.getAlertStart().equals("set")) {
                     startAlert.setChecked(true);
                 }
-                if(courseEntity.getAlertEnd().equals("set")) {
+                if (courseEntity.getAlertEnd().equals("set")) {
                     endAlert.setChecked(true);
                 }
             }
@@ -453,7 +502,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     Log.d(TAG, "Assess Entities: " + assessmentEntities);
 
                     assessData.clear();
-                    assessData.addAll(assessmentEntities);
+                    getCourseAssessments(courseId, assessmentEntities);
+          //          assessData.addAll(assessmentEntities);
 
                     if (mAssessAdapter == null) {
                         mAssessAdapter = new CourseEditAdapter(assessData, CourseEdit.this);
@@ -466,9 +516,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 .get(AssessViewModel.class);
         assessVM.mAssessments.observe(this, assessObserver);
 
-        Log.d(TAG, "CourseData: " + courseData);
+        allCourses = courseVM.mCourses.getValue();
         termData = courseVM.mTerms.getValue();
-        Log.d(TAG, "TermData: " + termData);
     }
 
     // Initialize recycler view
@@ -481,8 +530,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.appBar_homeBtn:
                 Intent mainIntent = new Intent(this, MainActivity.class);
                 this.startActivity(mainIntent);
@@ -490,7 +539,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     }
 
     // Method returning course passed via Bundle/Intent from TermEdit page
-    public CourseEntity getPassedCourse(){
+    public CourseEntity getPassedCourse() {
         Bundle extras = getIntent().getExtras();
         int courseId = extras.getInt(COURSE_ID_KEY);
         String courseTitle = extras.getString(COURSE_TITLE_KEY);
@@ -519,10 +568,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     }
 
     // Method to set course status spinner selection to reflect course data
-    public int getStatusSelectionId(String selection){
+    public int getStatusSelectionId(String selection) {
         int position = -1;
-        for(int i = 0; i < courseOptions.length; i++){
-            if(courseOptions[i].equals(selection)){
+        for (int i = 0; i < courseOptions.length; i++) {
+            if (courseOptions[i].equals(selection)) {
                 position = i;
                 Log.d(TAG, "Status position selected: " + position);
             }
@@ -532,19 +581,19 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
     // Checks to see alert status and sets Radio button true if alert is set
     public void setAlertsChecked(String start, String end) {
-         if(start.equals("set")) {
-             startAlert.setChecked(true);
-         }
-         if(end.equals("set")) {
-             endAlert.setChecked(true);
-         }
+        if (start.equals("set")) {
+            startAlert.setChecked(true);
+        }
+        if (end.equals("set")) {
+            endAlert.setChecked(true);
+        }
     }
 
     // Method returning list of Assessment entities with passed courseId parameter
-    public List<AssessmentEntity> getCourseAssessments(int courseId, List<AssessmentEntity> assessmentEntities){
+    public List<AssessmentEntity> getCourseAssessments(int courseId, List<AssessmentEntity> assessmentEntities) {
 
-        for(int i = 0; i < assessmentEntities.size(); i++){
-            if(assessmentEntities.get(i).getCourseId() == courseId){
+        for (int i = 0; i < assessmentEntities.size(); i++) {
+            if (assessmentEntities.get(i).getCourseId() == courseId) {
                 assessData.add(assessmentEntities.get(i));
             }
         }
@@ -552,11 +601,11 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     }
 
     // Method to return selected radio button data returned as String variable
-    public String getSelectedAssessmentType(){
+    public String getSelectedAssessmentType() {
         String type;
-        if(assessOA.isChecked()) {
+        if (assessOA.isChecked()) {
             type = "Objective";
-        } else if(assessPA.isChecked()) {
+        } else if (assessPA.isChecked()) {
             type = "Performance";
         } else {
             type = "No selection made";
@@ -566,15 +615,15 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     }
 
     // Method to check for assessments scheduled on the same day
-    private boolean assessmentConflict(Date due){
+    private boolean assessmentConflict(Date due) {
         boolean assessConflict = false;
 
-        if(assessData == null){
+        if (assessData == null) {
             assessConflict = false;
         } else {
-            for(int i = 0; i < assessData.size(); i++){
+            for (int i = 0; i < assessData.size(); i++) {
                 AssessmentEntity assess = assessData.get(i);
-                if(due.equals(assess.getAssessDue())){
+                if (due.equals(assess.getAssessDue())) {
                     assessConflict = true;
                 }
             }
@@ -594,6 +643,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         emptyInput.create().show();
 
     }
+
     // Assessment no input alert
     public void assessNoInputAlert() {
         AlertDialog.Builder emptyInput = new AlertDialog.Builder(this);
@@ -603,6 +653,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         });
         emptyInput.create().show();
     }
+
     // Assessment no type alert
     public void assessNoType() {
         AlertDialog.Builder noSelection = new AlertDialog.Builder(this);
@@ -611,6 +662,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         noSelection.setPositiveButton("OK", (dialog, which) -> {
         });
     }
+
     // Assessment date conflict
     public void assessConflictAlert() {
         AlertDialog.Builder dateConflict = new AlertDialog.Builder(this);
@@ -623,7 +675,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         dateConflict.create().show();
     }
 
-    public void deleteCourseError(){
+    public void deleteCourseError() {
         AlertDialog.Builder deleteCourseError = new AlertDialog.Builder(this);
         deleteCourseError.setTitle("Course Delete Error");
         deleteCourseError.setMessage("Course has assessments assigned to it, delete all assessments " +
@@ -636,7 +688,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getApplicationContext(),courseOptions[position], Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), courseOptions[position], Toast.LENGTH_LONG).show();
     }
 
     @Override

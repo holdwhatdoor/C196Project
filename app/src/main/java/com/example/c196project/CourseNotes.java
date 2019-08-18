@@ -85,8 +85,8 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
             public void onClick(View v) {
                 String newNote = noteText.getText().toString();
 
-                CourseEntity updatedCourse = new CourseEntity(courseId, courseTitle, cStart, cEnd, courseMentor,
-                        mentorEmail, mentorPhone, courseStatus, newNote, alertStart, alertEnd, termId);
+                CourseEntity updatedCourse = new CourseEntity(courseId, courseTitle, cStart, cEnd, courseStatus,courseMentor,
+                        mentorEmail, mentorPhone, newNote, alertStart, alertEnd, termId);
 
                 Log.d(TAG, "Updated Course: " + updatedCourse);
                 // call update to update course and return back to course edit

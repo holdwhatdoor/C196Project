@@ -28,6 +28,7 @@ import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
 
 public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.CourseEditHolder> {
 
@@ -84,6 +85,7 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
                 intent.putExtra(ASSESS_DUE_KEY, assessment.getAssessDue().toString());
                 intent.putExtra(ASSESS_ALERT_KEY, assessment.getAssessAlert());
                 intent.putExtra(ASSESS_TYPE_KEY, assessment.getAssessType());
+                intent.putExtra(COURSE_ID_KEY, assessment.getCourseId());
 
                 mContext.startActivity(intent);
             }
