@@ -94,6 +94,9 @@
 <string name="assess_edit_title">Edit Assessment</string>
 <string name="assess_title">Assessment Title: </string>
 
+// Share Notes string labels
+<string name="share_notes_title">Share Notes</string>
+
 // Button string labels
 <string name="create_btn_txt">Create</string>
 <string name="home">Home</string>
