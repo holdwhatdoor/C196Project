@@ -63,6 +63,13 @@
                 android:layout_height="match_parent"
                 android:text="@string/cancel_btn"/>
 
+            <Button
+                android:id="@+id/share_btn"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:text="@string/share"
+                />
+
         </LinearLayout>
 
 

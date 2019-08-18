@@ -12,30 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:appComponentFactory">
-        <receiver
-            android:name=".MyReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
 
-        <activity
-            android:name=".AssessmentActivity"
-            android:label="@string/title_activity_assessment"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name=".AssessmentView"
-            android:label="@string/assess_view_title"
-            android:theme="@style/NoActionBar" />
         <activity
             android:name=".AssessmentEdit"
             android:label="@string/assess_edit_title"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name=".CourseActivity"
-            android:label="@string/course_activity_title"
-            android:theme="@style/NoActionBar" />
-        <activity
-            android:name=".CourseView"
-            android:label="@string/course_view_title"
             android:theme="@style/NoActionBar" />
         <activity
             android:name=".CourseEdit"
@@ -50,10 +30,6 @@
             android:name=".TermActivity"
             android:label="@string/term_activity_title"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".TermView"
-            android:label="@string/term_view_title"
-            android:theme="@style/NoActionBar" />
         <activity
             android:name=".TermEdit"
             android:label="@string/edit_term"

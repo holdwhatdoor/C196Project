@@ -361,35 +361,17 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         statusSpinner.getSelectedItem().toString().equals("No Selection")) {
                     showNoInputAlert();
                 } else {
-                    Log.d(TAG, "today date....: " + today);
+
                     String course = courseTitleInput.getText().toString();
-                    Log.d(TAG, "Course title: " + course);
-
                     String startString = courseStartDate.getText().toString();
-                    Log.d(TAG, "Course Start Date String value: " + startString);
                     Date start = DateConverter.toDate(startString);
-                    Log.d(TAG, "Course Start Date converted: " + start);
-
                     String endString = courseEndDate.getText().toString();
-                    Log.d(TAG, "Course End Date String value: " + endString);
                     Date end = DateConverter.toDate(endString);
-                    Log.d(TAG, "Course End Date converted: " + end);
-
                     String mentor = courseMentor.getText().toString();
-                    Log.d(TAG, "Mentor: " + mentor);
-
                     String phone = mentorPhone.getText().toString();
-                    Log.d(TAG, "Phone: " + phone);
-
                     String email = mentorEmail.getText().toString();
-                    Log.d(TAG, "Email: " + email);
-
                     String status = statusSpinner.getSelectedItem().toString();
-                    Log.d(TAG, "Spinner selection: " + status);
-
                     String notes = "";
-                    Log.d(TAG, "Notes: " + notes);
-
                     String alertStart = "not set";
                     String alertEnd = "not set";
                     if (startAlert.isChecked()) {
@@ -399,25 +381,13 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         alertEnd = "set";
                     }
 
-                    //  int termId = getPassedTerm().getTermId();
-                    Log.d(TAG, "Term ID: " + termId);
-                    Log.d(TAG, "Start before end:  " + start.before(end));
-                    Log.d(TAG, "Start not before today: " + !start.before(today));
-
-
                     if (start.before(end) && !start.before(today) && start.after(termStart) &&
                             end.before(termEnd) && !overlappingCourses(start, end)) {
-                        Log.d(TAG, "Entered if that calls insertCourse()");
 
                         CourseEntity newCourse = new CourseEntity(course, start,
                                 end, status, mentor, phone, email, notes, alertStart, alertEnd, termId);
 
-                        Log.d(TAG, "Course object created");
-                        Log.d(TAG, "Course title: " + newCourse.getCourseTitle());
-
                         courseVM.insertCourse(newCourse);
-
-                        Log.d(TAG, "Course insert complete.");
 
                         courseTitleInput.getText().clear();
                         courseStartDate.setText(null);
@@ -437,12 +407,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         mentorEmail.setHint("Enter Mentor Email");
 
                     } else {
-
-                        Log.d(TAG, "today date: " + today);
                         courseConflictAlert();
                     }
-
-
                 }
             } catch (Exception ex) {
 
@@ -469,12 +435,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             }
         });
 
-
-
         termData = termVM.mTerms.getValue();
-        Log.d(TAG, ".......Term Data:........ " + termData);
-
-
         final Observer<List<CourseEntity>> coursesObserver =
                 new Observer<List<CourseEntity>>() {
                     @Override
@@ -483,7 +444,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         int termId = getPassedTerm().getTermId();
                         courseData.clear();
                         getTermCourses(termId, courseEntities);
-                        //courseData.addAll(courseEntities);
 
                         if (mCourseAdapter == null) {
                             mCourseAdapter = new TermEditAdapter(courseData, TermEdit.this);
@@ -538,7 +498,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
         for (int i = 0; i < courseEntities.size(); i++) {
             if (courseEntities.get(i).getTermId() == termId) {
-                Log.d(TAG, "GET TERM COURSES METHOD: " + courseEntities.get(i).getCourseId());
                 courseData.add(courseEntities.get(i));
             }
         }
@@ -552,13 +511,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             TermEntity term = termData.get(i);
             int checkedId = term.getTermId();
             int passedId = getPassedTerm().getTermId();
-            Log.d(TAG, "Checked ID: " + checkedId + ", Passed ID: " + passedId);
-            Log.d(TAG, "Ids match: " + (checkedId == passedId));
 
             if (checkedId != passedId) {
-                Log.d(TAG, "New Start: " + newStart + ", List Term: " + term.getStart());
-                Log.d(TAG, "New End: " + newEnd + ", List Term: " + term.getEnd());
-
                 if (newStart.after(term.getStart()) && newStart.before(term.getEnd())) {
                     termOverlap = true;
                     break;
@@ -578,7 +532,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     // Method to check for overlapping start and end dates for courses in database
     private boolean overlappingCourses(Date newStart, Date newEnd) {
         boolean courseOverlap = false;
-        Log.d(TAG, "courseData is: " + courseData);
         if (courseData.isEmpty() || courseData == null) {
             courseOverlap = false;
         } else {

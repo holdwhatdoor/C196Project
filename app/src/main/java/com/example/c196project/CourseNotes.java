@@ -49,6 +49,7 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
     public Button saveBtn;
     public Button clearBtn;
     public Button cancelBtn;
+    public Button shareBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +147,28 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
             }
         });
 
+        shareBtn = findViewById(R.id.share_btn);
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (v.getContext(), ShareNotes.class);
+
+                intent.putExtra(COURSE_ID_KEY, courseId);
+                intent.putExtra(COURSE_TITLE_KEY, courseTitle);
+                intent.putExtra(COURSE_START_KEY, courseStart);
+                intent.putExtra(COURSE_END_KEY, courseEnd);
+                intent.putExtra(COURSE_MENTOR_KEY, courseMentor);
+                intent.putExtra(COURSE_EMAIL_KEY, mentorEmail);
+                intent.putExtra(COURSE_PHONE_KEY, mentorPhone);
+                intent.putExtra(COURSE_STATUS_KEY, courseStatus);
+                intent.putExtra(COURSE_NOTES_KEY, courseNotes);
+                intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
+                intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
+                intent.putExtra(TERM_ID_KEY, termId);
+
+                v.getContext().startActivity(intent);
+            }
+        });
 
         // Initialize butterknife and initViewModel
         ButterKnife.bind(this);

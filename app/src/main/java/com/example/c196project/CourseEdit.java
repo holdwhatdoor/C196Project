@@ -160,14 +160,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
         int termId = extras.getInt(TERM_ID_KEY);
 
-        Log.d(TAG, "Course Edit received Course Title: " + courseTitle);
-        Log.d(TAG, "Course Edit received Course Start: " + courseStart);
-        Log.d(TAG, "Course Edit received Course End: " + courseEnd);
-        Log.d(TAG, "Course Edit received Course Mentor: " + courseMentor);
-        Log.d(TAG, "Course Edit received Mentor Email: " + mentorEmail);
-        Log.d(TAG, "Course Edit received Mentor Phone: " + mentorPhone);
-        Log.d(TAG, "Course Edit received Course Status: " + courseStatus);
-        Log.d(TAG, "Course Edit received Course Notes: " + courseNotes);
         // AssessmentEntity data
         int assessId = extras.getInt(ASSESS_ID_KEY);
         String assessTitle = extras.getString(ASSESS_TITLE_KEY);
@@ -178,10 +170,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String courseStartFormat = DateConverter.formatDateString(courseStart);
         String courseEndFormat = DateConverter.formatDateString(courseEnd);
         String assessDueFormat = DateConverter.formatDateString(assessDue);
-
-        // instantiate/set page title
-//        TextView title = (TextView) findViewById(R.id.title);
-//        title.setText("Edit Course");
 
         // header element id assignments
         pageTitle = findViewById(R.id.app_bar_title);
@@ -213,7 +201,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         startAlert = findViewById(R.id.ce_start_alert);
         endAlert = findViewById(R.id.ce_end_alert);
 
-
         /**
          *  Start and End date EditText ids and onClick override functionality
          */
@@ -240,15 +227,11 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 .get(Calendar.DAY_OF_MONTH)).show());
         // Term start date listener functionality
         courseStartListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "courseStartDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
             String startDate = month + "/" + dayOfMonth + "/" + year;
             courseStartDate.setText(startDate);
         };
         // Course end date listener functionality
         courseEndListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "courseEndDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
             String endDate = month + "/" + dayOfMonth + "/" + year;
             courseEndDate.setText(endDate);
         };
@@ -332,59 +315,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         updateDateConflictAlert();
                     }
                 }
-
-                String courseName = getPassedCourse().getCourseTitle();
-                String updatedStart = getPassedCourse().getStartDate().toString();
-                String updatedEnd = getPassedCourse().getEndDate().toString();
-                // Convert string dates to date objects
-                Date startDate = DateConverter.toDate(updatedStart);
-                Date endDate = DateConverter.toDate(updatedEnd);
-
-                String status = getPassedCourse().getStatus();
-                String mentor = getPassedCourse().getMentorName();
-                String mentorPhone = getPassedCourse().getMentorPhone();
-                String mentorEmail = getPassedCourse().getMentorEmail();
-                String notes = getPassedCourse().getCourseNotes();
-                String startAlert = getPassedCourse().getAlertStart();
-                String endAlert = getPassedCourse().getAlertEnd();
-
-                Log.d(TAG, "allCourses null? " + allCourses);
-                Log.d(TAG, "termData null?  " + termData);
-                Log.d(TAG, "assessData null? " + assessData);
-
-                if (allCourses != null) {
-                    for (int i = 0; i < allCourses.size(); i++) {
-                        Log.d(TAG, "......Course name: " + allCourses.get(i).getCourseTitle());
-                    }
-                }
-                if (termData != null) {
-                    for (int i = 0; i < termData.size(); i++) {
-                        Log.d(TAG, "......term name: " + termData.get(i).getTermTitle());
-                    }
-                }
-                if (assessData != null) {
-                    for (int i = 0; i < assessData.size(); i++) {
-                        Log.d(TAG, ".......Assess Name: " + assessData.get(i).getAssessName());
-                    }
-                }
-
-                CourseEntity course = getPassedCourse();
-                Log.d(TAG, "selected course id:" + course);
-                Log.d(TAG, "selected course name:" + course);
-                Log.d(TAG, "selected course start:" + course);
-                Log.d(TAG, "selected course end:" + course);
-                Log.d(TAG, "selected course :" + course);
-                Log.d(TAG, "selected course :" + course);
-                Log.d(TAG, "selected course :" + course);
-                Log.d(TAG, "selected course :" + course);
-                Log.d(TAG, "selected course :" + course);
-
-
-
-                Log.d(TAG, "COURSE DATA: " + courseData);
-                Log.d(TAG, "Assessment Data: " + assessData);
-                Log.d(TAG, "Term Data: " + termData);
-            }
+              }
         });
 
         // Add note button assignment/function
@@ -417,7 +348,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Assess Data: " + assessData.toString());
                 if (!assessData.isEmpty()) {
                     deleteCourseError();
                 } else {
@@ -455,8 +385,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 .get(Calendar.DAY_OF_MONTH)).show());
         //  Assessment due date listener functionality
         assessDueDateListener = (view, year, month, dayOfMonth) -> {
-            Log.d(TAG, "assessDueDateSet: mm/dd/yyyy: " + month + "/" + dayOfMonth + "/" + year);
-
             String startDate = month + "/" + dayOfMonth + "/" + year;
             courseStartDate.setText(startDate);
         };
@@ -469,22 +397,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             Locale locale = Locale.getDefault();
 
             Date today = Calendar.getInstance(localTZ, locale).getTime();
-//delete below here
-            if(assessData != null) {
-                for(int i = 0; i < assessData.size(); i++){
-                    Log.d(TAG, "Assess Name: " + assessData.get(i).getAssessName());
-                    Log.d(TAG, "Assess courseID: " + assessData.get(i).getCourseId());
-                }
-            }
-
-            if(courseData != null) {
-                for(int i = 0; i < courseData.size(); i++){
-                    Log.d(TAG, "Course Name: " + courseData.get(i).getCourseTitle());
-
-                }
-            }
-// stop delete here
-            Log.d(TAG, "Assess Data: " + assessData);
 
             try {
 
@@ -500,18 +412,13 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
                     String assess = assessTitleInput.getText().toString();
                     String dueString = assessDueDate.getText().toString();
-                    Log.d(TAG, "Assess String Due Date: " + dueString);
                     Date due = DateConverter.toDate(dueString);
-                    Log.d(TAG, "Assess Date Due Date: " + due);
                     String selectedType = getSelectedAssessmentType();
                     String dueAlert = "not set";
                     if (assessDueAlert.isChecked()) {
                         dueAlert = "set";
                     }
                     int courseID = courseId;
-
-                    Log.d(TAG, "cEndDate: " + cEndDate + ", due: " + due + ", cStartDate: " +
-                            cStartDate);
 
                     if (due.before(cEndDate) && due.after(cStartDate) && !assessmentConflict(due)) {
                         AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, due,
@@ -555,14 +462,11 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 courseStartDate.setText(DateConverter.formatDateString(courseEntity.getStartDate().toString()));
                 courseEndDate.setText(DateConverter.formatDateString(courseEntity.getEndDate().toString()));
                 courseMentorEdit.setText(courseEntity.getMentorName());
-                Log.d(TAG, "Course Mentor EditText set to: " + courseMentorEdit.getText());
                 mentorEmailEdit.setText(courseEntity.getMentorEmail());
-                Log.d(TAG, "Course Email EditText set to: " + mentorEmailEdit.getText());
                 mentorPhoneEdit.setText(courseEntity.getMentorPhone());
-                Log.d(TAG, "Course Phone EditText set to: " + mentorPhoneEdit.getText());
                 int spinnerPos = spinAdapter.getPosition(courseEntity.getStatus());
                 courseSpinner.setSelection(spinnerPos);
-                Log.d(TAG, "Course Status Spinner set to: " + courseSpinner.getSelectedItem().toString());
+
                 if (courseEntity.getAlertStart().equals("set")) {
                     startAlert.setChecked(true);
                 }
@@ -576,9 +480,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 assessmentEntities -> {
 
                     int courseId = getPassedCourse().getCourseId();
-                    Log.d(TAG, "Course Edit Page: Course ID: " + courseId);
-                    Log.d(TAG, "Assess Entities: " + assessmentEntities);
-
                     assessData.clear();
                     getCourseAssessments(courseId, assessmentEntities);
           //          assessData.addAll(assessmentEntities);
@@ -630,9 +531,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String courseNotes = extras.getString(COURSE_NOTES_KEY);
         String formatStart = DateConverter.formatDateString(courseStart);
         String formatEnd = DateConverter.formatDateString(courseEnd);
-        Log.d(TAG, "Course Formatted date: " + formatStart);
         Date cStartDate = DateConverter.toDate(formatStart);
-        Log.d(TAG, "Course Start date DATE: " + cStartDate);
         Date cEndDate = DateConverter.toDate(formatEnd);
         String alertStart = extras.getString(COURSE_ALERT_START_KEY);
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
@@ -663,8 +562,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         for (int i = 0; i < courseOptions.length; i++) {
             if (courseOptions[i].equals(selection)) {
                 position = i;
-                Log.d(TAG, "Status position selected: " + position);
-            }
+             }
         }
         return position;
     }

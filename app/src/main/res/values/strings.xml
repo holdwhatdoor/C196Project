@@ -130,7 +130,9 @@
 <string name="blank_date">mm/dd/yyyy</string>
 <string name="title_activity_assessment">Assessments</string>
 <string name="clear">Clear</string>
-<string name="addNoteBtn">Add Note</string>
+<string name="addNoteBtn">Add/View Note</string>
+<string name="share">Share Note</string>
+<string name="send">Send</string>
 
 <string name="cancel_btn">Cancel</string>
 <string name="save_btn">Save</string>
