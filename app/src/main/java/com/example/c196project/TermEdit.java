@@ -387,7 +387,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                     String status = statusSpinner.getSelectedItem().toString();
                     Log.d(TAG, "Spinner selection: " + status);
 
-                    String notes = ".";
+                    String notes = "";
                     Log.d(TAG, "Notes: " + notes);
 
                     String alertStart = "not set";
@@ -550,8 +550,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         boolean termOverlap = false;
         for (int i = 0; i < termData.size(); i++) {
             TermEntity term = termData.get(i);
-            int checkedId = (Integer)term.getTermId();
-            int passedId = (Integer)getPassedTerm().getTermId();
+            int checkedId = term.getTermId();
+            int passedId = getPassedTerm().getTermId();
             Log.d(TAG, "Checked ID: " + checkedId + ", Passed ID: " + passedId);
             Log.d(TAG, "Ids match: " + (checkedId == passedId));
 

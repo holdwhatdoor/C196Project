@@ -274,19 +274,97 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
 
-                if (courseData != null) {
-                    for (int i = 0; i < courseData.size(); i++) {
-                        Log.d(TAG, "Course name: " + courseData.get(i).getCourseTitle());
+                TimeZone localTZ = TimeZone.getDefault();
+                Locale locale = Locale.getDefault();
+
+                Date today = Calendar.getInstance(localTZ, locale).getTime();
+
+                int passedCourseID = getPassedCourse().getCourseId();
+                String passedCourseNotes = getPassedCourse().getCourseNotes();
+                int parentTermID = getPassedCourse().getTermId();
+                TermEntity parentTerm = getParentTerm(parentTermID);
+
+                if (TextUtils.isEmpty(courseTitleEdit.getText())) {
+                    courseNoInputAlert();
+                } else if(TextUtils.isEmpty(courseStartDate.getText())) {
+                    courseNoInputAlert();
+                } else if(TextUtils.isEmpty(courseEndDate.getText())) {
+                    courseNoInputAlert();
+                } else if(TextUtils.isEmpty(courseMentorEdit.getText())) {
+                    courseNoInputAlert();
+                } else if(TextUtils.isEmpty(mentorPhoneEdit.getText())) {
+                    courseNoInputAlert();
+                } else if(TextUtils.isEmpty(mentorEmailEdit.getText())) {
+                    courseNoInputAlert();
+                } else if (TextUtils.isEmpty(courseSpinner.getSelectedItem().toString()) ||
+                        courseSpinner.getSelectedItem().toString().equals("No Selection")) {
+                    courseNoInputAlert();
+                } else {
+
+                    String updateTitle = courseTitleEdit.getText().toString();
+                    String cStart = courseStartDate.getText().toString();
+                    String cEnd = courseEndDate.getText().toString();
+                    // Convert String dates to date
+                    Date start = DateConverter.toDate(cStart);
+                    Date end = DateConverter.toDate(cEnd);
+                    String cMentor = courseMentorEdit.getText().toString();
+                    String cPhone = mentorPhoneEdit.getText().toString();
+                    String cEmail = mentorEmailEdit.getText().toString();
+                    String cStatus = courseSpinner.getSelectedItem().toString();
+                    String alertStart = "not set";
+                    String alertEnd = "not set";
+                    if (startAlert.isChecked()){
+                        alertStart = "set";
+                    }
+                    if (endAlert.isChecked()){
+                        alertEnd = "set";
+                    }
+
+                    if (start.before(end) && !start.before(today) && start.after(parentTerm.getStart()) &&
+                            end.before(parentTerm.getEnd()) && !overlappingCourses(start, end)){
+
+                        CourseEntity updatedCourse = new CourseEntity(passedCourseID, updateTitle, start, end,
+                                cStatus, cMentor, cPhone, cEmail, passedCourseNotes, alertStart, alertEnd, parentTermID);
+
+                        courseVM.insertCourse(updatedCourse);
+                        finish();
+                    } else {
+                        updateDateConflictAlert();
+                    }
+                }
+
+                String courseName = getPassedCourse().getCourseTitle();
+                String updatedStart = getPassedCourse().getStartDate().toString();
+                String updatedEnd = getPassedCourse().getEndDate().toString();
+                // Convert string dates to date objects
+                Date startDate = DateConverter.toDate(updatedStart);
+                Date endDate = DateConverter.toDate(updatedEnd);
+
+                String status = getPassedCourse().getStatus();
+                String mentor = getPassedCourse().getMentorName();
+                String mentorPhone = getPassedCourse().getMentorPhone();
+                String mentorEmail = getPassedCourse().getMentorEmail();
+                String notes = getPassedCourse().getCourseNotes();
+                String startAlert = getPassedCourse().getAlertStart();
+                String endAlert = getPassedCourse().getAlertEnd();
+
+                Log.d(TAG, "allCourses null? " + allCourses);
+                Log.d(TAG, "termData null?  " + termData);
+                Log.d(TAG, "assessData null? " + assessData);
+
+                if (allCourses != null) {
+                    for (int i = 0; i < allCourses.size(); i++) {
+                        Log.d(TAG, "......Course name: " + allCourses.get(i).getCourseTitle());
                     }
                 }
                 if (termData != null) {
                     for (int i = 0; i < termData.size(); i++) {
-                        Log.d(TAG, "term name: " + termData.get(i).getTermTitle());
+                        Log.d(TAG, "......term name: " + termData.get(i).getTermTitle());
                     }
                 }
                 if (assessData != null) {
                     for (int i = 0; i < assessData.size(); i++) {
-                        Log.d(TAG, "Assess Name: " + assessData.get(i).getAssessName());
+                        Log.d(TAG, ".......Assess Name: " + assessData.get(i).getAssessName());
                     }
                 }
 
@@ -558,13 +636,25 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         Date cEndDate = DateConverter.toDate(formatEnd);
         String alertStart = extras.getString(COURSE_ALERT_START_KEY);
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
-
         int termId = extras.getInt(TERM_ID_KEY);
 
         CourseEntity passedCourse = new CourseEntity(courseId, courseTitle, cStartDate, cEndDate, courseStatus,
                 courseMentor, mentorPhone, mentorEmail, courseNotes, alertStart, alertEnd, termId);
 
         return passedCourse;
+    }
+
+    // Method to get parent term of selected course
+    public TermEntity getParentTerm(int termId) {
+        TermEntity parentTerm = null;
+
+        for(int i = 0; i < termData.size(); i++) {
+            int id = termData.get(i).getTermId();
+            if(id == termId){
+                parentTerm = termData.get(i);
+            }
+        }
+        return parentTerm;
     }
 
     // Method to set course status spinner selection to reflect course data
@@ -589,17 +679,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-    // Method returning list of Assessment entities with passed courseId parameter
-    public List<AssessmentEntity> getCourseAssessments(int courseId, List<AssessmentEntity> assessmentEntities) {
-
-        for (int i = 0; i < assessmentEntities.size(); i++) {
-            if (assessmentEntities.get(i).getCourseId() == courseId) {
-                assessData.add(assessmentEntities.get(i));
-            }
-        }
-        return assessData;
-    }
-
     // Method to return selected radio button data returned as String variable
     public String getSelectedAssessmentType() {
         String type;
@@ -612,6 +691,46 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         }
 
         return type;
+    }
+
+    // Method returning list of Assessment entities with passed courseId parameter
+    public List<AssessmentEntity> getCourseAssessments(int courseId, List<AssessmentEntity> assessmentEntities) {
+
+        for (int i = 0; i < assessmentEntities.size(); i++) {
+            if (assessmentEntities.get(i).getCourseId() == courseId) {
+                assessData.add(assessmentEntities.get(i));
+            }
+        }
+        return assessData;
+    }
+
+    // Method to check updated Course date conflicts with all other courses
+    private boolean overlappingCourses(Date newStart, Date newEnd){
+        boolean courseOverlap = false;
+
+        for(int i =0; i < allCourses.size(); i++) {
+            CourseEntity course = allCourses.get(i);
+            int checkedId = course.getCourseId();
+            int passedId = getPassedCourse().getCourseId();
+            Date otherStart = course.getStartDate();
+            Date otherEnd = course.getEndDate();
+            Log.d(TAG, "checkedId: " + checkedId);
+            Log.d(TAG, "passedId: " + passedId);
+
+            if(checkedId != passedId) {
+                if(newStart.after(otherStart) && newStart.before(otherEnd)){
+                    courseOverlap = true;
+                    break;
+                } else if (newEnd.after(otherStart) && newEnd.before(otherEnd)) {
+                    courseOverlap = true;
+                    break;
+                } else if (newStart.before(otherStart) && newEnd.after(otherEnd)) {
+                    courseOverlap = true;
+                    break;
+                }
+            }
+        }
+        return courseOverlap;
     }
 
     // Method to check for assessments scheduled on the same day
@@ -642,6 +761,20 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         });
         emptyInput.create().show();
 
+    }
+
+    // Course date conflict
+    public void updateDateConflictAlert() {
+        AlertDialog.Builder datesConflict = new AlertDialog.Builder(this);
+        datesConflict.setTitle("Conflicting Dates");
+        datesConflict.setMessage("Updated course start/end dates overlap other courses assigned to term " +
+                "or fall outside the start and end dates of the term courses are assigned to.  Select " +
+                "start and end dates that are within parent term start and end dates and don't interfere " +
+                "with other assigned courses.");
+        datesConflict.setPositiveButton("OK", (dialog, which) ->{
+
+        });
+        datesConflict.create().show();
     }
 
     // Assessment no input alert
