@@ -57,44 +57,56 @@ public class ShareNotes extends AppCompatActivity implements View.OnClickListene
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
         int termId = extras.getInt(TERM_ID_KEY);
 
+        String blankLine = "\r\n";
+
         sendTo = findViewById(R.id.to_edit);
         subject = findViewById(R.id.subject_edit);
         message = findViewById(R.id.message_edit);
 
         sendTo.setText(mentorEmail);
-        message.setText(courseNotes);
+        subject.setText(courseTitle + " Notes");
+        message.setText("COURSE NOTES: " + blankLine + blankLine + courseNotes);
 
         sendBtn = findViewById(R.id.send_btn);
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        sendBtn.setOnClickListener(v -> sendMail());
 
         cancelBtn = findViewById(R.id.send_cancel_btn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (v.getContext(), CourseNotes.class);
+        cancelBtn.setOnClickListener(v -> {
+            Intent intent = new Intent (v.getContext(), CourseNotes.class);
 
-                intent.putExtra(COURSE_ID_KEY, courseId);
-                intent.putExtra(COURSE_TITLE_KEY, courseTitle);
-                intent.putExtra(COURSE_START_KEY, courseStart);
-                intent.putExtra(COURSE_END_KEY, courseEnd);
-                intent.putExtra(COURSE_MENTOR_KEY, courseMentor);
-                intent.putExtra(COURSE_EMAIL_KEY, mentorEmail);
-                intent.putExtra(COURSE_PHONE_KEY, mentorPhone);
-                intent.putExtra(COURSE_STATUS_KEY, courseStatus);
-                intent.putExtra(COURSE_NOTES_KEY, courseNotes);
-                intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
-                intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
-                intent.putExtra(TERM_ID_KEY, termId);
+            intent.putExtra(COURSE_ID_KEY, courseId);
+            intent.putExtra(COURSE_TITLE_KEY, courseTitle);
+            intent.putExtra(COURSE_START_KEY, courseStart);
+            intent.putExtra(COURSE_END_KEY, courseEnd);
+            intent.putExtra(COURSE_MENTOR_KEY, courseMentor);
+            intent.putExtra(COURSE_EMAIL_KEY, mentorEmail);
+            intent.putExtra(COURSE_PHONE_KEY, mentorPhone);
+            intent.putExtra(COURSE_STATUS_KEY, courseStatus);
+            intent.putExtra(COURSE_NOTES_KEY, courseNotes);
+            intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
+            intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
+            intent.putExtra(TERM_ID_KEY, termId);
 
-                v.getContext().startActivity(intent);
-            }
+            v.getContext().startActivity(intent);
         });
 
+    }
+
+    private void sendMail(){
+        String recipientList = sendTo.getText().toString();
+        String[] recipients = recipientList.split(",");
+
+        String subjectTxt = subject.getText().toString();
+        String messageTxt = message.getText().toString();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subjectTxt);
+        intent.putExtra(Intent.EXTRA_TEXT, messageTxt);
+
+        intent.setType("message/rfc822");
+        startActivity(Intent.createChooser(intent, "Select email client"));
     }
 
     @Override
