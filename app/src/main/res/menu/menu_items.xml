@@ -16,22 +16,6 @@
         android:textColor="@color/colorTextOnBlue">
     </item>
 
-    <item
-        android:id="@+id/menu_courses"
-        android:title="@string/course_list"
-        android:layout_height="match_parent"
-        android:textColor="@color/colorTextOnBlue"
-        >
-    </item>
-
-    <item
-        android:id="@+id/menu_tests"
-        android:title="@string/assess_list"
-        android:textColor="@color/colorTextOnBlue"
-        >
-    </item>
-
-
 </menu>
 
 

@@ -277,6 +277,9 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     *  Creates menu drop down and functionality
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -306,7 +309,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                 this.startActivity(termIntent);
                 return true;
             default:
-                return true /*super.onOptionsItemSelected(item)*/;
+                return true;
         }
     }
 
