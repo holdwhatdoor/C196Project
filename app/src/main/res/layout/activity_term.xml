@@ -118,11 +118,6 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/add_term_btn" />
-                <Button
-                    android:id="@+id/del_all_term"
-                    android:layout_width="125dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/del_all_term" />
 
             </LinearLayout>
 

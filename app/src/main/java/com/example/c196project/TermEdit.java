@@ -108,7 +108,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     public Button delTermBtn;
     public Button saveBtn;
     public Button addCourse;
-    public Button delCoursesBtn;
 
     // Recycler view components
     @BindView(R.id.rv_edit_termList)
@@ -307,21 +306,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                     Date start = DateConverter.toDate(tStart);
                     Date end = DateConverter.toDate(tEnd);
 
-                    Log.d(TAG, "Term title update: " + updateTitle);
-                    Log.d(TAG, "Term start date string update: " + termStart);
-                    Log.d(TAG, "Term end date string update: " + termEnd);
-                    Log.d(TAG, "Term start Date format update: " + start);
-                    Log.d(TAG, "Term end Date format update: " + end);
-
-                    Log.d(TAG, "Start before end: " + start.before(end));
-
                     if (start.before(end)) {
                         TermEntity updatedTerm = new TermEntity(termId, updateTitle, start, end);
-                        Log.d(TAG, "Updated Term: " + updatedTerm);
-                        Log.d(TAG, "Course data: " + courseData);
-                        Log.d(TAG, "CheckUpdatedDates method: " + updatedDateConflict(start, end));
-                        Log.d(TAG, "overlappingTerms: " + overlappingTerms(start, end));
-
                         if (courseData.isEmpty() && !overlappingTerms(start, end)) {
                             termVM.insertTerm(updatedTerm);
                         } else if(!overlappingTerms(start, end) && !updatedDateConflict(start, end)){
@@ -420,12 +406,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             } catch (Exception ex) {
 
             }
-        });
-
-        // set delete all courses id and OnClickListener
-        delCoursesBtn = findViewById(R.id.delAllCourse);
-        delCoursesBtn.setOnClickListener(v -> {
-            courseVM.deleteCourses(termId);
         });
     }
 

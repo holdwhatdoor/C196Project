@@ -329,12 +329,6 @@
 
                 </Button>
 
-                <Button
-                    android:id="@+id/ce_delAssess"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/del_assess"/>
-
             </LinearLayout>
 
         </LinearLayout>

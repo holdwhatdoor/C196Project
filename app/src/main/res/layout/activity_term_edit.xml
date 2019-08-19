@@ -317,15 +317,6 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:text="@string/add_course_btn" />
 
-            <Button
-                android:id="@+id/delAllCourse"
-                android:layout_width="90dp"
-                android:layout_height="60dp"
-                android:layout_toRightOf="@+id/addCourse"
-                android:text="@string/del_all_course" />
-
-
-
         </RelativeLayout>
 
         <LinearLayout

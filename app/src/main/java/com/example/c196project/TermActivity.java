@@ -62,7 +62,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     private EditText endDisplayDate;
     private DatePickerDialog.OnDateSetListener endDateSetListener;
     public Button addTermBtn;
-    public Button delAllTermBtn;
 
     // Recycler view binding
     @BindView(R.id.rv_term_list)
@@ -220,15 +219,6 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (Exception ex) {
 
                 }
-            }
-        });
-
-
-        delAllTermBtn = findViewById(R.id.del_all_term);
-        delAllTermBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                termVM.deleteAll();
             }
         });
     }

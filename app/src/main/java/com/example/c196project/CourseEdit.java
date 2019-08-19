@@ -133,7 +133,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public Button addNoteBtn;
     public Button delCourseBtn;
     public Button addAssessBtn;
-    public Button delAssessmentsBtn;
 
     // Recycler view components
     @BindView(R.id.rv_assess_list)
@@ -451,11 +450,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
             }
 
         });
-        delAssessmentsBtn = findViewById(R.id.ce_delAssess);
-        delAssessmentsBtn.setOnClickListener(v -> {
-            assessVM.deleteAssessments(courseId);
-        });
-
     }
 
 
