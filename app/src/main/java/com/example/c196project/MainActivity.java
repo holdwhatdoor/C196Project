@@ -1,5 +1,6 @@
 package com.example.c196project;
 
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+
+    // Alarm manager for notification dates
+    AlarmManager startAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
     // View model
     private MainViewModel mainVM;

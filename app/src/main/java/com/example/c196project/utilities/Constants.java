@@ -23,12 +23,15 @@ public class Constants {
     public static final String ASSESS_ID_KEY = "assess_id_key";
     public static final String ASSESS_TITLE_KEY = "assess_title_key";
     public static final String ASSESS_TYPE_KEY = "assess_type_key";
+    public static final String ASSESS_START_KEY = "assess_start_key";
     public static final String ASSESS_DUE_KEY = "assess_due_key";
-    public static final String ASSESS_ALERT_KEY = "assess_alert_key";
+    public static final String ASSESS_START_ALERT_KEY = "assess_start_alert_key";
+    public static final String ASSESS_DUE_ALERT_KEY = "assess_due_alert_key";
 
 
-    // Assessment radio group button id assignments
-    public static final int OA_ID = 1;
-    public static final int PA_ID = 2;
+    // Notification channel constants
+    public static final String COURSE_START_CH = "courseStartChannel";
+    public static final String COURSE_END_CH = "courseEndChannel";
+    public static final String ASSESS_DUE_CH = "assessDueChannel";
 
 }

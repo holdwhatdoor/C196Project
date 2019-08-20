@@ -24,8 +24,12 @@ public class AssessmentEntity{
     private String assessName;
     @ColumnInfo(name = "assess_type")
     private String assessType;
+    @ColumnInfo(name = "assess_start")
+    private Date assessStart;
     @ColumnInfo(name = "assess_due")
     private Date assessDue;
+    @ColumnInfo(name = "start_alert")
+    private String startAlert;
     @ColumnInfo(name = "assess_alert")
     private String assessAlert;
 
@@ -35,22 +39,26 @@ public class AssessmentEntity{
     }
 
     @Ignore
-    public AssessmentEntity(String assessName, String assessType, Date assessDue,
-                            String assessAlert, int courseId) {
+    public AssessmentEntity(String assessName, String assessType, Date assessStart, Date assessDue,
+                            String startAlert, String assessAlert, int courseId) {
         this.assessName = assessName;
         this.assessType = assessType;
+        this.assessStart = assessStart;
         this.assessDue = assessDue;
+        this.startAlert = startAlert;
         this.assessAlert = assessAlert;
         this.courseId = courseId;
     }
 
     // constructor
-    public AssessmentEntity(int assessId, String assessName, String assessType, Date assessDue,
-                            String assessAlert, int courseId) {
+    public AssessmentEntity(int assessId, String assessName, String assessType, Date assessStart, Date assessDue,
+                            String startAlert, String assessAlert, int courseId) {
         this.assessId = assessId;
         this.assessName = assessName;
         this.assessType = assessType;
+        this.assessStart = assessStart;
         this.assessDue = assessDue;
+        this.startAlert = startAlert;
         this.assessAlert = assessAlert;
         this.courseId = courseId;
     }
@@ -71,10 +79,16 @@ public class AssessmentEntity{
         return assessType;
     }
 
+    public Date getAssessStart() {
+        return assessStart;
+    }
+
     public Date getAssessDue() {
 
         return assessDue;
     }
+
+    public String getStartAlert() { return startAlert; }
 
     public String getAssessAlert() {
         return assessAlert;
@@ -100,9 +114,17 @@ public class AssessmentEntity{
         this.assessType = assessType;
     }
 
+    public void setAssessStart(Date assessStart) {
+        this.assessStart = assessStart;
+    }
+
     public void setAssessDue(Date assessDue) {
 
         this.assessDue = assessDue;
+    }
+
+    public void setStartAlert(String startAlert) {
+        this.startAlert = startAlert;
     }
 
     public void setAssessAlert(String alert) {

@@ -37,9 +37,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-import static com.example.c196project.utilities.Constants.ASSESS_ALERT_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_DUE_ALERT_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
@@ -71,12 +72,15 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
      * Assessment data display/input elements
      */
     public EditText assessName;
-    // Assessment declarations for due date EditText with DatePickerDialog listener and SimpleDateFormat
+    // Assessment declarations for start/due date EditText with DatePickerDialog listener and SimpleDateFormat
+    public EditText startDate;
+    private DatePickerDialog.OnDateSetListener startDateSetListener;
     public EditText dueDate;
     private DatePickerDialog.OnDateSetListener dueDateSetListener;
 
-    // Set Alert checkbox
-    public CheckBox setAlert;
+    // Start/Due Alert checkboxes
+    public CheckBox startAlert;
+    public CheckBox dueAlert;
 
     // Radio Button instantiations
     public RadioGroup radioGroup;
@@ -110,8 +114,10 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
         // Assessment input element id assignments
         assessName = findViewById(R.id.enter_assess_name);
+        startDate = findViewById(R.id.assess_start_date);
         dueDate = findViewById(R.id.assess_due_date);
-        setAlert = findViewById(R.id.assess_cb_alert);
+        startAlert = findViewById(R.id.assess_start_alert);
+        dueAlert = findViewById(R.id.assess_cb_alert);
         // Radio group and button id assignments
         radioGroup = findViewById(R.id.assess_radio_grp);
         oaRadio = findViewById(R.id.asses_oa_radio);
@@ -120,7 +126,25 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         /**
          *  Due date EditText id and onClick override functionality
          */
-        //  Initialized Assessment DatePickerDialog date listener due
+        //  Initialized Assessment DatePickerDialog date listener start/due
+        DatePickerDialog.OnDateSetListener aStart = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            DateConverter.updateDateText(startDate, calendar);
+        };
+
+        // Assessment due date setOnClickListener
+        dueDate.setOnClickListener(v -> new DatePickerDialog(AssessmentEdit.this, aStart, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                .get(Calendar.DAY_OF_MONTH)).show());
+
+        dueDateSetListener = (view, year, month, dayOfMonth) -> {
+            String startDateString = month + "/" + dayOfMonth + "/" + year;
+            dueDate.setText(startDateString);
+        };
+
+
         DatePickerDialog.OnDateSetListener aDue = (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
@@ -141,8 +165,11 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         // Populate input fields with passed assessment information
         assessName.setText(passedAssessment.getAssessName());
         // Date retrieval, format convesion and text set
+        Date sDate = passedAssessment.getAssessStart();
+        String start = passedAssessment.getAssessStart().toString();
         Date dDate = passedAssessment.getAssessDue();
         String due = passedAssessment.getAssessDue().toString();
+        startDate.setText(DateConverter.formatDateString(start));
         dueDate.setText(DateConverter.formatDateString(due));
         // method calls to set assessment type and whether alert checkbox is set
 
@@ -179,6 +206,10 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 assessNoInputAlert();
             } else if (!oaRadio.isChecked() && !paRadio.isChecked()) {
                 assessNoType();
+            } else if (startDate.getText().toString().equals("") ||
+                    startDate.getText().toString().equals("mm/dd/yyyy") ||
+                    startDate.equals(null)) {
+                assessNoInputAlert();
             } else if (dueDate.getText().toString().equals("") ||
                     dueDate.getText().toString().equals("mm/dd/yyyy") ||
                     dueDate.equals(null)) {
@@ -186,21 +217,21 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
             } else {
 
                 String assess = assessName.getText().toString();
+                String sDt = startDate.getText().toString();
+                Date stDt = DateConverter.toDate(sDt);
                 String dueString = dueDate.getText().toString();
                 Date dueDate = DateConverter.toDate(dueString);
                 String selectedType = getSelectedAssessmentType();
-                String dueAlert = "not set";
-                if(setAlert.isChecked()){
-                    dueAlert = "set";
+                String sAlert = "not set";
+                String dAlert = "not set";
+                if(startAlert.isChecked()) {
+                    sAlert = "set";
+                }
+                if(dueAlert.isChecked()){
+                    dAlert = "set";
                 }
                 Date parentCourseStart = getParentCourse(courseId).getStartDate();
                 Date parentCourseEnd = getParentCourse(courseId).getEndDate();
-                Log.d(TAG, "parentCourseStart: " + courseData.get(0).getStartDate());
-                Log.d(TAG, "parentCourseEnd: " + courseData.get(0).getEndDate());
-
-                Log.d(TAG, "dueDate.before(parentCourseStart): " + dueDate.before(parentCourseStart));
-                Log.d(TAG, "dueDate.after(parentCourseEnd): " + dueDate.after(parentCourseEnd));
-                Log.d(TAG, "assessmentConflict(aId, date)" + assessmentConflict(assessId, dueDate));
 
                 if(dueDate.before(parentCourseStart) || dueDate.after(parentCourseEnd) ||
                         assessmentConflict(assessId, dueDate)) {
@@ -209,8 +240,16 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 }
                 else {
                     AssessmentEntity updatedAssessment = new AssessmentEntity(assessId, assess,
-                            selectedType, dueDate, dueAlert, courseId);
+                            selectedType, stDt, dueDate, sAlert, dAlert, courseId);
                     assessVM.insertAssessment(updatedAssessment);
+
+                    // Calls Notification object to set or cancel alert
+                    if(dueAlert.equals("set")){
+
+                    } else {
+
+                    }
+
                     finish();
                 }
             }
@@ -291,17 +330,21 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         Log.d(TAG, "Assess ID: " + assessId);
         String assessName = extras.getString(ASSESS_TITLE_KEY);
         Log.d(TAG, "Assess Name: " + assessName);
+        String start = extras.getString(ASSESS_START_KEY);
+        String formatStart = DateConverter.formatDateString(start);
+        Date assessStart = DateConverter.toDate(formatStart);
         String due = extras.getString(ASSESS_DUE_KEY);
         Log.d(TAG, "Due date string: " + due);
         String formatDue = DateConverter.formatDateString(due);
         Date assessDue = DateConverter.toDate(formatDue);
         Log.d(TAG, "Due date DATE: " + assessDue);
         String assessType = extras.getString(ASSESS_TYPE_KEY);
-        String assessAlert = extras.getString(ASSESS_ALERT_KEY);
+        String startAlert = extras.getString(ASSESS_START_KEY);
+        String assessAlert = extras.getString(ASSESS_DUE_ALERT_KEY);
         int courseId = extras.getInt(COURSE_ID_KEY);
 
         AssessmentEntity passedAssessment = new AssessmentEntity(assessId, assessName, assessType,
-                assessDue, assessAlert, courseId);
+                 assessStart, assessDue, startAlert, assessAlert, courseId);
 
         return passedAssessment;
     }
@@ -324,10 +367,15 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
     // Method to set if Alert box is checked
     public void setAlertChecked(AssessmentEntity assessmentEntity) {
-        String alertChecked = assessmentEntity.getAssessAlert();
-        Log.d(TAG, "Alert is.... " + alertChecked);
-        if (alertChecked.equals("set")) {
-            setAlert.setChecked(true);
+        String startChecked = assessmentEntity.getStartAlert();
+        String dueChecked = assessmentEntity.getAssessAlert();
+        Log.d(TAG, "Start Alert is..... " + startChecked);
+        Log.d(TAG, "Alert is.... " + dueChecked);
+        if(startChecked.equals("set")){
+            startAlert.setChecked(true);
+        }
+        if (dueChecked.equals("set")) {
+            dueAlert.setChecked(true);
         }
     }
 

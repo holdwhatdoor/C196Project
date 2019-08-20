@@ -48,8 +48,11 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.c196project.utilities.Constants.ASSESS_DUE_ALERT_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_START_ALERT_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ALERT_END_KEY;
@@ -66,7 +69,7 @@ import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
 public class CourseEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-
+///////  320 course edit save alert intents....  445 assess add alert intents
     private static final String TAG = "CourseEdit";
 
     // Header Variables
@@ -113,11 +116,14 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     /**
      * Add Assessment input data display/imput elements
      */
-    public EditText assessTitleInput;                               // id = ce_assessTitle
+    public EditText assessTitleInput;
     // Add Course declarations for start/end date EditText with DatePickerDialog listeners
-    public EditText assessDueDate;                                // id = ce_assessStart
+    public EditText assessStartDate;
+    public DatePickerDialog.OnDateSetListener assessStartDateListener;
+    public EditText assessDueDate;
     public DatePickerDialog.OnDateSetListener assessDueDateListener;
     // Checkbox for setting alert
+    public CheckBox assessStartAlert;
     public CheckBox assessDueAlert;
 
     // Radio button group and selections for Assessment type
@@ -316,6 +322,28 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                                 cStatus, cMentor, cPhone, cEmail, passedCourseNotes, alertStart, alertEnd, parentTermID);
 
                         courseVM.insertCourse(updatedCourse);
+
+                        // Calls notification alert to set or cancel alert
+                        if(alertStart.equals("set")){
+
+                        } else {
+
+                        }
+                        if(alertEnd.equals("set")){
+
+                        } else {
+
+                        }
+
+                        // Passes course info to Notification class
+                        Intent intent = new Intent(v.getContext(), Notifications.class);
+                        intent.putExtra(COURSE_ID_KEY, courseId);
+                        intent.putExtra(COURSE_TITLE_KEY, updateTitle);
+                        intent.putExtra(COURSE_START_KEY, start);
+                        intent.putExtra(COURSE_END_KEY, end);
+                        intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
+                        intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
+
                         finish();
                     } else {
                         updateDateConflictAlert();
@@ -372,27 +400,48 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         assessType = findViewById(R.id.ce_assessRadio_grp);
         assessOA = findViewById(R.id.ce_oaRadio);
         assessPA = findViewById(R.id.ce_paRadio);
+        assessStartDate = findViewById(R.id.ce_assessStart);
         assessDueDate = findViewById(R.id.ce_assessDue);
+        assessStartAlert = findViewById(R.id.ce_start_alert);
         assessDueAlert = findViewById(R.id.ce_due_alert);
 
         /**
          *  Due date EditText id and onClick override functionality
          */
         //  Initialized Course DatePickerDialog date listener start/end dates
+        DatePickerDialog.OnDateSetListener aStart = (view, year, month, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            DateConverter.updateDateText(assessStartDate, calendar);
+        };
+
         DatePickerDialog.OnDateSetListener aDue = (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             DateConverter.updateDateText(assessDueDate, calendar);
         };
+
+        // Assessment start date setOnClickListener
+        assessStartDate.setOnClickListener(v -> new DatePickerDialog(CourseEdit.this, aStart, calendar
+                .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
+                .get(Calendar.DAY_OF_MONTH)).show());
+        //  Assessment due date listener functionality
+        assessStartDateListener = (view, year, month, dayOfMonth) -> {
+            String startDate = month + "/" + dayOfMonth + "/" + year;
+            courseStartDate.setText(startDate);
+        };
+
+
         // Assessment due date setOnClickListener
         assessDueDate.setOnClickListener(v -> new DatePickerDialog(CourseEdit.this, aDue, calendar
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
                 .get(Calendar.DAY_OF_MONTH)).show());
         //  Assessment due date listener functionality
         assessDueDateListener = (view, year, month, dayOfMonth) -> {
-            String startDate = month + "/" + dayOfMonth + "/" + year;
-            courseStartDate.setText(startDate);
+            String dueDate = month + "/" + dayOfMonth + "/" + year;
+            courseStartDate.setText(dueDate);
         };
 
         // Assessment Button id assignments/functionality
@@ -410,17 +459,27 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     CourseEdit.this.assessNoInputAlert();
                 } else if (!assessOA.isChecked() && !assessPA.isChecked()) {
                     CourseEdit.this.assessNoType();
-                } else if (assessDueDate.getText().toString().equals("") ||
+                } else if (assessStartDate.getText().toString().equals("") ||
+                        assessStartDate.getText().toString().equals("mm/dd/yyyy") ||
+                        assessStartDate.equals(null)){
+                    assessNoInputAlert();
+                }else if (assessDueDate.getText().toString().equals("") ||
                         assessDueDate.getText().toString().equals("mm/dd/yyyy") ||
                         assessDueDate.equals(null)) {
                     assessNoInputAlert();
                 } else {
 
                     String assess = assessTitleInput.getText().toString();
+                    String aStartString = assessStartDate.getText().toString();
                     String dueString = assessDueDate.getText().toString();
+                    Date aStartDate = DateConverter.toDate(aStartString);
                     Date due = DateConverter.toDate(dueString);
                     String selectedType = getSelectedAssessmentType();
+                    String aStartAlert = "not set";
                     String dueAlert = "not set";
+                    if(assessStartAlert.isChecked()) {
+                        aStartAlert = "set";
+                    }
                     if (assessDueAlert.isChecked()) {
                         dueAlert = "set";
                     }
@@ -432,14 +491,33 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
                         assessVM.insertAssessment(assessment);
 
+                        // Calls Notification object to set alerts on assessment start/due date if selected
+                        if(aStartAlert.equals("set")) {
+
+                        }
+                        if(dueAlert.equals("set")){
+
+                        }
+
+                        // Passes assessment info to Notifications class
+                        Intent intent = new Intent(v.getContext(), Notifications.class);
+                        intent.putExtra(COURSE_TITLE_KEY, courseTitle);
+                        intent.putExtra(ASSESS_TITLE_KEY, assess);
+                        intent.putExtra(ASSESS_START_KEY, aStartDate);
+                        intent.putExtra(ASSESS_DUE_KEY, due);
+                        intent.putExtra(ASSESS_START_ALERT_KEY, aStartAlert);
+                        intent.putExtra(ASSESS_DUE_ALERT_KEY, dueAlert);
+
                         assessTitleInput.getText().clear();
+                        assessStartDate.getText().clear();
                         assessDueDate.getText().clear();
+                        assessStartAlert.setChecked(false);
                         assessDueAlert.setChecked(false);
 
                         assessTitleInput.setHint("Enter Assessment Name");
+                        assessStartDate.setHint("mm/dd/yyyy");
                         assessDueDate.setHint("mm/dd/yyyy");
                         assessType.clearCheck();
-                        Log.d(TAG, "Assessment insert complete.");
 
                     } else {
                         assessConflictAlert();

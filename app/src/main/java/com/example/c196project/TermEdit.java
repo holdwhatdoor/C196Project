@@ -46,13 +46,18 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.c196project.utilities.Constants.COURSE_ALERT_END_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_ALERT_START_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_END_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_START_KEY;
+import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.TERM_END_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 import static com.example.c196project.utilities.Constants.TERM_START_KEY;
 import static com.example.c196project.utilities.Constants.TERM_TITLE_KEY;
 
 public class TermEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
-
+///////////////////  390 course intent pass to Notifications
 
     private static final String TAG = "TermEdit";
 
@@ -381,6 +386,22 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                                 end, status, mentor, phone, email, notes, alertStart, alertEnd, termId);
 
                         courseVM.insertCourse(newCourse);
+
+                        // Calls Notification object to set alerts if selected
+                        if(alertStart.equals("set")) {
+
+                        }
+                        if(alertEnd.equals("set")){
+
+                        }
+
+                        // Passes course info to Notifications class to set notification
+                        Intent intent = new Intent(v.getContext(), Notifications.class);
+                        intent.putExtra(COURSE_TITLE_KEY, course);
+                        intent.putExtra(COURSE_START_KEY, start);
+                        intent.putExtra(COURSE_END_KEY, end);
+                        intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
+                        intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
 
                         courseTitleInput.getText().clear();
                         courseStartDate.setText(null);
