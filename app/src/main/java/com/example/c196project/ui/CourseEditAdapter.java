@@ -23,9 +23,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.c196project.utilities.Constants.ASSESS_ALERT_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_DUE_ALERT_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_START_ALERT_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
@@ -70,20 +72,24 @@ public class CourseEditAdapter extends RecyclerView.Adapter<CourseEditAdapter.Co
                 Log.d(TAG, "Assess Id on Edit click: " + assessId);
                 String assessTitle = getAssessmentAtPos(position).getAssessName();
                 Log.d(TAG, "Assess Name on Edit click: " + assessTitle);
+                Date start = getAssessmentAtPos(position).getAssessStart();
                 Date due = getAssessmentAtPos(position).getAssessDue();
                 Log.d(TAG, "Assess Start: " + due);
                 String type = getAssessmentAtPos(position).getAssessType();
+                String startAlert = getAssessmentAtPos(position).getStartAlert();
                 String alert = getAssessmentAtPos(position).getAssessAlert();
                 int courseId = getAssessmentAtPos(position).getCourseId();
 
-                AssessmentEntity assessment = new AssessmentEntity(assessId, assessTitle, type, due,
-                        alert, courseId);
+                AssessmentEntity assessment = new AssessmentEntity(assessId, assessTitle, type, start, due,
+                        startAlert, alert, courseId);
 
                 Intent intent = new Intent(mContext, AssessmentEdit.class);
                 intent.putExtra(ASSESS_ID_KEY, assessment.getAssessId());
                 intent.putExtra(ASSESS_TITLE_KEY, assessment.getAssessName());
+                intent.putExtra(ASSESS_START_KEY, assessment.getAssessStart().toString());
                 intent.putExtra(ASSESS_DUE_KEY, assessment.getAssessDue().toString());
-                intent.putExtra(ASSESS_ALERT_KEY, assessment.getAssessAlert());
+                intent.putExtra(ASSESS_START_ALERT_KEY, assessment.getStartAlert());
+                intent.putExtra(ASSESS_DUE_ALERT_KEY, assessment.getAssessAlert());
                 intent.putExtra(ASSESS_TYPE_KEY, assessment.getAssessType());
                 intent.putExtra(COURSE_ID_KEY, assessment.getCourseId());
 

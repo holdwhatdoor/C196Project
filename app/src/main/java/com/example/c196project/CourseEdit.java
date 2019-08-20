@@ -486,8 +486,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     int courseID = courseId;
 
                     if (due.before(cEndDate) && due.after(cStartDate) && !assessmentConflict(due)) {
-                        AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, due,
-                                dueAlert, courseID);
+                        AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, aStartDate, due,
+                                aStartAlert, dueAlert, courseID);
 
                         assessVM.insertAssessment(assessment);
 
