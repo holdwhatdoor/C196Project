@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_ALERT_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_DUE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_ID_KEY;
+import static com.example.c196project.utilities.Constants.ASSESS_START_ALERT_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
@@ -232,8 +233,9 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 }
                 Date parentCourseStart = getParentCourse(courseId).getStartDate();
                 Date parentCourseEnd = getParentCourse(courseId).getEndDate();
-
-                if(dueDate.before(parentCourseStart) || dueDate.after(parentCourseEnd) ||
+                if(dueDate.before(stDt)){
+                    startDueConflict();
+                } else if(dueDate.before(parentCourseStart) || dueDate.after(parentCourseEnd) ||
                         assessmentConflict(assessId, dueDate)) {
 
                     assessConflictAlert();
@@ -244,6 +246,11 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                     assessVM.insertAssessment(updatedAssessment);
 
                     // Calls Notification object to set or cancel alert
+                    if(startAlert.equals("set")){
+
+                    } else {
+
+                    }
                     if(dueAlert.equals("set")){
 
                     } else {
@@ -339,7 +346,7 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         Date assessDue = DateConverter.toDate(formatDue);
         Log.d(TAG, "Due date DATE: " + assessDue);
         String assessType = extras.getString(ASSESS_TYPE_KEY);
-        String startAlert = extras.getString(ASSESS_START_KEY);
+        String startAlert = extras.getString(ASSESS_START_ALERT_KEY);
         String assessAlert = extras.getString(ASSESS_DUE_ALERT_KEY);
         int courseId = extras.getInt(COURSE_ID_KEY);
 
@@ -449,6 +456,16 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
         });
         dateConflict.create().show();
+    }
+
+    // Assessment start/due date conflict
+    public void startDueConflict() {
+        AlertDialog.Builder startDueConflict = new AlertDialog.Builder(this);
+        startDueConflict.setTitle("Start/Due Conflict");
+        startDueConflict.setMessage("Assessment start date must be before due date.");
+        startDueConflict.setPositiveButton("OK", (dialog, which) -> {
+
+        });
     }
 
 }

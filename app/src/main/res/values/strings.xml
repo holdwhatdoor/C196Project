@@ -20,6 +20,7 @@
 <string name="term_title">Term Title</string>
 <string name="alerts">Alerts</string>
 <string name="default_main_term">No Current Term</string>
+<string name="load_complete">Loading Complete</string>
 
 
 // Activity Term page string labels

@@ -192,9 +192,7 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
 
                         Date start = DateConverter.toDate(startString);
-                        Log.d(TAG, "Start Date converted: " + start);
                         Date end = DateConverter.toDate(endString);
-                        Log.d(TAG, "End Date converted: " + end);
 
                         if (start.before(end) && (start.compareTo(today) == 0 || !start.before(today))
                                 && !overlappingTerms(start, end)) {

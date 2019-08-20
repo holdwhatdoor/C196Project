@@ -34,6 +34,14 @@ tools:context="com.example.c196project.MainActivity">
         android:orientation="vertical">
 
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorGrey"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="55dp"

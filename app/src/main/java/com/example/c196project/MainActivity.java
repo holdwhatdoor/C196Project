@@ -3,12 +3,15 @@ package com.example.c196project;
 import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "MainActivity";
 
+    // progress bar and text after loaded and status int
+    private ProgressBar progressBar;
+    private int progressStatus = 0;
+    private Handler mHandler = new Handler();
+
     // View model
     private MainViewModel mainVM;
 
@@ -60,8 +68,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // Set content layout view
         setContentView(R.layout.activity_main);
+
+        // Progress bar and message xml id assignments
+        progressBar = findViewById(R.id.progress_bar);
+        // Runnable thread to show progress bar status and toast message on completion
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(progressStatus < 100){
+                    progressStatus++;
+                    SystemClock.sleep(10);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "Progress Bar: " + progressBar);
+                            progressBar.setProgress(progressStatus);
+                        }
+                    });
+                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Loading Complete", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+        }).start();
 
         db = AppDatabase.getInstance(this);
 
