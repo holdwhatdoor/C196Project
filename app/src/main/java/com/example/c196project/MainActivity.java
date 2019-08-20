@@ -36,9 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "MainActivity";
 
-    // Alarm manager for notification dates
-    AlarmManager startAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-
     // View model
     private MainViewModel mainVM;
 
@@ -73,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         today.getTime();
+
+        // Alarm manager for notification dates
+        AlarmManager startAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+
 
         ButterKnife.bind(this);
         initRecyclerView();

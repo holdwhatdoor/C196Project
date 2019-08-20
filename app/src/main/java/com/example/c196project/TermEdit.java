@@ -379,8 +379,9 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         alertEnd = "set";
                     }
 
-                    if (start.before(end) && !start.before(today) && start.after(termStart) &&
-                            end.before(termEnd) && !overlappingCourses(start, end)) {
+                    if (start.before(end) && (start.compareTo(today) == 0 || !start.before(today)) &&
+                            (start.compareTo(termStart) == 0 || start.after(termStart)) && (end.compareTo(termEnd) == 0 ||
+                            end.before(termEnd)) && !overlappingCourses(start, end)) {
 
                         CourseEntity newCourse = new CourseEntity(course, start,
                                 end, status, mentor, phone, email, notes, alertStart, alertEnd, termId);

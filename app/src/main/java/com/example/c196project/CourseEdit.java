@@ -315,8 +315,9 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         alertEnd = "set";
                     }
 
-                    if (start.before(end) && !start.before(today) && start.after(parentTerm.getStart()) &&
-                            end.before(parentTerm.getEnd()) && !overlappingCourses(start, end)){
+                    if (start.before(end) && !start.before(today) && (start.after(parentTerm.getStart()) ||
+                            start.compareTo(parentTerm.getStart()) == 0) && (end.before(parentTerm.getEnd()) ||
+                            end.compareTo(parentTerm.getEnd()) == 0) && !overlappingCourses(start, end)){
 
                         CourseEntity updatedCourse = new CourseEntity(passedCourseID, updateTitle, start, end,
                                 cStatus, cMentor, cPhone, cEmail, passedCourseNotes, alertStart, alertEnd, parentTermID);
@@ -485,7 +486,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     }
                     int courseID = courseId;
 
-                    if (due.before(cEndDate) && due.after(cStartDate) && !assessmentConflict(due)) {
+                    if (aStartDate.before(due) && aStartDate.before(cEndDate) &&
+                            (aStartDate.compareTo(cStartDate) == 0 || !aStartDate.before(cStartDate)) &&
+                            (due.compareTo(cEndDate) == 0 || due.before(cEndDate)) && due.after(cStartDate) &&
+                            !assessmentConflict(due)) {
                         AssessmentEntity assessment = new AssessmentEntity(assess, selectedType, aStartDate, due,
                                 aStartAlert, dueAlert, courseID);
 
