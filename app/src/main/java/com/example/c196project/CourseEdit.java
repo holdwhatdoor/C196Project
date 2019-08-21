@@ -1,8 +1,16 @@
 package com.example.c196project;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +32,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +43,7 @@ import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.CourseEditAdapter;
+import com.example.c196project.utilities.Notifications;
 import com.example.c196project.viewmodel.AssessViewModel;
 import com.example.c196project.viewmodel.CourseViewModel;
 
@@ -82,12 +92,11 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     // Term data array list
     private List<TermEntity> termData = new ArrayList<>();
     // Course data array lists and adapters
-    private List<CourseEntity> courseData = new ArrayList<>();
-    private CourseEditAdapter mCourseAdapter;
     private List<CourseEntity> allCourses = new ArrayList<>();
     //Assessment data array lists and adapters
     private List<AssessmentEntity> assessData = new ArrayList<>();
     private CourseEditAdapter mAssessAdapter;
+    private List<AssessmentEntity> allAssessments = new ArrayList<>();
 
     // Initialized Calendar date variable
     Calendar calendar = Calendar.getInstance();
@@ -122,9 +131,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public DatePickerDialog.OnDateSetListener assessStartDateListener;
     public EditText assessDueDate;
     public DatePickerDialog.OnDateSetListener assessDueDateListener;
-    // Checkbox for setting alert
-    public CheckBox assessStartAlert;
-    public CheckBox assessDueAlert;
 
     // Radio button group and selections for Assessment type
     public RadioGroup assessType;                                   // id = ce_assessRadio_grp
@@ -171,6 +177,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String alertStart = extras.getString(COURSE_ALERT_START_KEY);
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
         int termId = extras.getInt(TERM_ID_KEY);
+
+        Date now = new Date();
 
         // AssessmentEntity data
         int assessId = extras.getInt(ASSESS_ID_KEY);
@@ -322,28 +330,45 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         CourseEntity updatedCourse = new CourseEntity(passedCourseID, updateTitle, start, end,
                                 cStatus, cMentor, cPhone, cEmail, passedCourseNotes, alertStart, alertEnd, parentTermID);
 
+                        // Creates unique integer request codes for start and end dates for setting/cancelling alarms
+                        int startRequestCode = courseId * 100;
+                        int endRequestCode = (courseId*100) + 1;
+                        Log.d(TAG, "startRequestCode: " + startRequestCode);
+                        Log.d(TAG, "endRequestCode: " + endRequestCode);
+
+                        String notifyTitle = "Course Notification";
+                        String targetStartDate = "Notification for " + updateTitle + " starting on " + DateConverter.formatDateString(start.toString());
+                        String targetEndDate = "Notification for " + updateTitle + " ending on " + DateConverter.formatDateString(end.toString());
+                        Date now = new Date();
+
+                        long startDifference = getDifference(start, now);
+                        long endDifference = getDifference(end, now);
+                        Log.d(TAG, "Now date: " + now);
+                        Log.d(TAG, "Now.getTime(): " + now.getTime());
+                        Log.d(TAG, "Start date: " + start);
+                        Log.d(TAG, "Start.getTime(): " + start.getTime());
+                        Log.d(TAG, "End Date: " + end);
+                        Log.d(TAG, "End.getTime(): " + end.getTime());
+                        Log.d(TAG, "Difference Start: " + startDifference);
+                        Log.d(TAG, "End Difference: " + endDifference);
+                        Log.d(TAG, "Difference Start minutes: " + startDifference);
+                        Log.d(TAG, "End Difference: " + endDifference);
+
                         courseVM.insertCourse(updatedCourse);
 
                         // Calls notification alert to set or cancel alert
                         if(alertStart.equals("set")){
-
+                           scheduleNotification(getNotification(notifyTitle, targetStartDate, startRequestCode),
+                                   startDifference, startRequestCode);
                         } else {
 
                         }
                         if(alertEnd.equals("set")){
-
+                            scheduleNotification(getNotification(notifyTitle, targetEndDate, endRequestCode),
+                                    endDifference, endRequestCode);
                         } else {
 
                         }
-
-                        // Passes course info to Notification class
-                        Intent intent = new Intent(v.getContext(), Notifications.class);
-                        intent.putExtra(COURSE_ID_KEY, courseId);
-                        intent.putExtra(COURSE_TITLE_KEY, updateTitle);
-                        intent.putExtra(COURSE_START_KEY, start);
-                        intent.putExtra(COURSE_END_KEY, end);
-                        intent.putExtra(COURSE_ALERT_START_KEY, alertStart);
-                        intent.putExtra(COURSE_ALERT_END_KEY, alertEnd);
 
                         finish();
                     } else {
@@ -403,8 +428,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         assessPA = findViewById(R.id.ce_paRadio);
         assessStartDate = findViewById(R.id.ce_assessStart);
         assessDueDate = findViewById(R.id.ce_assessDue);
-        assessStartAlert = findViewById(R.id.ce_start_alert);
-        assessDueAlert = findViewById(R.id.ce_due_alert);
 
         /**
          *  Due date EditText id and onClick override functionality
@@ -478,12 +501,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                     String selectedType = getSelectedAssessmentType();
                     String aStartAlert = "not set";
                     String dueAlert = "not set";
-                    if(assessStartAlert.isChecked()) {
-                        aStartAlert = "set";
-                    }
-                    if (assessDueAlert.isChecked()) {
-                        dueAlert = "set";
-                    }
+
                     int courseID = courseId;
 
                     if (aStartDate.before(due) && aStartDate.before(cEndDate) &&
@@ -494,14 +512,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                                 aStartAlert, dueAlert, courseID);
 
                         assessVM.insertAssessment(assessment);
-
-                        // Calls Notification object to set alerts on assessment start/due date if selected
-                        if(aStartAlert.equals("set")) {
-
-                        }
-                        if(dueAlert.equals("set")){
-
-                        }
 
                         // Passes assessment info to Notifications class
                         Intent intent = new Intent(v.getContext(), Notifications.class);
@@ -515,8 +525,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         assessTitleInput.getText().clear();
                         assessStartDate.getText().clear();
                         assessDueDate.getText().clear();
-                        assessStartAlert.setChecked(false);
-                        assessDueAlert.setChecked(false);
 
                         assessTitleInput.setHint("Enter Assessment Name");
                         assessStartDate.setHint("mm/dd/yyyy");
@@ -610,6 +618,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                 .get(AssessViewModel.class);
         assessVM.mAssessments.observe(this, assessObserver);
 
+        allAssessments = courseVM.mAssessments.getValue();
         allCourses = courseVM.mCourses.getValue();
         termData = courseVM.mTerms.getValue();
     }
@@ -830,6 +839,58 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
         });
         deleteCourseError.create().show();
+    }
+
+    // Gets difference as a long between date parameters
+    private long getDifference(Date target, Date now) {
+        long difference = 0;
+        long secInMillis = 1000;
+        long minInMillis = 60000;
+        long hoursInMillis = 3600000;
+        difference = target.getTime() - now.getTime();
+        //difference = difference + (hoursInMillis * 6);
+        difference = difference - (minInMillis * 10);
+        return difference;
+    }
+
+    // Notification scheduler
+    private void scheduleNotification(Notification notification, long delay, int requestCode) {
+        Intent notificationIntent = new Intent(this, Notifications.class);
+        notificationIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        notificationIntent.putExtra(Notifications.NOTIFICATION_ID, requestCode);
+        notificationIntent.putExtra(Notifications.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long targetDateMillis = SystemClock.elapsedRealtime() + delay;
+        Log.d(TAG, "Sched Notificatoin method, system clock + delay (): " + targetDateMillis);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, targetDateMillis, pendingIntent);
+    }
+
+    // Get notification method
+    private Notification getNotification(String title, String body, int notificationId){
+
+        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String channelId = "com.example.c196project";
+        String channelName = "Date Notification";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(channelId, channelName,
+                    importance);
+            manager.createNotificationChannel(mChannel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setContentText(body);
+
+        manager.notify(notificationId, builder.build());
+
+        return builder.build();
     }
 
     @Override

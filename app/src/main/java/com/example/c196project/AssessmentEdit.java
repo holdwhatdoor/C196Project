@@ -136,11 +136,11 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         };
 
         // Assessment due date setOnClickListener
-        dueDate.setOnClickListener(v -> new DatePickerDialog(AssessmentEdit.this, aStart, calendar
+        startDate.setOnClickListener(v -> new DatePickerDialog(AssessmentEdit.this, aStart, calendar
                 .get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar
                 .get(Calendar.DAY_OF_MONTH)).show());
 
-        dueDateSetListener = (view, year, month, dayOfMonth) -> {
+        startDateSetListener = (view, year, month, dayOfMonth) -> {
             String startDateString = month + "/" + dayOfMonth + "/" + year;
             dueDate.setText(startDateString);
         };
@@ -180,24 +180,6 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         // Button id assignments and functionality
         saveAssess = findViewById(R.id.save_assess_btn);
         saveAssess.setOnClickListener(v -> {
-
-            Log.d(TAG, "Assess Data" + assessData);
-            Log.d(TAG, "Course Data" + courseData);
-
-            if(assessData != null) {
-                for(int i = 0; i < assessData.size(); i++){
-                    Log.d(TAG, "Assess Name: " + assessData.get(i).getAssessName());
-                    Log.d(TAG, "Assess courseID: " + assessData.get(i).getCourseId());
-
-                }
-            }
-
-            if(courseData != null) {
-                for(int i = 0; i < courseData.size(); i++){
-                    Log.d(TAG, "Course Name: " + courseData.get(i).getCourseTitle());
-
-                }
-            }
 
             int assessId = getPassedAssessment().getAssessId();
             int courseId = getPassedAssessment().getCourseId();
@@ -243,6 +225,10 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 else {
                     AssessmentEntity updatedAssessment = new AssessmentEntity(assessId, assess,
                             selectedType, stDt, dueDate, sAlert, dAlert, courseId);
+
+                    String channelStartId = Integer.toString(assessId) + "AS";
+                    String channelDueId = Integer.toString(assessId) + "AD";
+
                     assessVM.insertAssessment(updatedAssessment);
 
                     // Calls Notification object to set or cancel alert
@@ -316,9 +302,8 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         });
 
         courseData = assessVM.mCourses.getValue();
-        Log.d(TAG, "Course data: " + courseData);
         assessData = assessVM.mAssessments.getValue();
-        Log.d(TAG, "Assess data: " + assessData);
+
     }
 
     @Override

@@ -13,17 +13,11 @@ import com.example.c196project.database.AppDatabase;
 import com.example.c196project.database.AssessmentDAO;
 import com.example.c196project.database.CourseDAO;
 import com.example.c196project.database.TermDAO;
-import com.example.c196project.database.TermEntity;
-import com.example.c196project.utilities.SampleData;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class DatabaseTest {
@@ -56,14 +50,8 @@ public class DatabaseTest {
 
     @Test
     public void createAndRetrieve(){
- //       alertDAO.insertAll(SampleData.get);
- //       assessmentDAO.insertAll(SampleData.get);
- //       courseDAO.insertAll(SampleData.get);
-        termDAO.insertAll((ArrayList<TermEntity>) SampleData.getTerms());
 
         int count = termDAO.getCount();
-        Log.i(TAG, "createAndRetrieve: count= " + count);
-        assertEquals(SampleData.getTerms().size(), count);
     }
 
 }

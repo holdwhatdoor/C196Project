@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -32,6 +31,7 @@ import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.TermEditAdapter;
+import com.example.c196project.utilities.Notifications;
 import com.example.c196project.viewmodel.CourseViewModel;
 import com.example.c196project.viewmodel.TermViewModel;
 
@@ -75,6 +75,13 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     private List<AssessmentEntity> courseAssessData = new ArrayList<>();
     private TermEditAdapter mAssessAdapter;
 
+
+    // Course Data array list
+    private List<CourseEntity> allCourses = new ArrayList<>();
+    // Assessment Data array list
+    private List<AssessmentEntity> allAssessments = new ArrayList<>();
+
+
     // Initialized Calendar date variable
     Calendar calendar = Calendar.getInstance();
     // SimpleDateFormat initialization for all date display items
@@ -106,8 +113,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     // Course status and alert inputs
     public Spinner statusSpinner;
     public String[] spinnerOptions = {"No Selection", "Planned", "In Progress", "Completed", "Dropped"};
-    public CheckBox startAlert;
-    public CheckBox endAlert;
 
     // Button variables
     public Button delTermBtn;
@@ -118,6 +123,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     @BindView(R.id.rv_edit_termList)
     public RecyclerView courseRV;
 
+    public Date today = new Date();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +132,17 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
         Toolbar toolbar = findViewById(R.id.te_appbar);
         setSupportActionBar(toolbar);
+
+
+        /**
+         *  Checks all start/end/due dates of courses and assessments in database for notifications
+         */
+        // Get local time today
+ //       today.getTime();
+        // Initialize list of all courses and assessments in database
+//        allCourses = courseVM.mCourses.getValue();
+ //       allAssessments = courseVM.mAssessments.getValue();
+
 
         // retrieves term data passed from adapter
         Bundle extras = getIntent().getExtras();
@@ -221,8 +239,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(spinAdapter);
 
-        startAlert = findViewById(R.id.start_alert);
-        endAlert = findViewById(R.id.end_alert);
+ //       startAlert = findViewById(R.id.start_alert);
+ //       endAlert = findViewById(R.id.end_alert);
 
         // Course start date instantiation/functionality
         DatePickerDialog.OnDateSetListener courseStart = (view, year, month, dayOfMonth) -> {
@@ -372,12 +390,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                     String notes = "";
                     String alertStart = "not set";
                     String alertEnd = "not set";
-                    if (startAlert.isChecked()) {
-                        alertStart = "set";
-                    }
-                    if (endAlert.isChecked()) {
-                        alertEnd = "set";
-                    }
 
                     if (start.before(end) && (start.compareTo(today) == 0 || !start.before(today)) &&
                             (start.compareTo(termStart) == 0 || start.after(termStart)) && (end.compareTo(termEnd) == 0 ||
@@ -387,14 +399,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                                 end, status, mentor, phone, email, notes, alertStart, alertEnd, termId);
 
                         courseVM.insertCourse(newCourse);
-
-                        // Calls Notification object to set alerts if selected
-                        if(alertStart.equals("set")) {
-
-                        }
-                        if(alertEnd.equals("set")){
-
-                        }
 
                         // Passes course info to Notifications class to set notification
                         Intent intent = new Intent(v.getContext(), Notifications.class);
@@ -411,8 +415,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                         mentorPhone.getText().clear();
                         mentorEmail.getText().clear();
                         statusSpinner.setSelection(0);
-                        startAlert.setChecked(false);
-                        endAlert.setChecked(false);
 
                         courseTitleInput.setHint("Enter Course Title");
                         courseStartDate.setHint("mm/dd/yyyy");
@@ -466,6 +468,20 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
                 .get(CourseViewModel.class);
         courseVM.mCourses.observe(this, coursesObserver);
 
+        allCourses = courseVM.mCourses.getValue();
+        allAssessments = courseVM.mAssessments.getValue();
+
+
+    }
+
+    // Initiates recycler view
+    private void initRecyclerView() {
+        courseRV.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        courseRV.setLayoutManager(layoutManager);
+
+        mCourseAdapter = new TermEditAdapter(courseData, this);
+        courseRV.setAdapter(mCourseAdapter);
     }
 
     /**
@@ -497,16 +513,6 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             default:
                 return true;
         }
-    }
-
-    // Initiates recycler view
-    private void initRecyclerView() {
-        courseRV.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        courseRV.setLayoutManager(layoutManager);
-
-        mCourseAdapter = new TermEditAdapter(courseData, this);
-        courseRV.setAdapter(mCourseAdapter);
     }
 
     @Override
@@ -542,6 +548,12 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
             }
         }
         return courseData;
+    }
+
+    public int getInsertedCourseID() {
+        int courseId = 0;
+
+        return courseId;
     }
 
     // Method to check for overlapping start and end dates for terms in database

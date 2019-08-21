@@ -42,7 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".Notifications" />
+        <receiver android:name=".utilities.Notifications" />
     </application>
 
 </manifest>

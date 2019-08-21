@@ -1,6 +1,5 @@
 package com.example.c196project;
 
-import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -104,16 +103,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        today.getTime();
-
-        // Alarm manager for notification dates
-        AlarmManager startAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-
+        // Bind and initialize recycler view and view model
         ButterKnife.bind(this);
         initRecyclerView();
         initViewModel();
 
+        /**
+         *  Sets page title and home button xml ids
+         */
         pageTitle = findViewById(R.id.app_bar_title);
         pageTitle.setText("Home");
         homeBtn = findViewById(R.id.appBar_homeBtn);
@@ -229,6 +226,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return currentTerm;
     }
-
 }
 
