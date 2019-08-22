@@ -34,4 +34,7 @@ public class Constants {
     public static final String COURSE_END_CH = "courseEndChannel";
     public static final String ASSESS_DUE_CH = "assessDueChannel";
 
+    // Editing Key
+    public static final String EDITING_KEY = "editing_key";
+
 }

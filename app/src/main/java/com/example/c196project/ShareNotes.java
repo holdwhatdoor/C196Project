@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.c196project.utilities.Constants;
+
 import static com.example.c196project.utilities.Constants.COURSE_ALERT_END_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ALERT_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_EMAIL_KEY;
@@ -19,6 +21,7 @@ import static com.example.c196project.utilities.Constants.COURSE_PHONE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_STATUS_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
 public class ShareNotes extends AppCompatActivity implements View.OnClickListener {
@@ -36,11 +39,17 @@ public class ShareNotes extends AppCompatActivity implements View.OnClickListene
     public Button sendBtn;
     public Button cancelBtn;
 
+    public boolean mEditing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.share);
 
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
         // retrieves course data passed from CourseNotes class
         Bundle extras = getIntent().getExtras();
         // passed CourseEntity data
@@ -112,5 +121,11 @@ public class ShareNotes extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
     }
 }

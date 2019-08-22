@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.c196project.database.AppDatabase;
 import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.MainViewAdapter;
+import com.example.c196project.utilities.Constants;
 import com.example.c196project.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,12 +60,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView pageTitle;         // id= app_bar_title
     private ImageButton homeBtn;        // id= appBar_homeBtn
 
-
     public MainViewModel mainView;
 
     public Date today = new Date();
 
     private AppDatabase db;
+
+    public boolean mEditing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Bind and initialize recycler view and view model
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
         initRecyclerView();
         initViewModel();
 
@@ -127,8 +135,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChanged(List<TermEntity> termEntities) {
                 termData.clear();
-                TermEntity currentTerm = getCurrentTerm(termEntities);
-                termData.add(currentTerm);
+                if(termEntities != null || !termEntities.isEmpty()){
+                    TermEntity currentTerm = getCurrentTerm(termEntities);
+                    termData.add(currentTerm);
+                }
 
                 if (mMainAdapter == null) {
                     mMainAdapter = new MainViewAdapter(termData, MainActivity.this);
@@ -225,6 +235,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         return currentTerm;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
     }
 }
 

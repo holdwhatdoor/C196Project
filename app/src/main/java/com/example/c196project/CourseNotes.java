@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
+import com.example.c196project.utilities.Constants;
 import com.example.c196project.viewmodel.CourseViewModel;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import static com.example.c196project.utilities.Constants.COURSE_PHONE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_STATUS_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
 public class CourseNotes extends AppCompatActivity implements View.OnClickListener {
@@ -51,10 +53,16 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
     public Button cancelBtn;
     public Button shareBtn;
 
+    public boolean mEditing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.note);
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
 
         // retrieves course data passed from CourseEdit class
         Bundle extras = getIntent().getExtras();
@@ -199,5 +207,11 @@ public class CourseNotes extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
     }
 }

@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.TermItemAdapter;
+import com.example.c196project.utilities.Constants;
 import com.example.c196project.viewmodel.TermViewModel;
 
 import java.text.SimpleDateFormat;
@@ -41,6 +42,8 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 
 public class TermActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -62,6 +65,8 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
     private EditText endDisplayDate;
     private DatePickerDialog.OnDateSetListener endDateSetListener;
     public Button addTermBtn;
+
+    public boolean mEditing;
 
     // Recycler view binding
     @BindView(R.id.rv_term_list)
@@ -85,6 +90,10 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
 
         // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
         initRecyclerView();
         initViewModel();
 
@@ -361,4 +370,9 @@ public class TermActivity extends AppCompatActivity implements View.OnClickListe
         dateConflict.create().show();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
+    }
 }

@@ -31,6 +31,7 @@ import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.TermEditAdapter;
+import com.example.c196project.utilities.Constants;
 import com.example.c196project.utilities.Notifications;
 import com.example.c196project.viewmodel.CourseViewModel;
 import com.example.c196project.viewmodel.TermViewModel;
@@ -51,6 +52,7 @@ import static com.example.c196project.utilities.Constants.COURSE_ALERT_START_KEY
 import static com.example.c196project.utilities.Constants.COURSE_END_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 import static com.example.c196project.utilities.Constants.TERM_END_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 import static com.example.c196project.utilities.Constants.TERM_START_KEY;
@@ -119,6 +121,8 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
     public Button saveBtn;
     public Button addCourse;
 
+    public boolean mEditing;
+
     // Recycler view components
     @BindView(R.id.rv_edit_termList)
     public RecyclerView courseRV;
@@ -167,6 +171,10 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
         // initialize butterknife, initRecyclerView and initViewModel
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
         initRecyclerView();
         initViewModel();
 
@@ -438,7 +446,7 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
         termVM = ViewModelProviders.of(this)
                 .get(TermViewModel.class);
         termVM.mLiveTerm.observe(this, (termEntity) -> {
-            if (termEntity != null) {
+            if (termEntity != null && !mEditing) {
                 Calendar calendar = Calendar.getInstance();
                 termTitleEdit.setText(termEntity.getTermTitle());
                 termStartDate.setText(DateConverter.formatDateString(termEntity.getStart().toString()));
@@ -672,4 +680,9 @@ public class TermEdit extends AppCompatActivity implements View.OnClickListener,
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
+    }
 }

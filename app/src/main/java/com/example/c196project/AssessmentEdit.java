@@ -1,6 +1,8 @@
 package com.example.c196project;
 
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,6 +28,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.c196project.database.AssessmentEntity;
 import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
+import com.example.c196project.utilities.Constants;
+import com.example.c196project.utilities.Notifications;
 import com.example.c196project.viewmodel.AssessViewModel;
 import com.example.c196project.viewmodel.CourseViewModel;
 
@@ -45,6 +49,7 @@ import static com.example.c196project.utilities.Constants.ASSESS_START_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TITLE_KEY;
 import static com.example.c196project.utilities.Constants.ASSESS_TYPE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_ID_KEY;
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 
 public class AssessmentEdit extends AppCompatActivity implements View.OnClickListener {
 
@@ -54,6 +59,9 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
     // Header variables
     public TextView pageTitle;
     public ImageButton homeBtn;
+
+    // Context variable
+    public Context context;
 
     // View Model variables
     AssessViewModel assessVM;
@@ -92,6 +100,8 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
     public Button saveAssess;
     public Button deleteAssess;
 
+    public boolean mEditing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +109,8 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
         Toolbar toolbar = findViewById(R.id.a_appbar);
         setSupportActionBar(toolbar);
+
+        context = getApplicationContext();
 
         // head element id assignments
         pageTitle = findViewById(R.id.app_bar_title);
@@ -108,6 +120,10 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
 
         // initialize butterknife and initViewModel
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
         initViewModel();
 
         // instantiates passed assessment
@@ -213,8 +229,13 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                 if(dueAlert.isChecked()){
                     dAlert = "set";
                 }
+
+                Log.d(TAG, "Start Alert Checked: " + sAlert);
+                Log.d(TAG, "Due Alert Checked: " + dAlert);
+
                 Date parentCourseStart = getParentCourse(courseId).getStartDate();
                 Date parentCourseEnd = getParentCourse(courseId).getEndDate();
+
                 if(dueDate.before(stDt)){
                     startDueConflict();
                 } else if(dueDate.before(parentCourseStart) || dueDate.after(parentCourseEnd) ||
@@ -223,24 +244,49 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
                     assessConflictAlert();
                 }
                 else {
+
                     AssessmentEntity updatedAssessment = new AssessmentEntity(assessId, assess,
                             selectedType, stDt, dueDate, sAlert, dAlert, courseId);
 
-                    String channelStartId = Integer.toString(assessId) + "AS";
-                    String channelDueId = Integer.toString(assessId) + "AD";
+                    int startRequestCode = (assessId *100) + 2;
+                    int dueRequestCode = (assessId * 100) + 3;
+
+                    String notifyTitle = "Assessment Notification";
+                    String targetStartDate = "Notification for " + assess + " starting on " +
+                            DateConverter.formatDateString(stDt.toString());
+                    String targetDueDate = "Notification for " + assess + " due on " +
+                            DateConverter.formatDateString(dueDate.toString());
+                    Date now = new Date();
+
+                    long startDifference = Notifications.getDifference(stDt, now);
+                    long dueDifference = Notifications.getDifference(dueDate, now);
 
                     assessVM.insertAssessment(updatedAssessment);
 
                     // Calls Notification object to set or cancel alert
-                    if(startAlert.equals("set")){
-
+                    if(sAlert.equals("set")){
+                        Notification notification = Notifications.getNotification(context, notifyTitle,
+                                targetStartDate, startRequestCode);
+                        Notifications.scheduleNotification(context, notification, startDifference,
+                                startRequestCode);
                     } else {
+                        int notificationId = Notifications.getActiveNotificationId(context, startRequestCode);
+                        if(notificationId != 0){
+                            Notifications.cancelNotification(context, startRequestCode);
+                        }
 
                     }
-                    if(dueAlert.equals("set")){
-
+                    if(dAlert.equals("set")){
+                        Notification notification = Notifications.getNotification(context, notifyTitle,
+                                targetDueDate, dueRequestCode);
+                        Notifications.scheduleNotification(context, notification, dueDifference,
+                                dueRequestCode);
                     } else {
-
+                        int notificationId = Notifications.getActiveNotificationId(context, dueRequestCode);
+                        Log.d(TAG, "Assess Due Notifications before cancel: " + notificationId);
+                        if(notificationId != 0){
+                            Notifications.cancelNotification(context, dueRequestCode);
+                        }
                     }
 
                     finish();
@@ -293,7 +339,7 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         assessVM = ViewModelProviders.of(this)
                 .get(AssessViewModel.class);
         assessVM.mLiveAssess.observe(this, assessmentEntity -> {
-            if (assessmentEntity != null) {
+            if (assessmentEntity != null && !mEditing) {
                 Calendar calendar = Calendar.getInstance();
                 assessName.setText(assessmentEntity.getAssessName());
                 dueDate.setText(DateConverter.formatDateString(assessmentEntity.getAssessDue().toString()));
@@ -453,4 +499,9 @@ public class AssessmentEdit extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
+    }
 }

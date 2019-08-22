@@ -1,16 +1,10 @@
 package com.example.c196project;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -32,7 +26,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,6 +36,7 @@ import com.example.c196project.database.CourseEntity;
 import com.example.c196project.database.DateConverter;
 import com.example.c196project.database.TermEntity;
 import com.example.c196project.ui.CourseEditAdapter;
+import com.example.c196project.utilities.Constants;
 import com.example.c196project.utilities.Notifications;
 import com.example.c196project.viewmodel.AssessViewModel;
 import com.example.c196project.viewmodel.CourseViewModel;
@@ -76,6 +70,7 @@ import static com.example.c196project.utilities.Constants.COURSE_PHONE_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_START_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_STATUS_KEY;
 import static com.example.c196project.utilities.Constants.COURSE_TITLE_KEY;
+import static com.example.c196project.utilities.Constants.EDITING_KEY;
 import static com.example.c196project.utilities.Constants.TERM_ID_KEY;
 
 public class CourseEdit extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -84,7 +79,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
     // Header Variables
     public TextView pageTitle;
-    public ImageButton homeBtn;  // id = home_btn_term
+    public ImageButton homeBtn;
+
+    // Context variable
+    public Context context;
 
     // View Models
     public CourseViewModel courseVM;
@@ -146,6 +144,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     public Button delCourseBtn;
     public Button addAssessBtn;
 
+    public boolean mEditing;
+
     // Recycler view components
     @BindView(R.id.rv_assess_list)
     public RecyclerView assessRV;
@@ -157,6 +157,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
         Toolbar toolbar = findViewById(R.id.ce_appbar);
         setSupportActionBar(toolbar);
+
+        context = getApplicationContext();
 
         // retrieves course data passed from adapter
         Bundle extras = getIntent().getExtras();
@@ -178,8 +180,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         String alertEnd = extras.getString(COURSE_ALERT_END_KEY);
         int termId = extras.getInt(TERM_ID_KEY);
 
-        Date now = new Date();
-
         // AssessmentEntity data
         int assessId = extras.getInt(ASSESS_ID_KEY);
         String assessTitle = extras.getString(ASSESS_TITLE_KEY);
@@ -199,6 +199,10 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
         // initialize butterknife, initRecyclerView and intViewModel
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
         initRecyclerView();
         initViewModel();
 
@@ -323,7 +327,9 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         alertEnd = "set";
                     }
 
-                    if (start.before(end) && !start.before(today) && (start.after(parentTerm.getStart()) ||
+                    Log.d(TAG, "Parent Term Start, End: " + parentTerm.getStart() + ", " + parentTerm.getEnd());
+
+                    if (start.before(end) && (start.after(parentTerm.getStart()) ||
                             start.compareTo(parentTerm.getStart()) == 0) && (end.before(parentTerm.getEnd()) ||
                             end.compareTo(parentTerm.getEnd()) == 0) && !overlappingCourses(start, end)){
 
@@ -341,8 +347,8 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
                         String targetEndDate = "Notification for " + updateTitle + " ending on " + DateConverter.formatDateString(end.toString());
                         Date now = new Date();
 
-                        long startDifference = getDifference(start, now);
-                        long endDifference = getDifference(end, now);
+                        long startDifference = Notifications.getDifference(start, now);
+                        long endDifference = Notifications.getDifference(end, now);
                         Log.d(TAG, "Now date: " + now);
                         Log.d(TAG, "Now.getTime(): " + now.getTime());
                         Log.d(TAG, "Start date: " + start);
@@ -358,16 +364,26 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
 
                         // Calls notification alert to set or cancel alert
                         if(alertStart.equals("set")){
-                           scheduleNotification(getNotification(notifyTitle, targetStartDate, startRequestCode),
-                                   startDifference, startRequestCode);
+                            Notification notification = Notifications.getNotification(context, notifyTitle,
+                                    targetStartDate, startRequestCode);
+                            Notifications.scheduleNotification(context, notification, startDifference,
+                                    startRequestCode);
                         } else {
-
+                            int notificationId = Notifications.getActiveNotificationId(context, startRequestCode);
+                            if(notificationId != 0){
+                                Notifications.cancelNotification(context, startRequestCode);
+                            }
                         }
                         if(alertEnd.equals("set")){
-                            scheduleNotification(getNotification(notifyTitle, targetEndDate, endRequestCode),
-                                    endDifference, endRequestCode);
+                            Notification notification = Notifications.getNotification(context, notifyTitle,
+                                    targetEndDate, endRequestCode);
+                            Notifications.scheduleNotification(context, notification, endDifference,
+                                    endRequestCode);
                         } else {
-
+                            int notificationId = Notifications.getActiveNotificationId(context, endRequestCode);
+                            if(notificationId != 0){
+                                Notifications.cancelNotification(context, endRequestCode);
+                            }
                         }
 
                         finish();
@@ -579,7 +595,7 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         courseVM = ViewModelProviders.of(this)
                 .get(CourseViewModel.class);
         courseVM.mLiveCourse.observe(this, (courseEntity) -> {
-            if (courseEntity != null) {
+            if (courseEntity != null && !mEditing) {
                 Calendar calendar = Calendar.getInstance();
                 courseTitleEdit.setText(courseEntity.getCourseTitle());
                 courseStartDate.setText(DateConverter.formatDateString(courseEntity.getStartDate().toString()));
@@ -841,58 +857,6 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
         deleteCourseError.create().show();
     }
 
-    // Gets difference as a long between date parameters
-    private long getDifference(Date target, Date now) {
-        long difference = 0;
-        long secInMillis = 1000;
-        long minInMillis = 60000;
-        long hoursInMillis = 3600000;
-        difference = target.getTime() - now.getTime();
-        //difference = difference + (hoursInMillis * 6);
-        difference = difference - (minInMillis * 10);
-        return difference;
-    }
-
-    // Notification scheduler
-    private void scheduleNotification(Notification notification, long delay, int requestCode) {
-        Intent notificationIntent = new Intent(this, Notifications.class);
-        notificationIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        notificationIntent.putExtra(Notifications.NOTIFICATION_ID, requestCode);
-        notificationIntent.putExtra(Notifications.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long targetDateMillis = SystemClock.elapsedRealtime() + delay;
-        Log.d(TAG, "Sched Notificatoin method, system clock + delay (): " + targetDateMillis);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, targetDateMillis, pendingIntent);
-    }
-
-    // Get notification method
-    private Notification getNotification(String title, String body, int notificationId){
-
-        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
-        String channelId = "com.example.c196project";
-        String channelName = "Date Notification";
-        int importance = NotificationManager.IMPORTANCE_HIGH;
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mChannel = new NotificationChannel(channelId, channelName,
-                    importance);
-            manager.createNotificationChannel(mChannel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(title)
-                .setContentText(body);
-
-        manager.notify(notificationId, builder.build());
-
-        return builder.build();
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(getApplicationContext(), courseOptions[position], Toast.LENGTH_LONG).show();
@@ -901,5 +865,11 @@ public class CourseEdit extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(Constants.EDITING_KEY, true);
+        super.onSaveInstanceState(outState);
     }
 }
